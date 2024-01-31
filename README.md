@@ -16,7 +16,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 30 January, 2024 at 22:36:14
+  Summary on Tuesday, 30 January, 2024 at 23:03:58
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -30,15 +30,7 @@ Dining Info
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
     <div class="list">
-Main Line
-Swedish Meatballs
-Cauliflower Rice with Kale &amp; Carrots
-Chana Masala (Chickpeas)
-Rice &amp; Beans
-Mac &amp; Cheese
-Farro Pilaf
-
-Main Line
+MAIN LINE
 Swedish Meatballs
 Cauliflower Rice with Kale &amp; Carrots
 Chana Masala (Chickpeas)
@@ -54,23 +46,17 @@ Farro Pilaf
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-Build Your Own - Right Line
+BUILD YOUR OWN - RIGHT LINE
 Protein
 Cheese
 Toppings
 Dressings
 
-Build Your Own - Right Line
-Protein
-Cheese
-Toppings
-Dressings
-
-Cold Counter - Middle Line
+COLD COUNTER - MIDDLE LINE
 Italian Sub
 Italian Baked Tofu Hero
 
-Hot Counter - Left Line
+HOT COUNTER - LEFT LINE
 Chef Mike&#39;s Grandma Special
 Chef Mike&#39;s Vegan Grandma Special
 </div>
@@ -82,13 +68,10 @@ Chef Mike&#39;s Vegan Grandma Special
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-Grill
+GRILL
 Buffalo Chicken Taco
 
-Grill
-Buffalo Chicken Taco
-
-Fry Station
+FRY STATION
 Fried Items
 </div>
     <br>
@@ -100,7 +83,7 @@ Fried Items
       <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
-Main Line
+MAIN LINE
 Apple Pancakes
 Scrambled Eggs
 Hash Brown Patty
@@ -108,20 +91,12 @@ Pork Sausage
 Sausage Gravy
 Biscuits
 
-Main Line
-Apple Pancakes
-Scrambled Eggs
-Hash Brown Patty
-Pork Sausage
-Sausage Gravy
-Biscuits
-
-Vegan Station
+VEGAN STATION
 Curried Cauliflower
 Beyond Sausage
 Just Egg Patty
 
-Main Line
+MAIN LINE
 Apple Pancakes
 Scrambled Eggs
 Hash Brown Patty
@@ -129,30 +104,30 @@ Pork Sausage
 Sausage Gravy
 Biscuits
 
-Action Station
+ACTION STATION
 Panini Bar
 
-Daily Pizzas
+DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
-Vegan Station
+VEGAN STATION
 Orange Ginger Tofu
 Soba Noodles
 Napa Cabbage with Carrots
 
-Main Line
+MAIN LINE
 Mongolian Pork
 Baked Sweet Potato
 Quinoa Pilaf
 Black Beans
 
-Vegan Station
+VEGAN STATION
 Baked Sweet Potato
 Savory Black Beans
 Chipotle Corn
 
-Action Station
+ACTION STATION
 Taco Bar
 </div>
       <br>
@@ -163,17 +138,12 @@ Taco Bar
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-Hot Counter - Left Line
+HOT COUNTER - LEFT LINE
 Oatmeal
 Apple Oatmeal
 Cream of Wheat
 
-Hot Counter - Left Line
-Oatmeal
-Apple Oatmeal
-Cream of Wheat
-
-Main Line
+MAIN LINE
 Scramble Eggs
 Peppers, Onions, Mushrooms Frittata
 Pancakes
@@ -181,60 +151,60 @@ Vegetable Medley
 Hash Brown
 Fresh Ham
 
-Vegan Station
+VEGAN STATION
 Just Egg Patty
 Vegetable Medley
 Hash Brown
 
-Nook
+NOOK
 French Toast
 Waffle Sticks
 
-Main Line
+MAIN LINE
 Sliced Steak with Chimichurri Sauce
 Yellow Rice
 Roasted Eggplant, Artichoke and Grape Tomato
 Barley with Mushrooms, Carrots, Spinach And Yellow Peppers
 Black Beans
 
-Halal Station
+HALAL STATION
 Beef Tacos
 Roasted Eggplant, Artichoke and Grape Tomato
 Yellow Rice
 
-Gluten Free Station
+GLUTEN FREE STATION
 Beef Tacos
 Roasted Eggplant, Artichoke and Grape Tomato
 Yellow Rice
 
-Vegan Station
+VEGAN STATION
 Impossible Beef Tacos
 Roasted Eggplant, Artichoke and Grape Tomato
 Yellow Rice
 
-Main Line
+MAIN LINE
 Jerk Pork
 Rice &amp; Peas
 Kasha
 Green Beans, Mushrooms, &amp; Peppers
 Black Eyed Peas
 
-Halal Station
+HALAL STATION
 Jerk Chicken
 Rice &amp; Peas
 Green Beans, Mushrooms, &amp; Peppers
 
-Gluten Free Station
+GLUTEN FREE STATION
 Jerk Chicken
 Rice &amp; Peas
 Green Beans, Mushrooms, &amp; Peppers
 
-Vegan Station
+VEGAN STATION
 Jerk Tofu Nuggets
 Green Beans, Mushrooms, &amp; Peppers
 Rice &amp; Peas
 
-Pasta Station
+PASTA STATION
 Marinara
 Broccoli Cheese Sauce
 Basil Oil
@@ -242,21 +212,21 @@ Rigatoni
 Whole Wheat Pasta
 Lentil and Mushroom Primavera
 
-Soup Station
+SOUP STATION
 Italian Wedding Soup
 Broccoli Cheddar Soup
 
-Fusion Station
+FUSION STATION
 Carnitas
 Refried Beans
 White Rice
 Sweet Plantains
 Flour Tortillas
 
-Action Station
+ACTION STATION
 Chilaquiles with Vegan Chorizo
 
-Grill
+GRILL
 Chicken Alfredo Flatbread
 </div>
       <br>
@@ -268,27 +238,24 @@ Chicken Alfredo Flatbread
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-Grill
+GRILL
 BLT Sandwich
 
-Grill
-BLT Sandwich
-
-Vegan &amp; Vegetarian Station
+VEGAN &amp; VEGETARIAN STATION
 Mac &amp; Cheese Bar
 
-Daily Pizzas
+DAILY PIZZAS
 Traditional Cheese Pizza
 Sausage Pizza
 Mushroom Pizza
 
-Grill
+GRILL
 Chopped Cheese
 
-Vegan &amp; Vegetarian Station
+VEGAN &amp; VEGETARIAN STATION
 Hot Grain Bar
 
-Grain Bowl
+GRAIN BOWL
 Korean BBQ Chicken
 Kimchi Style Cabbage
 Maple Ginger Sweet Potato
