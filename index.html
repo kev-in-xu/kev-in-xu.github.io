@@ -16,13 +16,13 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 30 January, 2024 at 23:03:58
+  Summary on Wednesday, 31 January, 2024 at 14:27:50
   <br><br>
-  Ferris has nothing good today :(
+  Ferris has Grilled Cheese today!
   <br>
   Fac House has nothing good today :(
   <br>
-  Chef Mike&#39;s has Chef Mike&#39;s Grandma Special today !
+  Chef Mike&#39;s has nothing good today :(
   <br>
 </div>
 <div class="w3-row-padding w3-center w3-margin-top">
@@ -31,12 +31,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Swedish Meatballs
-Cauliflower Rice with Kale &amp; Carrots
-Chana Masala (Chickpeas)
-Rice &amp; Beans
+BBQ Chicken
+Steamed Cabbage &amp; Carrots
+Dal (Lentils)
+Sweet Plantains
 Mac &amp; Cheese
-Farro Pilaf
+Mixed Grains Pilaf
 </div>
     <br>
     </div>
@@ -53,12 +53,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-Italian Sub
-Italian Baked Tofu Hero
+The Fran
+Taiwanese Pckled Carrots and Cucumbers with Teriyaki Chicken
 
 HOT COUNTER - LEFT LINE
-Chef Mike&#39;s Grandma Special
-Chef Mike&#39;s Vegan Grandma Special
+Buffalo Chicken and Ranch
+Buffalo Cauliflower
 </div>
       <br>
     </div>
@@ -68,8 +68,13 @@ Chef Mike&#39;s Vegan Grandma Special
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-GRILL
-Buffalo Chicken Taco
+MAIN LINE
+Chicken Bacon Avocado Salad Sandwich
+Old Bay Shrimp Wrap
+Spicy Pork Belly Quesadilla
+Curried Chickpea Wrap
+Eggplant Greek Fries
+Chimi Burger
 
 FRY STATION
 Fried Items
@@ -84,51 +89,50 @@ Fried Items
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Apple Pancakes
+French Toast
 Scrambled Eggs
-Hash Brown Patty
-Pork Sausage
+Roasted Potatoes
+Pork Bacon
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
-Curried Cauliflower
+Ratatouille
+Tofu Scramble
 Beyond Sausage
-Just Egg Patty
 
 MAIN LINE
-Apple Pancakes
+French Toast
 Scrambled Eggs
-Hash Brown Patty
-Pork Sausage
+Roasted Potatoes
+Pork Bacon
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Panini Bar
+Grilled Cheese Bar
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Orange Ginger Tofu
-Soba Noodles
-Napa Cabbage with Carrots
+Beyond Sausage
+Peppers &amp; Onions
+Pasta
 
 MAIN LINE
-Mongolian Pork
-Baked Sweet Potato
-Quinoa Pilaf
-Black Beans
+Irish Beef Stew
+Mashed Potatoes
+Cous Cous Pilaf
+Cannellini Beans
 
 VEGAN STATION
-Baked Sweet Potato
-Savory Black Beans
-Chipotle Corn
+Tofu Cauliflower Korma
+Basmati Rice
 
 ACTION STATION
-Taco Bar
+Quesadilla Bar
 </div>
       <br>
       </div>
@@ -138,96 +142,96 @@ Taco Bar
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-HOT COUNTER - LEFT LINE
+SOUP STATION
 Oatmeal
-Apple Oatmeal
-Cream of Wheat
+Chocolate Raspberry Oatmeal
+Farina
 
 MAIN LINE
 Scramble Eggs
-Peppers, Onions, Mushrooms Frittata
+Broccoli, Carrots, Red Onion Egg Whites
 Pancakes
-Vegetable Medley
-Hash Brown
-Fresh Ham
+Spinach
+Tri Potato Patty
+Turkey Sausage
 
 VEGAN STATION
 Just Egg Patty
-Vegetable Medley
-Hash Brown
+Spinach
+Tri Patty
 
 NOOK
 French Toast
-Waffle Sticks
+Biscuits
 
 MAIN LINE
-Sliced Steak with Chimichurri Sauce
-Yellow Rice
-Roasted Eggplant, Artichoke and Grape Tomato
-Barley with Mushrooms, Carrots, Spinach And Yellow Peppers
-Black Beans
+BBQ Chicken
+Mashed Sweet Potato
+Cajun Quinoa
+Sautéed Cabbage
+Red Beans
 
 HALAL STATION
-Beef Tacos
-Roasted Eggplant, Artichoke and Grape Tomato
-Yellow Rice
+BBQ Chicken
+Sautéed Cabbage
+Mashed Sweet Potato
 
 GLUTEN FREE STATION
-Beef Tacos
-Roasted Eggplant, Artichoke and Grape Tomato
-Yellow Rice
+BBQ Chicken
+Sautéed Cabbage
+Mashed Sweet Potato
 
 VEGAN STATION
-Impossible Beef Tacos
-Roasted Eggplant, Artichoke and Grape Tomato
-Yellow Rice
+Vegan BBQ Chicken
+Sautéed Cabbage
+Mashed Sweet Potato
 
 MAIN LINE
-Jerk Pork
-Rice &amp; Peas
-Kasha
-Green Beans, Mushrooms, &amp; Peppers
-Black Eyed Peas
+Sliced Beef with Caramelized Mushrooms &amp; Onions
+Tri Colored Potatoes
+Bulgar with Roasted Potatoes
+Vegetable Medley
+White Beans
 
 HALAL STATION
-Jerk Chicken
-Rice &amp; Peas
-Green Beans, Mushrooms, &amp; Peppers
+Sliced Beef with Caramelized Mushrooms and Onions
+Vegetable Medley
+Tri Colored Potatoes
 
 GLUTEN FREE STATION
-Jerk Chicken
-Rice &amp; Peas
-Green Beans, Mushrooms, &amp; Peppers
+Sliced Beef with Caramelized Mushrooms and Onions
+Vegetable Medley
+Tri Colored Potatoes
 
 VEGAN STATION
-Jerk Tofu Nuggets
-Green Beans, Mushrooms, &amp; Peppers
-Rice &amp; Peas
-
-PASTA STATION
-Marinara
-Broccoli Cheese Sauce
-Basil Oil
-Rigatoni
-Whole Wheat Pasta
-Lentil and Mushroom Primavera
+Vegan Sausage &amp; Peppers
+Vegetable Medley
+Pasta
 
 SOUP STATION
-Italian Wedding Soup
-Broccoli Cheddar Soup
+Chicken Noodle Soup
+Tomato Bisque
+
+PASTA STATION
+Marinara Sauce
+Sundried Tomato Pesto
+Garlic Oil
+Orecchiette
+Whole Wheat Pasta
+Turkey Bolognese
 
 FUSION STATION
-Carnitas
-Refried Beans
-White Rice
-Sweet Plantains
-Flour Tortillas
+Chicken Tinga
+Black Beans
+Green Rice
+Butternut Squash
 
 ACTION STATION
-Chilaquiles with Vegan Chorizo
+Portobello Mushrooms with Butternut Squash Quesadilla
 
 GRILL
-Chicken Alfredo Flatbread
+Falafel Hummus Bowl
+Beyond Sausage
 </div>
       <br>
       </div>
@@ -238,27 +242,10 @@ Chicken Alfredo Flatbread
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-GRILL
-BLT Sandwich
-
-VEGAN &amp; VEGETARIAN STATION
-Mac &amp; Cheese Bar
-
-DAILY PIZZAS
-Traditional Cheese Pizza
-Sausage Pizza
-Mushroom Pizza
-
-GRILL
-Chopped Cheese
-
-VEGAN &amp; VEGETARIAN STATION
-Hot Grain Bar
-
 GRAIN BOWL
-Korean BBQ Chicken
-Kimchi Style Cabbage
-Maple Ginger Sweet Potato
+Sliced Blackened Chicken Breast
+Roasted Green Beans &amp; Carrots
+Roasted Chipotle Corn &amp; Peppers
 </div>
       <br>
       </div>
