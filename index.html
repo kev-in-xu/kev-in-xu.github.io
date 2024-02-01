@@ -16,7 +16,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Thursday, 01 February, 2024 at 08:06:01
+  Summary on Thursday, 01 February, 2024 at 09:09:46
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -29,7 +29,15 @@ Dining Info
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
-    <div class="list">No data on menu items</div>
+    <div class="list">
+MAIN LINE
+Beef Stew
+Steamed Broccoli
+Mushroom Spinach Ragout
+Mashed Potatoes
+Mac &amp; Cheese
+Couscous Pilaf
+</div>
     <br>
     </div>
   </div>
