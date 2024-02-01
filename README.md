@@ -16,7 +16,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Thursday, 01 February, 2024 at 09:09:46
+  Summary on Thursday, 01 February, 2024 at 14:48:50
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -68,16 +68,13 @@ Tempeh Cheesesteak
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-FRY STATION
-Fried Items
-
-DAILY OFFERINGS
-Cheeseburger
-Turkey Burger
-Beyond Burger
-Black Bean Burger
-Crispy Chicken Sandwich
-Grilled Chicken
+MAIN LINE
+Caprese Burger
+Tostone and Shaved Steak Sandwich
+Tacos Al Pastor
+Banana Pudding Pancakes
+Veggie Lo mein
+Caprese Grilled Cheese
 </div>
     <br>
     </div>
@@ -100,6 +97,27 @@ VEGAN STATION
 Baked Sweet Potato Wedge
 Tofu Scramble
 Beyond Sausage
+
+MAIN LINE
+Belgium Waffles
+Scrambled Eggs
+Sweet Potato Tots
+Ham
+Sausage Gravy
+Biscuits
+
+ACTION STATION
+Buffalo Chicken Wrap
+Buffalo Cauliflower Wrap
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
+VEGAN STATION
+Three Bean Stew
+Garlic Herb Roasted Potatoes
+Agave Glazed Baby Carrots
 </div>
       <br>
       </div>
@@ -109,72 +127,6 @@ Beyond Sausage
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-SOUP STATION
-Oatmeal
-Oatmeal with Raisins
-Grits
-
-MAIN LINE
-Scramble Eggs
-Kale, Mushroom, Tomato Egg White
-Pancakes
-Vegetable Medley
-Potato Medley
-Pork Bacon
-
-VEGAN STATION
-Just Egg Patty
-Vegetable Medley
-Potato Medley
-
-NOOK
-French Toast
-Waffles
-
-MAIN LINE
-Beef Picadillo
-Rice Pilaf
-Farro
-Green Beans, Carrots, Peppers
-Black Beans
-
-HALAL STATION
-Beef Picadillo
-Green Beans, Carrots, Peppers
-Rice Pilaf
-
-GLUTEN FREE STATION
-Beef Picadillo
-Green Beans, Carrots, Peppers
-Rice Pilaf
-
-VEGAN STATION
-Impossible Picadillo
-Green Beans, Carrots, Peppers
-Rice Pilaf
-
-MAIN LINE
-Brown Stew Chicken
-Rice &amp; Pigeon Peas
-Quinoa with Mangos and Craisins
-Napa Cabbage and Bok Choy with Carrots
-Northern Beans
-
-HALAL STATION
-Brown Stew Chicken
-Napa Cabbage and Bok Choy with Carrots
-Rice &amp; Pigeon Peas
-
-GLUTEN FREE STATION
-Brown Stew Chicken
-Napa Cabbage and Bok Choy with Carrots
-Rice &amp; Pigeon Peas
-
-VEGAN STATION
-Jerk Vegan Chicken
-Napa Cabbage and Bok Choy with Carrots
-Rice &amp; Pigeon Peas
-
 PASTA STATION
 Marinara
 Primavera Sauce
@@ -209,29 +161,6 @@ Beyond Burger
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-GRILL
-Angus Burger
-Beyond Burger
-
-VEGAN &amp; VEGETARIAN STATION
-Ramen Noodle Bar
-
-DAILY PIZZAS
-Traditional Cheese Pizza
-Pepperoni Pizza
-Mushroom Pizza
-
-GRILL
-Bibimbap Bowl
-
-VEGAN &amp; VEGETARIAN STATION
-Baked Potato Bar
-
-DAILY PIZZAS
-Three Cheese Pizza
-Pepperoni Pizza
-Mushroom Pizza
-
 GRAIN BOWL
 Balsamic Glazed Chicken
 Basil Pesto Tofu
