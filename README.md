@@ -16,9 +16,9 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 31 January, 2024 at 14:27:50
+  Summary on Thursday, 01 February, 2024 at 08:06:01
   <br><br>
-  Ferris has Grilled Cheese today!
+  Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
@@ -29,15 +29,7 @@ Dining Info
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
-    <div class="list">
-MAIN LINE
-BBQ Chicken
-Steamed Cabbage &amp; Carrots
-Dal (Lentils)
-Sweet Plantains
-Mac &amp; Cheese
-Mixed Grains Pilaf
-</div>
+    <div class="list">No data on menu items</div>
     <br>
     </div>
   </div>
@@ -53,12 +45,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-The Fran
-Taiwanese Pckled Carrots and Cucumbers with Teriyaki Chicken
+Roast Beef
+Portabello Eggplant Sub
 
 HOT COUNTER - LEFT LINE
-Buffalo Chicken and Ranch
-Buffalo Cauliflower
+Philly Cheesesteak
+Tempeh Cheesesteak
 </div>
       <br>
     </div>
@@ -68,16 +60,16 @@ Buffalo Cauliflower
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-MAIN LINE
-Chicken Bacon Avocado Salad Sandwich
-Old Bay Shrimp Wrap
-Spicy Pork Belly Quesadilla
-Curried Chickpea Wrap
-Eggplant Greek Fries
-Chimi Burger
-
 FRY STATION
 Fried Items
+
+DAILY OFFERINGS
+Cheeseburger
+Turkey Burger
+Beyond Burger
+Black Bean Burger
+Crispy Chicken Sandwich
+Grilled Chicken
 </div>
     <br>
     </div>
@@ -89,50 +81,17 @@ Fried Items
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-French Toast
+Belgium Waffles
 Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
+Sweet Potato Tots
+Ham
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
-Ratatouille
+Baked Sweet Potato Wedge
 Tofu Scramble
 Beyond Sausage
-
-MAIN LINE
-French Toast
-Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
-Sausage Gravy
-Biscuits
-
-ACTION STATION
-Grilled Cheese Bar
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
-VEGAN STATION
-Beyond Sausage
-Peppers &amp; Onions
-Pasta
-
-MAIN LINE
-Irish Beef Stew
-Mashed Potatoes
-Cous Cous Pilaf
-Cannellini Beans
-
-VEGAN STATION
-Tofu Cauliflower Korma
-Basmati Rice
-
-ACTION STATION
-Quesadilla Bar
 </div>
       <br>
       </div>
@@ -144,94 +103,94 @@ Quesadilla Bar
       <div class="list">
 SOUP STATION
 Oatmeal
-Chocolate Raspberry Oatmeal
-Farina
+Oatmeal with Raisins
+Grits
 
 MAIN LINE
 Scramble Eggs
-Broccoli, Carrots, Red Onion Egg Whites
+Kale, Mushroom, Tomato Egg White
 Pancakes
-Spinach
-Tri Potato Patty
-Turkey Sausage
+Vegetable Medley
+Potato Medley
+Pork Bacon
 
 VEGAN STATION
 Just Egg Patty
-Spinach
-Tri Patty
+Vegetable Medley
+Potato Medley
 
 NOOK
 French Toast
-Biscuits
+Waffles
 
 MAIN LINE
-BBQ Chicken
-Mashed Sweet Potato
-Cajun Quinoa
-Sautéed Cabbage
-Red Beans
+Beef Picadillo
+Rice Pilaf
+Farro
+Green Beans, Carrots, Peppers
+Black Beans
 
 HALAL STATION
-BBQ Chicken
-Sautéed Cabbage
-Mashed Sweet Potato
+Beef Picadillo
+Green Beans, Carrots, Peppers
+Rice Pilaf
 
 GLUTEN FREE STATION
-BBQ Chicken
-Sautéed Cabbage
-Mashed Sweet Potato
+Beef Picadillo
+Green Beans, Carrots, Peppers
+Rice Pilaf
 
 VEGAN STATION
-Vegan BBQ Chicken
-Sautéed Cabbage
-Mashed Sweet Potato
+Impossible Picadillo
+Green Beans, Carrots, Peppers
+Rice Pilaf
 
 MAIN LINE
-Sliced Beef with Caramelized Mushrooms &amp; Onions
-Tri Colored Potatoes
-Bulgar with Roasted Potatoes
-Vegetable Medley
-White Beans
+Brown Stew Chicken
+Rice &amp; Pigeon Peas
+Quinoa with Mangos and Craisins
+Napa Cabbage and Bok Choy with Carrots
+Northern Beans
 
 HALAL STATION
-Sliced Beef with Caramelized Mushrooms and Onions
-Vegetable Medley
-Tri Colored Potatoes
+Brown Stew Chicken
+Napa Cabbage and Bok Choy with Carrots
+Rice &amp; Pigeon Peas
 
 GLUTEN FREE STATION
-Sliced Beef with Caramelized Mushrooms and Onions
-Vegetable Medley
-Tri Colored Potatoes
+Brown Stew Chicken
+Napa Cabbage and Bok Choy with Carrots
+Rice &amp; Pigeon Peas
 
 VEGAN STATION
-Vegan Sausage &amp; Peppers
-Vegetable Medley
-Pasta
-
-SOUP STATION
-Chicken Noodle Soup
-Tomato Bisque
+Jerk Vegan Chicken
+Napa Cabbage and Bok Choy with Carrots
+Rice &amp; Pigeon Peas
 
 PASTA STATION
-Marinara Sauce
-Sundried Tomato Pesto
-Garlic Oil
-Orecchiette
+Marinara
+Primavera Sauce
+Rosemary Oil
+Linguini
 Whole Wheat Pasta
-Turkey Bolognese
+Beef Bolognese
+
+SOUP STATION
+Pumpkin Bisque
+Chicken Corn Chowder
 
 FUSION STATION
-Chicken Tinga
-Black Beans
-Green Rice
-Butternut Squash
+Beef Fajita
+Pinto Beans
+Sweet Plantains
+Vegetable Medley
 
 ACTION STATION
-Portobello Mushrooms with Butternut Squash Quesadilla
+Green Chili Jackfruit
 
 GRILL
-Falafel Hummus Bowl
-Beyond Sausage
+Jerk Pork Chops with Pineapple Salsa
+Beyond Burger
 </div>
       <br>
       </div>
@@ -242,10 +201,33 @@ Beyond Sausage
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
+GRILL
+Angus Burger
+Beyond Burger
+
+VEGAN &amp; VEGETARIAN STATION
+Ramen Noodle Bar
+
+DAILY PIZZAS
+Traditional Cheese Pizza
+Pepperoni Pizza
+Mushroom Pizza
+
+GRILL
+Bibimbap Bowl
+
+VEGAN &amp; VEGETARIAN STATION
+Baked Potato Bar
+
+DAILY PIZZAS
+Three Cheese Pizza
+Pepperoni Pizza
+Mushroom Pizza
+
 GRAIN BOWL
-Sliced Blackened Chicken Breast
-Roasted Green Beans &amp; Carrots
-Roasted Chipotle Corn &amp; Peppers
+Balsamic Glazed Chicken
+Basil Pesto Tofu
+Oven Roasted Brussel Sprouts
 </div>
       <br>
       </div>
