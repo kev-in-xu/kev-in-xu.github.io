@@ -16,7 +16,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Friday, 02 February, 2024 at 13:15:24
+  Summary on Sunday, 04 February, 2024 at 20:43:34
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -29,15 +29,7 @@ Dining Info
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
-    <div class="list">
-MAIN LINE
-Fried Battered Cod
-Stir Fried Vegetables
-Linguine with Garlic Oil
-Jasmine Rice
-Buffalo Tofu
-Farro &amp;Spinach Pilaf
-</div>
+    <div class="list">No data on menu items</div>
     <br>
     </div>
   </div>
@@ -45,21 +37,7 @@ Farro &amp;Spinach Pilaf
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-BUILD YOUR OWN - RIGHT LINE
-Protein
-Cheese
-Toppings
-Dressings
-
-COLD COUNTER - MIDDLE LINE
-Turkey BLT
-Smokey Seitan, Guacamole, and Tomato
-
-HOT COUNTER - LEFT LINE
-Chicken Parmesan
-Lentil Shawarma
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
   </div>
@@ -68,9 +46,6 @@ Lentil Shawarma
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-FRY STATION
-Fried Items
-
 DAILY OFFERINGS
 Cheeseburger
 Turkey Burger
@@ -89,24 +64,38 @@ Grilled Chicken
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Blueberry Pancakes
+French Toast Sticks
 Scrambled Eggs
-Potato Pancakes
-Turkey Bacon
+Potato Pancake
+Turkey Sausage
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Fish Tacos
+Chunky Monkey Waffles
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Red Lentil Dahl
-Turmeric Rice
-Pita
+Garlic Broccoli
+Tofu Scramble
+Beyond Sausage
+
+MAIN LINE
+Sausage &amp; Peppers
+Baked Ziti
+Red Beans
+Ratatouille
+
+VEGAN STATION
+Mapo Tofu
+Scallion Rice
+Garlic Green Beans
+
+ACTION STATION
+Chunky Monkey Waffles
 </div>
       <br>
       </div>
@@ -115,7 +104,29 @@ Pita
       <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+MAIN LINE
+Pernil
+Sweet Plantains
+Wheatberries Pilaf
+Root Vegetables
+Black Beans
+
+HALAL STATION
+Pollo Asado
+Root Vegetables
+Sweet Plantains
+
+VEGAN STATION
+Pastelon
+Root Vegetables
+Yellow Rice
+
+GLUTEN FREE STATION
+Pollo Asado
+Root Vegetables
+Yellow Rice
+</div>
       <br>
       </div>
     </div>
@@ -124,24 +135,7 @@ Pita
       <div class="w3-card w3-container" style="min-height:400px">
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-GRILL
-Cajun Shrimp with Southern Cheese Grits
-Chicken and Waffles
-
-DAILY PIZZAS
-Trio Cheese Flatbread
-Sausage Flatbread Pizza
-Mushroom Pizza
-
-VEGAN &amp; VEGETARIAN STATION
-Taco Bar
-
-GRAIN BOWL
-Jerk Chicken
-Fried Tofu
-Fingerling Potatoes
-</div>
+      <div class="list">No data on menu items</div>
       <br>
       </div>
     </div>
