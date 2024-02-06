@@ -10,19 +10,18 @@ Dining Info
 
     <body>
         <div class="navbar">
-            <a href="/" class="navbar-brand">Home</a>
-            <a href="/about/" class="navbar-item">About</a>
+            <a href="home.html" class="navbar-brand">Home</a>
         </div>
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 06 February, 2024 at 15:21:29
+  Summary on Tuesday, 06 February, 2024 at 17:43:01
   <br><br>
   Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
-  Chef Mike&#39;s has nothing good today :(
+  Chef Mike's has nothing good today :(
   <br>
 </div>
 <div class="w3-row-padding w3-center w3-margin-top">
@@ -54,7 +53,7 @@ Dressings
 
 COLD COUNTER - MIDDLE LINE
 The Ultimate Fig-Brie
-Fig jam &amp; Ricotta Sub
+Fig jam & Ricotta Sub
 
 HOT COUNTER - LEFT LINE
 Chicken Tikka Masala Sub
@@ -86,39 +85,6 @@ Creamy Tomato Soup in Grilled Cheese Bread Bowl
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Apple Pancakes
-Scrambled Eggs
-Hash Brown Patty
-Pork Sausage
-Sausage Gravy
-Biscuits
-
-VEGAN STATION
-Curried Cauliflower
-Tofu Scramble
-Beyond Sausage
-
-MAIN LINE
-Apple Pancakes
-Scrambled Eggs
-Hash Brown Patty
-Pork Sausage
-Sausage Gravy
-Biscuits
-
-ACTION STATION
-Tacos
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
-VEGAN STATION
-Sticky Tofu
-Green Rice
-Vegetable Medley
-
-MAIN LINE
 BBQ Pulled Pork
 Mashed Potatoes
 Quinoa
@@ -140,55 +106,11 @@ Bread Pudding
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-SOUP STATION
-Oatmeal
-Triple Berry Oatmeal
-Cream of Wheat
-
-MAIN LINE
-Scramble Eggs
-Sweet Potato, Kale, Red pepper Egg White Scramble
-Cereal Pancake
-Curry Roasted Cauliflower
-Roasted Potatoes
-Chicken Sausage
-
-VEGAN STATION
-Just Egg Patty
-Curry Roasted Cauliflower
-Roasted Potatoes
-
-NOOK
-Cinnamon Swirl French toast
-Waffle Sticks
-
-MAIN LINE
-General Tso&#39;s Chicken
-Vegetarian Lo mein
-Farro Pilaf
-Broccoli with Shitake Mushrooms
-Butter Beans
-
-HALAL STATION
-General Tso&#39;s Chicken
-Broccoli with Shitake Mushrooms
-Vegetarian Lo Mein
-
-GLUTEN FREE STATION
-General Tso&#39;s Chicken
-Broccoli with Shitake Mushrooms
-Jasmine Rice
-
-VEGAN STATION
-General Tso&#39;s Tofu Nuggets
-Broccoli with Shitake Mushrooms
-Vegetarian Lo Mein
-
 MAIN LINE
 Beef Stroganoff
 Egg Noodles
 Wheatberries Pilaf
-Green Beans &amp; Carrots
+Green Beans & Carrots
 Northern Beans
 
 HALAL STATION
@@ -215,10 +137,11 @@ Roasted Redskin Potato
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-SALAD
-Chicken Mole
-Red Curry Jackfruit
-Roasted Yams
+GRILL
+Turkey Meatloaf
+
+VEGAN & VEGETARIAN STATION
+Vegan Chicken Cacciatore
 </div>
       <br>
       </div>
