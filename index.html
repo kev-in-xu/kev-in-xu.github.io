@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 06 February, 2024 at 17:43:01
+  Summary on Tuesday, 06 February, 2024 at 17:55:46
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -39,70 +39,7 @@ Roast Potatoes
 </div>
     <br>
     </div>
-  </div>
-  <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
-    <h3>Chef Mike's</h3>
-    <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-BUILD YOUR OWN - RIGHT LINE
-Protein
-Cheeses
-Toppings
-Dressings
-
-COLD COUNTER - MIDDLE LINE
-The Ultimate Fig-Brie
-Fig jam & Ricotta Sub
-
-HOT COUNTER - LEFT LINE
-Chicken Tikka Masala Sub
-Curry Seitan with Vegetables
-</div>
-      <br>
-    </div>
-  </div>
-  <div class="w3-third">
-    <div class="w3-card w3-container" style="min-height:400px">
-    <h3>JJs</h3>
-    <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-    <div class="list">
-MAIN LINE
-Italian Burger
-Salmon Avocado Wrap
-Lamb and Beef Gyro with Tzatziki
-Pot Roast Quesadilla
-Beyond Italian Burger
-Creamy Tomato Soup in Grilled Cheese Bread Bowl
-</div>
-    <br>
-    </div>
-  </div>
-</div>
-<div class="w3-row-padding w3-center w3-margin-top">
-    <div class="w3-third">
-      <div class="w3-card w3-container" style="min-height:400px">
-      <h3>Ferris</h3>
-      <div class="list">
-MAIN LINE
-BBQ Pulled Pork
-Mashed Potatoes
-Quinoa
-Red Beans
-
-VEGAN STATION
-Vegan Chicken Nuggets
-Cilantro Rice
-Steamed Broccoli
-
-ACTION STATION
-Bread Pudding
-</div>
-      <br>
-      </div>
-    </div>
-    <div class="w3-third">
-      <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
@@ -129,11 +66,65 @@ Green Beans and Carrots
 Roasted Redskin Potato
 </div>
       <br>
-      </div>
     </div>
-    
-    <div class="w3-third">
-      <div class="w3-card w3-container" style="min-height:400px">
+  </div>
+  <div class="w3-third">
+    <div class="w3-card w3-container" style="min-height:400px">
+    <h3>Chef Mike's</h3>
+    <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
+      <div class="list">
+BUILD YOUR OWN - RIGHT LINE
+Protein
+Cheeses
+Toppings
+Dressings
+
+COLD COUNTER - MIDDLE LINE
+The Ultimate Fig-Brie
+Fig jam & Ricotta Sub
+
+HOT COUNTER - LEFT LINE
+Chicken Tikka Masala Sub
+Curry Seitan with Vegetables
+</div>
+      <br>
+    </div>
+    <div class="w3-card w3-container" style="min-height:400px">
+      <h3>Ferris</h3>
+      <div class="list">
+MAIN LINE
+BBQ Pulled Pork
+Mashed Potatoes
+Quinoa
+Red Beans
+
+VEGAN STATION
+Vegan Chicken Nuggets
+Cilantro Rice
+Steamed Broccoli
+
+ACTION STATION
+Bread Pudding
+</div>
+      <br>
+    </div>
+  </div>
+  <div class="w3-third">
+    <div class="w3-card w3-container" style="min-height:400px">
+    <h3>JJs</h3>
+    <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
+    <div class="list">
+MAIN LINE
+Italian Burger
+Salmon Avocado Wrap
+Lamb and Beef Gyro with Tzatziki
+Pot Roast Quesadilla
+Beyond Italian Burger
+Creamy Tomato Soup in Grilled Cheese Bread Bowl
+</div>
+    <br>
+    </div>
+    <div class="w3-card w3-container" style="min-height:400px">
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
@@ -144,8 +135,8 @@ VEGAN & VEGETARIAN STATION
 Vegan Chicken Cacciatore
 </div>
       <br>
-      </div>
     </div>
+  </div>
 </div>
 
 
