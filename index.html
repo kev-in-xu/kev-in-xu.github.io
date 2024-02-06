@@ -16,11 +16,11 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Monday, 05 February, 2024 at 08:23:23
+  Summary on Tuesday, 06 February, 2024 at 15:21:29
   <br><br>
   Ferris has nothing good today :(
   <br>
-  Fac House has salmon today!
+  Fac House has nothing good today :(
   <br>
   Chef Mike&#39;s has nothing good today :(
   <br>
@@ -31,12 +31,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Sweet Chili Salmon
-Mac &amp; Cheese
-Chana Masala (Chickpeas)
-Steamed Green Beans
-Farro Pilaf
-Jasmine Rice
+Swedish Meatballs
+Linguine in Garlic Oil
+Yellow Dal (Lentils)
+Steamed Mixed Vegetables
+Couscous Pilaf
+Roast Potatoes
 </div>
     <br>
     </div>
@@ -45,7 +45,21 @@ Jasmine Rice
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+BUILD YOUR OWN - RIGHT LINE
+Protein
+Cheeses
+Toppings
+Dressings
+
+COLD COUNTER - MIDDLE LINE
+The Ultimate Fig-Brie
+Fig jam &amp; Ricotta Sub
+
+HOT COUNTER - LEFT LINE
+Chicken Tikka Masala Sub
+Curry Seitan with Vegetables
+</div>
       <br>
     </div>
   </div>
@@ -54,13 +68,13 @@ Jasmine Rice
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-DAILY OFFERINGS
-Cheeseburger
-Turkey Burger
-Beyond Burger
-Black Bean Burger
-Crispy Chicken Sandwich
-Grilled Chicken
+MAIN LINE
+Italian Burger
+Salmon Avocado Wrap
+Lamb and Beef Gyro with Tzatziki
+Pot Roast Quesadilla
+Beyond Italian Burger
+Creamy Tomato Soup in Grilled Cheese Bread Bowl
 </div>
     <br>
     </div>
@@ -72,17 +86,51 @@ Grilled Chicken
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Pancakes
+Apple Pancakes
 Scrambled Eggs
-Tater Tots
-Turkey Sausage
+Hash Brown Patty
+Pork Sausage
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
-Steamed Broccoli
-Beyond Sausage
+Curried Cauliflower
 Tofu Scramble
+Beyond Sausage
+
+MAIN LINE
+Apple Pancakes
+Scrambled Eggs
+Hash Brown Patty
+Pork Sausage
+Sausage Gravy
+Biscuits
+
+ACTION STATION
+Tacos
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
+VEGAN STATION
+Sticky Tofu
+Green Rice
+Vegetable Medley
+
+MAIN LINE
+BBQ Pulled Pork
+Mashed Potatoes
+Quinoa
+Red Beans
+
+VEGAN STATION
+Vegan Chicken Nuggets
+Cilantro Rice
+Steamed Broccoli
+
+ACTION STATION
+Bread Pudding
 </div>
       <br>
       </div>
@@ -94,91 +142,69 @@ Tofu Scramble
       <div class="list">
 SOUP STATION
 Oatmeal
-Vanilla Chai
-Grits
+Triple Berry Oatmeal
+Cream of Wheat
 
 MAIN LINE
 Scramble Eggs
-Zucchini, Squash, Red Onion Egg Whites
-Pancakes
-Roasted Tomatoes
-Hash Brown
-Roasted Chicken
+Sweet Potato, Kale, Red pepper Egg White Scramble
+Cereal Pancake
+Curry Roasted Cauliflower
+Roasted Potatoes
+Chicken Sausage
 
 VEGAN STATION
 Just Egg Patty
-Roasted Tomatoes
-Hash Brown
+Curry Roasted Cauliflower
+Roasted Potatoes
 
 NOOK
-French Toast Sticks
-Sausage, Egg, and Cheese Biscuit
+Cinnamon Swirl French toast
+Waffle Sticks
 
 MAIN LINE
-Sliced Pork with Vinegar Peppers
-Risotto
-Sautéed Broccoli Rabe
-Garbanzo Beans
+General Tso&#39;s Chicken
+Vegetarian Lo mein
+Farro Pilaf
+Broccoli with Shitake Mushrooms
+Butter Beans
 
 HALAL STATION
-Chicken with Vinegar Peppers
-Sautéed Broccoli Rabe
-Risotto
+General Tso&#39;s Chicken
+Broccoli with Shitake Mushrooms
+Vegetarian Lo Mein
 
 GLUTEN FREE STATION
-Sliced Pork with Vinegar Peppers
-Sautéed Broccoli Rabe
-Risotto
+General Tso&#39;s Chicken
+Broccoli with Shitake Mushrooms
+Jasmine Rice
 
 VEGAN STATION
-Chana Masala
-Broccoli Rabe
-Basmati Rice
+General Tso&#39;s Tofu Nuggets
+Broccoli with Shitake Mushrooms
+Vegetarian Lo Mein
 
 MAIN LINE
-Chicken Picatta
-Penne with Garlic Oil and Herbs
-Stewed Lentils
-Roasted Brussel Sprouts
-White Beans with Roasted Tomatoes and Herbs
+Beef Stroganoff
+Egg Noodles
+Wheatberries Pilaf
+Green Beans &amp; Carrots
+Northern Beans
 
 HALAL STATION
-Chicken Picatta
-Roasted Brussel Sprouts
-Penne with Garlic Oil and Herbs
+Beef Stroganoff
+Egg Noodles
+Green Beans and Carrots
 
 GLUTEN FREE STATION
-Chicken Picatta
-Roasted Brussel Sprouts
-Gluten Free Pasta with Garlic Oil
+Beef Stroganoff
+Green Beans and Carrots
+Roasted Redskin Potato
 
 VEGAN STATION
-Vegan Chicken Picatta
-Roasted Brussel Sprouts
-Penne with Garlic Oil
-
-PASTA STATION
-Marinara Sauce
-Carbonara
-Shallot Oil
-Cavatelli
-Whole Wheat Pasta
-Chicken Alfredo
-
-SOUP STATION
-Pasta E Fagioli
-Broccoli Cheddar Soup
-
-FUSION STATION
-Poke Bowl
-
-ACTION STATION
-Hawaiian Pork with Rice
-Macaroni Salad
-
-GRILL
-Cajun Fried Fish Po Boy
-Beyond Burger
+Beyond Stroganoff
+Green Beans and Carrots
+Roasted Redskin Potato
 </div>
       <br>
       </div>
@@ -188,7 +214,12 @@ Beyond Burger
       <div class="w3-card w3-container" style="min-height:400px">
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+SALAD
+Chicken Mole
+Red Curry Jackfruit
+Roasted Yams
+</div>
       <br>
       </div>
     </div>
