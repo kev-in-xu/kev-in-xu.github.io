@@ -10,12 +10,12 @@ Dining Info
 
     <body>
         <div class="navbar">
-            <a href="home.html" class="navbar-brand">Home</a>
+            <a href="" class="navbar-brand">Home</a>
         </div>
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 07 February, 2024 at 14:18:16
+  Summary on Wednesday, 07 February, 2024 at 16:06:34
   <br><br>
   Ferris has Grilled Cheese today!
   <br>
@@ -224,10 +224,20 @@ Spinach & Artichoke Dip Grilled Cheese
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-GRAIN BOWL
-Tandoori Chicken
-Roasted Tomato & Cauliflower
-Spicy Eggplant
+GRILL
+Shake & Bake Pork Chops
+Green Rice
+Vegetable Medley
+
+VEGAN & VEGETARIAN STATION
+Grilled Tofu
+Cauliflower Rice
+Baked Tomatoes
+
+DAILY PIZZAS
+3 Cheese Pizza
+Pepperoni Pizza
+Mushroom Flatbread Pizza
 </div>
       <br>
     </div>
