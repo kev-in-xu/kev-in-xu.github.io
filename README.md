@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 06 February, 2024 at 17:55:46
+  Summary on Wednesday, 07 February, 2024 at 10:14:48
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -30,12 +30,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Swedish Meatballs
-Linguine in Garlic Oil
-Yellow Dal (Lentils)
-Steamed Mixed Vegetables
-Couscous Pilaf
-Roast Potatoes
+Beef Teriyaki
+Dal Makhani
+Vegetable Lo Mein
+Steamed Broccoli
+Quinoa Pilaf
+Jasmine Rice
 </div>
     <br>
     </div>
@@ -43,27 +43,27 @@ Roast Potatoes
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
+SOUP STATION
+Oatmeal
+Pineapple Upside Down Cake (Pineapple, Cherry)
+Farina
+
 MAIN LINE
-Beef Stroganoff
-Egg Noodles
-Wheatberries Pilaf
-Green Beans & Carrots
-Northern Beans
-
-HALAL STATION
-Beef Stroganoff
-Egg Noodles
-Green Beans and Carrots
-
-GLUTEN FREE STATION
-Beef Stroganoff
-Green Beans and Carrots
-Roasted Redskin Potato
+Scramble Eggs
+Leek, Mushrooms, Asparagus Egg White Scramble
+Pancakes
+Brussel Sprouts
+Tri Patty
+Andouille
 
 VEGAN STATION
-Beyond Stroganoff
-Green Beans and Carrots
-Roasted Redskin Potato
+Just Egg Patty
+Brussel Sprouts
+Tri Patty
+
+NOOK
+French Toast Sticks
+Apple Turnover
 </div>
       <br>
     </div>
@@ -75,17 +75,17 @@ Roasted Redskin Potato
       <div class="list">
 BUILD YOUR OWN - RIGHT LINE
 Protein
-Cheeses
+Cheese
 Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-The Ultimate Fig-Brie
-Fig jam & Ricotta Sub
+BLT
+Grilled Veggies, Quinoa, Beans, and Roasted Eggplant
 
 HOT COUNTER - LEFT LINE
-Chicken Tikka Masala Sub
-Curry Seitan with Vegetables
+Mike's Hot Honey Chicken with Mozzarella
+Buffalo Breaded Cauliflower
 </div>
       <br>
     </div>
@@ -93,18 +93,17 @@ Curry Seitan with Vegetables
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-BBQ Pulled Pork
-Mashed Potatoes
-Quinoa
-Red Beans
+French Toast
+Scrambled Eggs
+Roasted Potatoes
+Pork Bacon
+Sausage Gravy
+Biscuits
 
 VEGAN STATION
-Vegan Chicken Nuggets
-Cilantro Rice
-Steamed Broccoli
-
-ACTION STATION
-Bread Pudding
+Ratatouille
+Tofu Scramble
+Beyond Sausage
 </div>
       <br>
     </div>
@@ -115,12 +114,15 @@ Bread Pudding
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 MAIN LINE
-Italian Burger
-Salmon Avocado Wrap
-Lamb and Beef Gyro with Tzatziki
-Pot Roast Quesadilla
-Beyond Italian Burger
-Creamy Tomato Soup in Grilled Cheese Bread Bowl
+Fried Items
+
+DAILY OFFERINGS
+Cheeseburger
+Turkey Burger
+Beyond Burger
+Black Bean Burger
+Crispy Chicken Sandwich
+Grilled Chicken
 </div>
     <br>
     </div>
@@ -129,10 +131,36 @@ Creamy Tomato Soup in Grilled Cheese Bread Bowl
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 GRILL
-Turkey Meatloaf
+Greek Meditteranean Burger
+Grilled Three Cheese on Texas Toast
 
 VEGAN & VEGETARIAN STATION
-Vegan Chicken Cacciatore
+Fried Edamame Dumplings
+
+DAILY PIZZAS
+3 Cheese Flatbread Pizza
+Pepperoni Pizza
+Mushroom Flatbread Pizza
+
+GRILL
+Shake & Bake Pork Chops
+Green Rice
+Vegetable Medley
+
+VEGAN & VEGETARIAN STATION
+Grilled Tofu
+Cauliflower Rice
+Baked Tomatoes
+
+DAILY PIZZAS
+3 Cheese Pizza
+Pepperoni Pizza
+Mushroom Flatbread Pizza
+
+GRAIN BOWL
+Tandoori Chicken
+Roasted Tomato & Cauliflower
+Spicy Eggplant
 </div>
       <br>
     </div>
