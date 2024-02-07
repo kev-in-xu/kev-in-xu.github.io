@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 07 February, 2024 at 12:08:41
+  Summary on Wednesday, 07 February, 2024 at 14:18:16
   <br><br>
   Ferris has Grilled Cheese today!
   <br>
@@ -43,6 +43,28 @@ Jasmine Rice
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
+SOUP STATION
+Oatmeal
+Pineapple Upside Down Cake (Pineapple, Cherry)
+Farina
+
+MAIN LINE
+Scramble Eggs
+Leek, Mushrooms, Asparagus Egg White Scramble
+Pancakes
+Brussel Sprouts
+Tri Patty
+Andouille
+
+VEGAN STATION
+Just Egg Patty
+Brussel Sprouts
+Tri Patty
+
+NOOK
+French Toast Sticks
+Apple Turnover
+
 MAIN LINE
 Beef & Chicken Meatballs
 Spaghetti with Marinara Sauce
@@ -64,6 +86,47 @@ VEGAN STATION
 Vegan Meatballs
 Spaghetti with Marinara Sauce
 Green Beans
+
+MAIN LINE
+Beef Sloppy Joe
+Pretzel Buns
+Tater Tots
+Roasted Carrots
+Baked Beans
+
+HALAL STATION
+Beef Sloppy Joe
+Pretzel Buns
+Roasted Carrots
+
+GLUTEN FREE STATION
+Beef Sloppy Joe
+Gluten Free Buns
+Roasted Carrots
+
+VEGAN STATION
+Impossible Beef Sloppy Joe
+Pretzel Buns
+Roasted Carrots
+
+PASTA STATION
+Marinara
+Sundried Tomato Pesto
+Garlic Oil
+
+SOUP STATION
+Chicken Noodle
+Broccoli & Cheddar
+
+FUSION STATION
+Pulled Chicken Banh Mi
+Pulled Vegan Chicken Banh Mi
+
+ACTION STATION
+Mac & Cheese Bar
+
+GRILL
+Beef & Lamb Gyro
 </div>
       <br>
     </div>
@@ -100,6 +163,19 @@ Pork Bacon
 Sausage Gravy
 Biscuits
 
+VEGAN STATION
+Ratatouille
+Tofu Scramble
+Beyond Sausage
+
+MAIN LINE
+French Toast
+Scrambled Eggs
+Roasted Potatoes
+Pork Bacon
+Sausage Gravy
+Biscuits
+
 ACTION STATION
 Grilled Cheese Bar
 
@@ -111,6 +187,20 @@ VEGAN STATION
 Pineapple Coconut Rice
 BBQ Smoked Tofu
 Vegetable Medley
+
+MAIN LINE
+BBQ Brisket
+Cornbread
+Barley Pilaf
+Roasted Carrots
+
+VEGAN STATION
+BBQ Tofu
+Barley Pilaf
+Succotash
+
+ACTION STATION
+Quesadilla Bar
 </div>
       <br>
     </div>
@@ -134,17 +224,10 @@ Spinach & Artichoke Dip Grilled Cheese
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-GRILL
-Greek Meditteranean Burger
-Grilled Three Cheese on Texas Toast
-
-VEGAN & VEGETARIAN STATION
-Fried Edamame Dumplings
-
-DAILY PIZZAS
-3 Cheese Flatbread Pizza
-Pepperoni Pizza
-Mushroom Flatbread Pizza
+GRAIN BOWL
+Tandoori Chicken
+Roasted Tomato & Cauliflower
+Spicy Eggplant
 </div>
       <br>
     </div>
