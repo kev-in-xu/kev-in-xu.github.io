@@ -15,9 +15,9 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 07 February, 2024 at 10:14:48
+  Summary on Wednesday, 07 February, 2024 at 12:08:41
   <br><br>
-  Ferris has nothing good today :(
+  Ferris has Grilled Cheese today!
   <br>
   Fac House has nothing good today :(
   <br>
@@ -43,27 +43,27 @@ Jasmine Rice
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-SOUP STATION
-Oatmeal
-Pineapple Upside Down Cake (Pineapple, Cherry)
-Farina
-
 MAIN LINE
-Scramble Eggs
-Leek, Mushrooms, Asparagus Egg White Scramble
-Pancakes
-Brussel Sprouts
-Tri Patty
-Andouille
+Beef & Chicken Meatballs
+Spaghetti with Marinara Sauce
+Green Beans with Garlic Oil
+Farro with Roasted Vegetables
+Cannellini Beans
+
+HALAL STATION
+Beef & Chicken Meatballs
+Spaghetti with Marinara Sauce
+Green Beans
+
+GLUTEN FREE STATION
+Beef Meatballs
+Gluten Free Penne & Marinara
+Green Beans
 
 VEGAN STATION
-Just Egg Patty
-Brussel Sprouts
-Tri Patty
-
-NOOK
-French Toast Sticks
-Apple Turnover
+Vegan Meatballs
+Spaghetti with Marinara Sauce
+Green Beans
 </div>
       <br>
     </div>
@@ -100,10 +100,17 @@ Pork Bacon
 Sausage Gravy
 Biscuits
 
+ACTION STATION
+Grilled Cheese Bar
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
 VEGAN STATION
-Ratatouille
-Tofu Scramble
-Beyond Sausage
+Pineapple Coconut Rice
+BBQ Smoked Tofu
+Vegetable Medley
 </div>
       <br>
     </div>
@@ -114,15 +121,12 @@ Beyond Sausage
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 MAIN LINE
-Fried Items
-
-DAILY OFFERINGS
-Cheeseburger
-Turkey Burger
-Beyond Burger
-Black Bean Burger
-Crispy Chicken Sandwich
-Grilled Chicken
+JJ's Garbage Plate
+Fish and Chips
+Chicken Bacon Ranch Sandwich
+Coconut Pineapple Pancakes
+Root Vegetable Wrap with Dijon Tahini Dressing
+Spinach & Artichoke Dip Grilled Cheese
 </div>
     <br>
     </div>
@@ -141,26 +145,6 @@ DAILY PIZZAS
 3 Cheese Flatbread Pizza
 Pepperoni Pizza
 Mushroom Flatbread Pizza
-
-GRILL
-Shake & Bake Pork Chops
-Green Rice
-Vegetable Medley
-
-VEGAN & VEGETARIAN STATION
-Grilled Tofu
-Cauliflower Rice
-Baked Tomatoes
-
-DAILY PIZZAS
-3 Cheese Pizza
-Pepperoni Pizza
-Mushroom Flatbread Pizza
-
-GRAIN BOWL
-Tandoori Chicken
-Roasted Tomato & Cauliflower
-Spicy Eggplant
 </div>
       <br>
     </div>
