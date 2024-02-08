@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Thursday, 08 February, 2024 at 11:08:49
+  Summary on Thursday, 08 February, 2024 at 18:22:57
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -44,26 +44,26 @@ Rice & Beans
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Pork Ribs
-Mac & Cheese
-Cajun Quinoa
-Roasted Corn
-Black Eyed Peas
+Peruvian Chicken
+Spicy Peruvian Green Sauce
+Vegetable Medley
+Rice Pilaf
+Butter Beans
 
 HALAL STATION
-BBQ Chicken
-Roasted Corn
-Roasted Fingerling Potatoes
+Peruvian Chicken
+Vegetable Medley
+Rice Pilaf
 
 GLUTEN FREE STATION
-BBQ Chicken
-Roasted Corn
-Roasted Finerling Potatoes
+Peruvian Chicken
+Vegetable Medley
+Rice Pilaf
 
 VEGAN STATION
-Vegan Fish
-Roasted Corn
-Roasted Fingerling Potato
+Mindful Chicken Bulgogi
+Vegetable Medley
+Rice Pilaf
 </div>
       <br>
     </div>
@@ -93,25 +93,18 @@ Roasted Eggplant Sub
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Belgium Waffles
-Scrambled Eggs
-Sweet Potato Tots
-Ham
-Sausage Gravy
-Biscuits
-
-ACTION STATION
-Buffalo Chicken Wrap
-Buffalo Cauliflower Wrap
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
+Crab Cake
+Cous Cous
+Bulgar
+Green Beans & Carrots
 
 VEGAN STATION
-Vegan Orange Chicken Nugget
-Peas & Carrots
-Beets Rice
+Jerk Tofu
+Cabbage
+Cous Cous
+
+ACTION STATION
+Chicken Shawarma Wrap
 </div>
       <br>
     </div>
@@ -121,16 +114,13 @@ Beets Rice
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-FRY STATION
-Fried Items
-
-DAILY OFFERINGS
-Cheeseburger
-Turkey Burger
-Beyond Burger
-Black Bean Burger
-Crispy Chicken Sandwich
-Grilled Chicken
+MAIN LINE
+Smothered Porkchops with Garlic Mashed Potatoes
+Tofu with Collard Greens
+Beef Stew Over Rice
+BBQ Pulled Chicken Sandwich
+Baked Macaroni and Cheese
+Sweet Potato Pancakes
 </div>
     <br>
     </div>
@@ -139,16 +129,17 @@ Grilled Chicken
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 GRILL
-Angus Burger
-Grilled Cheese BLT with Fried Avocado
+Pepper Steak
+White Rice
+Green Beans
 
 VEGAN & VEGETARIAN STATION
-Tortellini Bar
+Vegan Fish
 
 DAILY PIZZAS
-The Trio Cheese Flatbread Pizza
+Three Cheese Pizza
 Sausage Pizza
-Vegan Tandoori Cauliflower
+Vegan Tandoori Cauliflower Pizza
 </div>
       <br>
     </div>
