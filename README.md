@@ -15,9 +15,9 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 07 February, 2024 at 16:06:34
+  Summary on Thursday, 08 February, 2024 at 11:08:49
   <br><br>
-  Ferris has Grilled Cheese today!
+  Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
@@ -30,12 +30,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Beef Teriyaki
-Dal Makhani
-Vegetable Lo Mein
-Steamed Broccoli
-Quinoa Pilaf
-Jasmine Rice
+BBQ Chicken
+Chana Dal (Chickpeas & Lentils)
+Mac & Cheese
+Baby Carrots & Cauliflower Rice
+Bulgur Wheat Pilaf
+Rice & Beans
 </div>
     <br>
     </div>
@@ -43,90 +43,27 @@ Jasmine Rice
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-SOUP STATION
-Oatmeal
-Pineapple Upside Down Cake (Pineapple, Cherry)
-Farina
-
 MAIN LINE
-Scramble Eggs
-Leek, Mushrooms, Asparagus Egg White Scramble
-Pancakes
-Brussel Sprouts
-Tri Patty
-Andouille
-
-VEGAN STATION
-Just Egg Patty
-Brussel Sprouts
-Tri Patty
-
-NOOK
-French Toast Sticks
-Apple Turnover
-
-MAIN LINE
-Beef & Chicken Meatballs
-Spaghetti with Marinara Sauce
-Green Beans with Garlic Oil
-Farro with Roasted Vegetables
-Cannellini Beans
+Pork Ribs
+Mac & Cheese
+Cajun Quinoa
+Roasted Corn
+Black Eyed Peas
 
 HALAL STATION
-Beef & Chicken Meatballs
-Spaghetti with Marinara Sauce
-Green Beans
+BBQ Chicken
+Roasted Corn
+Roasted Fingerling Potatoes
 
 GLUTEN FREE STATION
-Beef Meatballs
-Gluten Free Penne & Marinara
-Green Beans
+BBQ Chicken
+Roasted Corn
+Roasted Finerling Potatoes
 
 VEGAN STATION
-Vegan Meatballs
-Spaghetti with Marinara Sauce
-Green Beans
-
-MAIN LINE
-Beef Sloppy Joe
-Pretzel Buns
-Tater Tots
-Roasted Carrots
-Baked Beans
-
-HALAL STATION
-Beef Sloppy Joe
-Pretzel Buns
-Roasted Carrots
-
-GLUTEN FREE STATION
-Beef Sloppy Joe
-Gluten Free Buns
-Roasted Carrots
-
-VEGAN STATION
-Impossible Beef Sloppy Joe
-Pretzel Buns
-Roasted Carrots
-
-PASTA STATION
-Marinara
-Sundried Tomato Pesto
-Garlic Oil
-
-SOUP STATION
-Chicken Noodle
-Broccoli & Cheddar
-
-FUSION STATION
-Pulled Chicken Banh Mi
-Pulled Vegan Chicken Banh Mi
-
-ACTION STATION
-Mac & Cheese Bar
-
-GRILL
-Beef & Lamb Gyro
+Vegan Fish
+Roasted Corn
+Roasted Fingerling Potato
 </div>
       <br>
     </div>
@@ -143,12 +80,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-BLT
-Grilled Veggies, Quinoa, Beans, and Roasted Eggplant
+Chicken Caesar Sub
+Sweet Spicy Curry Chickpea Cool Cucumber
 
 HOT COUNTER - LEFT LINE
-Mike's Hot Honey Chicken with Mozzarella
-Buffalo Breaded Cauliflower
+Brisket, Pickle, Coleslaw, BBQ Sauce
+Roasted Eggplant Sub
 </div>
       <br>
     </div>
@@ -156,51 +93,25 @@ Buffalo Breaded Cauliflower
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-French Toast
+Belgium Waffles
 Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
-Sausage Gravy
-Biscuits
-
-VEGAN STATION
-Ratatouille
-Tofu Scramble
-Beyond Sausage
-
-MAIN LINE
-French Toast
-Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
+Sweet Potato Tots
+Ham
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Grilled Cheese Bar
+Buffalo Chicken Wrap
+Buffalo Cauliflower Wrap
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Pineapple Coconut Rice
-BBQ Smoked Tofu
-Vegetable Medley
-
-MAIN LINE
-BBQ Brisket
-Cornbread
-Barley Pilaf
-Roasted Carrots
-
-VEGAN STATION
-BBQ Tofu
-Barley Pilaf
-Succotash
-
-ACTION STATION
-Quesadilla Bar
+Vegan Orange Chicken Nugget
+Peas & Carrots
+Beets Rice
 </div>
       <br>
     </div>
@@ -210,13 +121,16 @@ Quesadilla Bar
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-MAIN LINE
-JJ's Garbage Plate
-Fish and Chips
-Chicken Bacon Ranch Sandwich
-Coconut Pineapple Pancakes
-Root Vegetable Wrap with Dijon Tahini Dressing
-Spinach & Artichoke Dip Grilled Cheese
+FRY STATION
+Fried Items
+
+DAILY OFFERINGS
+Cheeseburger
+Turkey Burger
+Beyond Burger
+Black Bean Burger
+Crispy Chicken Sandwich
+Grilled Chicken
 </div>
     <br>
     </div>
@@ -225,19 +139,16 @@ Spinach & Artichoke Dip Grilled Cheese
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 GRILL
-Shake & Bake Pork Chops
-Green Rice
-Vegetable Medley
+Angus Burger
+Grilled Cheese BLT with Fried Avocado
 
 VEGAN & VEGETARIAN STATION
-Grilled Tofu
-Cauliflower Rice
-Baked Tomatoes
+Tortellini Bar
 
 DAILY PIZZAS
-3 Cheese Pizza
-Pepperoni Pizza
-Mushroom Flatbread Pizza
+The Trio Cheese Flatbread Pizza
+Sausage Pizza
+Vegan Tandoori Cauliflower
 </div>
       <br>
     </div>
