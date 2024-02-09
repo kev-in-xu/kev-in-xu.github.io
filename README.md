@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Thursday, 08 February, 2024 at 18:22:57
+  Summary on Friday, 09 February, 2024 at 08:28:37
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -30,41 +30,19 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-BBQ Chicken
-Chana Dal (Chickpeas & Lentils)
+Broiled Cod with Saffron Cream
+Buffalo Tofu
 Mac & Cheese
-Baby Carrots & Cauliflower Rice
-Bulgur Wheat Pilaf
-Rice & Beans
+Roasted Corn with Bell Peppers
+Brown Rice Pilaf
+Mashed Potatoes
 </div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-MAIN LINE
-Peruvian Chicken
-Spicy Peruvian Green Sauce
-Vegetable Medley
-Rice Pilaf
-Butter Beans
-
-HALAL STATION
-Peruvian Chicken
-Vegetable Medley
-Rice Pilaf
-
-GLUTEN FREE STATION
-Peruvian Chicken
-Vegetable Medley
-Rice Pilaf
-
-VEGAN STATION
-Mindful Chicken Bulgogi
-Vegetable Medley
-Rice Pilaf
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
   </div>
@@ -80,12 +58,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-Chicken Caesar Sub
-Sweet Spicy Curry Chickpea Cool Cucumber
+Roasted Brussel Sprouts, Chicken, and Pears w/ Balsamic Vinegar
+Roasted Brussel Sprouts, Tofu, and Pears w/ Balsamic Vinegar
 
 HOT COUNTER - LEFT LINE
-Brisket, Pickle, Coleslaw, BBQ Sauce
-Roasted Eggplant Sub
+Sweet Chili Chicken Sandwich
+Vegan Sweet Chili Chicken
 </div>
       <br>
     </div>
@@ -93,18 +71,17 @@ Roasted Eggplant Sub
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Crab Cake
-Cous Cous
-Bulgar
-Green Beans & Carrots
+Blueberry Pancakes
+Scrambled Eggs
+Potato Pancakes
+Turkey Bacon
+Sausage Gravy
+Biscuits
 
 VEGAN STATION
-Jerk Tofu
-Cabbage
-Cous Cous
-
-ACTION STATION
-Chicken Shawarma Wrap
+Quinoa & Mixed Berry
+Just Egg Patty
+Beyond Breakfast Sausage
 </div>
       <br>
     </div>
@@ -114,13 +91,16 @@ Chicken Shawarma Wrap
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-MAIN LINE
-Smothered Porkchops with Garlic Mashed Potatoes
-Tofu with Collard Greens
-Beef Stew Over Rice
-BBQ Pulled Chicken Sandwich
-Baked Macaroni and Cheese
-Sweet Potato Pancakes
+FRY STATION
+Fried Items
+
+DAILY OFFERINGS
+Cheeseburger
+Turkey Burger
+Beyond Burger
+Black Bean Burger
+Crispy Chicken Sandwich
+Grilled Chicken
 </div>
     <br>
     </div>
@@ -129,17 +109,22 @@ Sweet Potato Pancakes
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 GRILL
-Pepper Steak
-White Rice
-Green Beans
+Chicken & Waffles Bar
+Omelet Bar
+Cajun Shrimp with Southern Cheese Grits
 
 VEGAN & VEGETARIAN STATION
-Vegan Fish
+Falafel Bar
 
 DAILY PIZZAS
 Three Cheese Pizza
-Sausage Pizza
-Vegan Tandoori Cauliflower Pizza
+Sausage Flatbread Pizza
+Vegan Sausage & Peppers Pizza
+
+GRAIN BOWL
+Mediterranean Chicken
+Mediterranean Butter Beans
+Farro
 </div>
       <br>
     </div>
