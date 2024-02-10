@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Friday, 09 February, 2024 at 08:28:37
+  Summary on Friday, 09 February, 2024 at 22:17:54
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -82,6 +82,40 @@ VEGAN STATION
 Quinoa & Mixed Berry
 Just Egg Patty
 Beyond Breakfast Sausage
+
+MAIN LINE
+BlueberryPancakes
+Scrambled Eggs
+Potato Pancakes
+Turkey Bacon
+Sausage Gravy
+Biscuits
+
+ACTION STATION
+Shrimp Tacos
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
+VEGAN STATION
+Latin Rice with Vegan Chorizo
+Black Beans
+Charred Plantains
+
+MAIN LINE
+Smothered Pork Chops
+Diryt Rice
+Wheatberries
+Asparagus, Carrots, & Cabbage
+
+VEGAN STATION
+Sweet & Sour Tofu
+Jasmine Rice
+Asparagus, Carrots, Cabbage
+
+ACTION STATION
+Baked Potato Bar
 </div>
       <br>
     </div>
@@ -91,16 +125,8 @@ Beyond Breakfast Sausage
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-FRY STATION
-Fried Items
-
-DAILY OFFERINGS
-Cheeseburger
-Turkey Burger
-Beyond Burger
-Black Bean Burger
-Crispy Chicken Sandwich
-Grilled Chicken
+GRILL
+Jamaica Beef Patty
 </div>
     <br>
     </div>
