@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Saturday, 10 February, 2024 at 10:47:03
+  Summary on Saturday, 10 February, 2024 at 15:02:26
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -60,6 +60,40 @@ VEGAN STATION
 Hash Brown Patty
 Tofu Scramble
 Beyond Sausage
+
+MAIN LINE
+Pancakes
+Scrambled Eggs
+Hash Brown Patty
+Chicken Sausage
+Sausage Gravy
+Biscuits
+
+ACTION STATION
+Bagel Schmear Bar
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
+VEGAN STATION
+Vegan Chili
+Rice Pilaf
+Red Kidney Beans
+
+MAIN LINE
+Herb Roasted Pork Chop with Sweet & Sour Sauce
+Mac & Cheese
+Corn Bread
+Quinoa Pilaf
+
+VEGAN STATION
+Vegan Chili
+Rice Pilaf
+Red Kidney Beans
+
+ACTION STATION
+Fried Rice Bar
 </div>
       <br>
     </div>
@@ -76,12 +110,6 @@ Roast Beef with Horseradish Mayo Sandwich
 Croissant French Toast
 Vegan Picadillo Taco
 Roasted Sweet Potato and Feta Wrap
-
-GRILL
-Philly Cheesesteak Eggrolls
-
-FRY STATION
-Fried Items
 </div>
     <br>
     </div>
