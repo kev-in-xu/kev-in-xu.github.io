@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Friday, 09 February, 2024 at 22:17:54
+  Summary on Saturday, 10 February, 2024 at 10:47:03
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -28,15 +28,7 @@ Dining Info
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
-    <div class="list">
-MAIN LINE
-Broiled Cod with Saffron Cream
-Buffalo Tofu
-Mac & Cheese
-Roasted Corn with Bell Peppers
-Brown Rice Pilaf
-Mashed Potatoes
-</div>
+    <div class="list">No data on menu items</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
@@ -50,72 +42,24 @@ Mashed Potatoes
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-BUILD YOUR OWN - RIGHT LINE
-Protein
-Cheese
-Toppings
-Dressings
-
-COLD COUNTER - MIDDLE LINE
-Roasted Brussel Sprouts, Chicken, and Pears w/ Balsamic Vinegar
-Roasted Brussel Sprouts, Tofu, and Pears w/ Balsamic Vinegar
-
-HOT COUNTER - LEFT LINE
-Sweet Chili Chicken Sandwich
-Vegan Sweet Chili Chicken
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Blueberry Pancakes
+Pancakes
 Scrambled Eggs
-Potato Pancakes
-Turkey Bacon
+Hash Brown Patty
+Chicken Sausage
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
-Quinoa & Mixed Berry
-Just Egg Patty
-Beyond Breakfast Sausage
-
-MAIN LINE
-BlueberryPancakes
-Scrambled Eggs
-Potato Pancakes
-Turkey Bacon
-Sausage Gravy
-Biscuits
-
-ACTION STATION
-Shrimp Tacos
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
-VEGAN STATION
-Latin Rice with Vegan Chorizo
-Black Beans
-Charred Plantains
-
-MAIN LINE
-Smothered Pork Chops
-Diryt Rice
-Wheatberries
-Asparagus, Carrots, & Cabbage
-
-VEGAN STATION
-Sweet & Sour Tofu
-Jasmine Rice
-Asparagus, Carrots, Cabbage
-
-ACTION STATION
-Baked Potato Bar
+Hash Brown Patty
+Tofu Scramble
+Beyond Sausage
 </div>
       <br>
     </div>
@@ -125,33 +69,26 @@ Baked Potato Bar
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
+MAIN LINE
+Cheesesteak Burger
+Curried Chicken on Naan
+Roast Beef with Horseradish Mayo Sandwich
+Croissant French Toast
+Vegan Picadillo Taco
+Roasted Sweet Potato and Feta Wrap
+
 GRILL
-Jamaica Beef Patty
+Philly Cheesesteak Eggrolls
+
+FRY STATION
+Fried Items
 </div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-GRILL
-Chicken & Waffles Bar
-Omelet Bar
-Cajun Shrimp with Southern Cheese Grits
-
-VEGAN & VEGETARIAN STATION
-Falafel Bar
-
-DAILY PIZZAS
-Three Cheese Pizza
-Sausage Flatbread Pizza
-Vegan Sausage & Peppers Pizza
-
-GRAIN BOWL
-Mediterranean Chicken
-Mediterranean Butter Beans
-Farro
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
   </div>
