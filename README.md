@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Saturday, 10 February, 2024 at 15:02:26
+  Summary on Sunday, 11 February, 2024 at 16:46:13
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -34,7 +34,29 @@ Dining Info
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+PASTA STATION
+Marinara
+Alfredo Sauce
+Garlic Oil
+Bowtie Pasta
+Whole Wheat Pasta
+Sunday Sauce
+
+SOUP STATION
+Chicken Noodle
+Broccoli Cheddar
+
+FUSION STATION
+Fried Pollock
+Chana Masala
+Orange Basmati Rice
+Curried Cauliflower
+
+GRILL
+Turkey Burger Chopped Cheese
+Vegan Hot Dog
+</div>
       <br>
     </div>
   </div>
@@ -49,51 +71,38 @@ Dining Info
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Pancakes
+French Toast Sticks
 Scrambled Eggs
-Hash Brown Patty
-Chicken Sausage
-Sausage Gravy
-Biscuits
-
-VEGAN STATION
-Hash Brown Patty
-Tofu Scramble
-Beyond Sausage
-
-MAIN LINE
-Pancakes
-Scrambled Eggs
-Hash Brown Patty
-Chicken Sausage
+Potato Pancake
+Turkey Sausage
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Bagel Schmear Bar
+Chicken & Waffles
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Vegan Chili
-Rice Pilaf
-Red Kidney Beans
+Tofu Scramble
+Garlic Broccoli
+Beyond Sausage
 
 MAIN LINE
-Herb Roasted Pork Chop with Sweet & Sour Sauce
-Mac & Cheese
-Corn Bread
-Quinoa Pilaf
+Beef Bulgogi
+Jasmine Rice
+Quinoa
+Carrots
 
 VEGAN STATION
-Vegan Chili
-Rice Pilaf
-Red Kidney Beans
+Italian Sausage
+Pasta with Marinara
+Sautéed Squash & Zucchini
 
 ACTION STATION
-Fried Rice Bar
+Chicken & Waffles
 </div>
       <br>
     </div>
@@ -104,12 +113,11 @@ Fried Rice Bar
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 MAIN LINE
-Cheesesteak Burger
-Curried Chicken on Naan
-Roast Beef with Horseradish Mayo Sandwich
-Croissant French Toast
-Vegan Picadillo Taco
-Roasted Sweet Potato and Feta Wrap
+Fried Mushroom Burger
+Pork Dumplings with Chili Crisp
+Buffalo Chicken Sandwich
+Oreo Cream Stuffed French Toast
+Beyond Sloppy Joe
 </div>
     <br>
     </div>
