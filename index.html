@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Monday, 12 February, 2024 at 13:20:52
+  Summary on Monday, 12 February, 2024 at 16:29:27
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -43,27 +43,25 @@ Garlic Bread
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-MAIN LINE
-Grilled Balsamic Chicken with Roasted Tomatoes & Sauteed Mushrooms
-Garlic Bread
-Cous Cous
-Garlic Broccoli Rabe Sundried Tomato
-Butter Beans
+PASTA STATION
+Marinara
+Boursin Cream Sauce
+Basil Oil
+Rigatoni
+Chicken Alfredo
 
-HALAL STATION
-Grilled Balsamic Chicken with Roasted Tomatoes & Sauteed Mushrooms
-Garlic Broccoli Rabe Sundried Tomato
-Garlic Bread
+SOUP STATION
+Miso Soup
+Three Bean Chili
 
-GLUTEN FREE STATION
-Grilled Balsamic Chicken with Roasted Tomatoes & Sauteed Mushrooms
-Garlic Broccoli Rabe Sundried Tomato
-Brown Rice
+FUSION STATION
+Seafood Udon
+Togarashi Tofu
+Bok Choy
 
-VEGAN STATION
-5 Spiced Tofu
-Broccoli Rabe
-Brown Rice
+GRILL
+Pork Belly Bao
+Beyond Burger
 </div>
       <br>
     </div>
@@ -96,6 +94,19 @@ MAIN LINE
 Pancakes
 Scrambled Eggs
 Tater Tots
+Pork Sausage
+Sausage Gravy
+Biscuits
+
+VEGAN STATION
+Broccoli
+Tofu Scramble
+Beyond Sausage
+
+MAIN LINE
+Pancakes
+Scrambled Eggs
+Tater Tots
 Pokr Sausage
 Sausage Gravy
 Biscuits
@@ -111,6 +122,20 @@ VEGAN STATION
 Chickpea Chana Masala
 Basmati Rice
 Vegetable Medley
+
+MAIN LINE
+Chicken Cordon Bleu
+Ravioli
+Pinto Beans
+Garlic Broccoli
+
+VEGAN STATION
+Vegan Chicken Marsala
+Polenta
+Green Beans & Carrots
+
+ACTION STATION
+Baked Potato Bar
 </div>
       <br>
     </div>
@@ -135,14 +160,16 @@ Hot Cheeto & Ranch Black Bean Burger
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 GRILL
-Big Blue Bacon Mushroom Burger
+Smothered Chicken
+Wild Rice
+Fried Okra
 
 VEGAN & VEGETARIAN STATION
-Tortellini Bar
+Falafel Bar
 
 DAILY PIZZAS
 Three Cheese Pizza
-Sausage Flatbread Pizza
+Sausage Pizza
 Mushroom Pizza
 </div>
       <br>
