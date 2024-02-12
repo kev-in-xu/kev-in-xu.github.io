@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Sunday, 11 February, 2024 at 16:46:13
+  Summary on Sunday, 11 February, 2024 at 19:27:48
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -35,27 +35,27 @@ Dining Info
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-PASTA STATION
-Marinara
-Alfredo Sauce
-Garlic Oil
-Bowtie Pasta
-Whole Wheat Pasta
-Sunday Sauce
+MAIN LINE
+Chicken Chili
+Yellow Rice
+Farro
+Brussel Sprouts, Butternut Squash, & Tomatoes
+Pinto Beans
 
-SOUP STATION
-Chicken Noodle
-Broccoli Cheddar
+HALAL STATION
+Chicken Chili
+Yellow Rice
+Brussel Sprouts, Butternut Squash, & Tomatoes
 
-FUSION STATION
-Fried Pollock
-Chana Masala
-Orange Basmati Rice
-Curried Cauliflower
+GLUTEN FREE STATION
+Chicken Chili
+Yellow Rice
+Brussel Sprouts, Butternut Squash, & Tomatoes
 
-GRILL
-Turkey Burger Chopped Cheese
-Vegan Hot Dog
+VEGAN STATION
+Buffalo Tofu Nuggets
+Yellow Rice
+Brussel Sprouts, Butternut Squash, & Tomatoes
 </div>
       <br>
     </div>
@@ -70,26 +70,6 @@ Vegan Hot Dog
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
-MAIN LINE
-French Toast Sticks
-Scrambled Eggs
-Potato Pancake
-Turkey Sausage
-Sausage Gravy
-Biscuits
-
-ACTION STATION
-Chicken & Waffles
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
-VEGAN STATION
-Tofu Scramble
-Garlic Broccoli
-Beyond Sausage
-
 MAIN LINE
 Beef Bulgogi
 Jasmine Rice
