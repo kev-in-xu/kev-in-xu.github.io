@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Sunday, 11 February, 2024 at 19:27:48
+  Summary on Monday, 12 February, 2024 at 13:20:52
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -28,7 +28,15 @@ Dining Info
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
-    <div class="list">No data on menu items</div>
+    <div class="list">
+MAIN LINE
+Beef Bolognese
+Channa Masala
+Linguine with Garlic Oil
+Green Beans & Carrots
+Brown Rice Pilaf
+Garlic Bread
+</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
@@ -36,26 +44,26 @@ Dining Info
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Chicken Chili
-Yellow Rice
-Farro
-Brussel Sprouts, Butternut Squash, & Tomatoes
-Pinto Beans
+Grilled Balsamic Chicken with Roasted Tomatoes & Sauteed Mushrooms
+Garlic Bread
+Cous Cous
+Garlic Broccoli Rabe Sundried Tomato
+Butter Beans
 
 HALAL STATION
-Chicken Chili
-Yellow Rice
-Brussel Sprouts, Butternut Squash, & Tomatoes
+Grilled Balsamic Chicken with Roasted Tomatoes & Sauteed Mushrooms
+Garlic Broccoli Rabe Sundried Tomato
+Garlic Bread
 
 GLUTEN FREE STATION
-Chicken Chili
-Yellow Rice
-Brussel Sprouts, Butternut Squash, & Tomatoes
+Grilled Balsamic Chicken with Roasted Tomatoes & Sauteed Mushrooms
+Garlic Broccoli Rabe Sundried Tomato
+Brown Rice
 
 VEGAN STATION
-Buffalo Tofu Nuggets
-Yellow Rice
-Brussel Sprouts, Butternut Squash, & Tomatoes
+5 Spiced Tofu
+Broccoli Rabe
+Brown Rice
 </div>
       <br>
     </div>
@@ -64,25 +72,45 @@ Brussel Sprouts, Butternut Squash, & Tomatoes
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+BUILD YOUR OWN - RIGHT LINE
+Protein
+Cheese
+Toppings
+Dressings
+
+COLD COUNTER - MIDDLE LINE
+Southwest Chipotle Chicken
+Southwest Chipotle Tempeh
+
+HOT COUNTER - LEFT LINE
+Italian Beef
+Tricolor Potato, Beans, Quinoa, and Vegan Cheese
+</div>
       <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Beef Bulgogi
-Jasmine Rice
-Quinoa
-Carrots
-
-VEGAN STATION
-Italian Sausage
-Pasta with Marinara
-Sautéed Squash & Zucchini
+Pancakes
+Scrambled Eggs
+Tater Tots
+Pokr Sausage
+Sausage Gravy
+Biscuits
 
 ACTION STATION
-Chicken & Waffles
+Falafel Bowl
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
+VEGAN STATION
+Chickpea Chana Masala
+Basmati Rice
+Vegetable Medley
 </div>
       <br>
     </div>
@@ -93,18 +121,30 @@ Chicken & Waffles
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 MAIN LINE
-Fried Mushroom Burger
-Pork Dumplings with Chili Crisp
-Buffalo Chicken Sandwich
-Oreo Cream Stuffed French Toast
-Beyond Sloppy Joe
+Salmon Burgers with Pickled Onions and Lemon Garlic Mayo
+Turkey Herb Mayo & Cranberry Chutney Sandwich
+Hot Dog Grilled Cheese
+Cheesy Ground Beef Quesadilla
+Creamy Chickpea Salad Sandwich
+Hot Cheeto & Ranch Black Bean Burger
 </div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+GRILL
+Big Blue Bacon Mushroom Burger
+
+VEGAN & VEGETARIAN STATION
+Tortellini Bar
+
+DAILY PIZZAS
+Three Cheese Pizza
+Sausage Flatbread Pizza
+Mushroom Pizza
+</div>
       <br>
     </div>
   </div>
