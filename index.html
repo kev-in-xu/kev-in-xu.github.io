@@ -15,13 +15,13 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Monday, 12 February, 2024 at 16:29:27
+  Summary on Tuesday, 13 February, 2024 at 14:25:11
   <br><br>
   Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
-  Chef Mike's has nothing good today :(
+  Chef Mike's has Chef Mike's Grandma Special today !
   <br>
 </div>
 <div class="w3-row-padding w3-center w3-margin-top">
@@ -30,12 +30,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Beef Bolognese
-Channa Masala
-Linguine with Garlic Oil
-Green Beans & Carrots
-Brown Rice Pilaf
-Garlic Bread
+Roast Chicken
+Chana Dal (Chickpeas & Lentils)
+Mac & Cheese
+Mixed Vegetables
+Bulgur Wheat Pilaf
+Rice & Beans
 </div>
     <br>
     </div>
@@ -43,25 +43,14 @@ Garlic Bread
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-PASTA STATION
-Marinara
-Boursin Cream Sauce
-Basil Oil
-Rigatoni
-Chicken Alfredo
-
 SOUP STATION
-Miso Soup
-Three Bean Chili
+New England Clam Chowder
+Lentil Soup
 
 FUSION STATION
-Seafood Udon
-Togarashi Tofu
-Bok Choy
-
-GRILL
-Pork Belly Bao
-Beyond Burger
+Grillades
+Lentil Gumbo
+Grits
 </div>
       <br>
     </div>
@@ -78,12 +67,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-Southwest Chipotle Chicken
-Southwest Chipotle Tempeh
+The Fran
+Hummus & White Bean Sandwich
 
 HOT COUNTER - LEFT LINE
-Italian Beef
-Tricolor Potato, Beans, Quinoa, and Vegan Cheese
+Chef Mike's Grandma Special
+Chef Mike's Vegan Grandma's Special
 </div>
       <br>
     </div>
@@ -91,51 +80,51 @@ Tricolor Potato, Beans, Quinoa, and Vegan Cheese
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Pancakes
+Apple Pancakes
 Scrambled Eggs
-Tater Tots
-Pork Sausage
+Hash Brown Patty
+Chicken Sausage
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
-Broccoli
-Tofu Scramble
+Curry Cauliflower
+Just Egg Patty
 Beyond Sausage
 
 MAIN LINE
-Pancakes
+Apple Pancakes
 Scrambled Eggs
-Tater Tots
-Pokr Sausage
+Hash Brown Patty
+Chicken Sausage
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Falafel Bowl
+Panini Bar
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Chickpea Chana Masala
-Basmati Rice
+Sticky Tofu
+Brown Rice
 Vegetable Medley
 
 MAIN LINE
-Chicken Cordon Bleu
-Ravioli
-Pinto Beans
-Garlic Broccoli
+One Pot Chicken, Sausage, & Beans
+Shrimp & Grits
+Cajun Mac & Cheese
+Chipotle Buttered Corn
 
 VEGAN STATION
-Vegan Chicken Marsala
-Polenta
-Green Beans & Carrots
+Roasted Corn on the Cob
+Mac & Cheese
+Cajun Chicken & Beans
 
 ACTION STATION
-Baked Potato Bar
+Beignets
 </div>
       <br>
     </div>
@@ -146,12 +135,12 @@ Baked Potato Bar
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 MAIN LINE
-Salmon Burgers with Pickled Onions and Lemon Garlic Mayo
-Turkey Herb Mayo & Cranberry Chutney Sandwich
-Hot Dog Grilled Cheese
-Cheesy Ground Beef Quesadilla
-Creamy Chickpea Salad Sandwich
-Hot Cheeto & Ranch Black Bean Burger
+Blackened Catfish Sandwich
+Shrimp & Chicken Jambalaya
+Cajun Shrimp & Grits
+Bananas Foster Pancakes
+Vegan Jambalaya
+Red Beans & Rice
 </div>
     <br>
     </div>
@@ -159,18 +148,10 @@ Hot Cheeto & Ranch Black Bean Burger
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-GRILL
-Smothered Chicken
-Wild Rice
-Fried Okra
-
-VEGAN & VEGETARIAN STATION
-Falafel Bar
-
-DAILY PIZZAS
-Three Cheese Pizza
-Sausage Pizza
-Mushroom Pizza
+SALAD
+Honey Creole Chicken
+Okra and Tomatoes
+Sweet Potato
 </div>
       <br>
     </div>
