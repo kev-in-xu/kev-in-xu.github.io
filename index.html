@@ -15,13 +15,13 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 14 February, 2024 at 12:20:01
+  Summary on Thursday, 15 February, 2024 at 10:12:10
   <br><br>
-  Ferris has Grilled Cheese today!
+  Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
-  Chef Mike's has Beef Reuben today !
+  Chef Mike's has nothing good today :(
   <br>
 </div>
 <div class="w3-row-padding w3-center w3-margin-top">
@@ -30,12 +30,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Beef Stew
-Yellow Dal (Lentils)
-Mac & Cheese
-Mixed Vegetables
-Mixed Grains Pilaf
-Mashed Potatoes
+(Switch-a-Roo Thursday)
+Chicken Makhani (Chicken & Butter)
+Dal Makhani (Lentils & Butter)
+Potatoes, Peas & Cauliflower
+Steamed Jasmine Rice
+Naan Bread
 </div>
     <br>
     </div>
@@ -43,27 +43,27 @@ Mashed Potatoes
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
+SOUP STATION
+Oatmeal
+Strawberry Oatmeal
+Cornmeal Porridge
+
 MAIN LINE
-Bulgogi Beef
-Kimchi Fried Rice
-Kasha
-Green Beans & Eggplant
-Edamame
-
-HALAL STATION
-Bulgogi Beef
-Green Beans & Eggplant
-Kimchi Fried Rice
-
-GLUTEN FREE STATION
-Bulgogi
-Green Beans & Eggplant
-Kimchi Fried Rice
+Scrambled Eggs
+Kale, Mushroom, Tomato Egg White Scramble
+Pancake White Chocolate Chip
+Spinach with Peppers & Onions
+Tostones
+Dominican Sausage
 
 VEGAN STATION
-Impossible Beef Bulgogi
-Green Beans & Eggplant
-Kimchi Fried Rice
+Just Egg Patty
+Vegetable Medley
+Tostones
+
+NOOK
+Apple Turnover
+French Toast Sticks
 </div>
       <br>
     </div>
@@ -80,12 +80,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-Chicken Bacon Ranch
-Tofu Nugget
+Fresh Mozzarella with Arugula and Pesto
+Vegan Cheese with Arugula and Pesto
 
 HOT COUNTER - LEFT LINE
-Corned Beef Reuben
-Tempeh Reuben
+Chicken Parmigiana
+Vegan Chicken Parmigiana
 </div>
       <br>
     </div>
@@ -93,24 +93,17 @@ Tempeh Reuben
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-French Toast
+Belgium Waffles
 Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
+Sweet Potato Tots
+Sliced Ham
 Sausage Gravy
 Biscuits
 
-ACTION STATION
-Grilled Cheese Bar
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
 VEGAN STATION
-Sweet Potato & Chickpea Chili
-Turmeric Rice
-Tortilla Chips
+Baked Sweet Potato Wedge
+Tofu Scramble
+Beyond Breakfast Sausage
 </div>
       <br>
     </div>
@@ -121,12 +114,18 @@ Tortilla Chips
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 MAIN LINE
-Heartbreak Blues Burger
-First Date Panini
-What's "Club" Got To Do With It?
-Beet-ing Heart Burger
-Red Velvet Pancakes
-"Olive" You Very Much Quesadilla
+Tasty Tostone Burger
+Turkey, Gouda, and Arugula Panini
+Ragin Cajun Chicken Sandwich
+Raspberry Biscuit French Toast
+Roasted Vegetable Sandwich with Pea Pesto
+Cucumber Seaweed Wrap
+
+GRILL
+Philly Cheese Steak Egg Rolls
+
+FRY STATION
+Fried Items
 </div>
     <br>
     </div>
@@ -135,16 +134,34 @@ Red Velvet Pancakes
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 GRILL
-Quesadilla Burger
-Texas Double Cheese Grilled Cheese
+Angus Burger
+Tomato & Swiss Grilled Cheese
 
 VEGAN & VEGETARIAN STATION
-Rissotto Bar
+Ramen Noodle Bar
 
 DAILY PIZZAS
-3 Cheese Flatbread Pizza
-Sausage Flatbread Pizza
-Mushroom Flatbread Pizza
+The Trio Cheese Flatbread Pizza
+Sausage Pizza
+Chickpea and Cauliflower Tagine Pizza
+
+GRILL
+Shake and Bake Pork Chops
+Mac & Cheese
+Roasted Brussel Sprouts
+
+VEGAN & VEGETARIAN STATION
+Baked Potato Bar
+
+DAILY PIZZAS
+Three Cheese Pizza
+Sausage Pizza
+Chickpea and Cauliflower Tagine Flatbread Pizza
+
+GRAIN BOWL
+Balsamic Glazed Chicken
+Herb Tofu
+Oven Roasted Brussel Sprouts
 </div>
       <br>
     </div>
