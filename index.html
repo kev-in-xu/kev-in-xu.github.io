@@ -15,11 +15,11 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Thursday, 15 February, 2024 at 10:12:10
+  Summary on Friday, 16 February, 2024 at 11:29:32
   <br><br>
   Ferris has nothing good today :(
   <br>
-  Fac House has nothing good today :(
+  Fac House has salmon today!
   <br>
   Chef Mike's has nothing good today :(
   <br>
@@ -30,41 +30,19 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-(Switch-a-Roo Thursday)
-Chicken Makhani (Chicken & Butter)
-Dal Makhani (Lentils & Butter)
-Potatoes, Peas & Cauliflower
-Steamed Jasmine Rice
-Naan Bread
+BBQ Salmon
+Dal (Lentils)
+Mac & Cheese
+Mixed Vegetables
+Mixed Grains Pilaf
+Rice & Beans
 </div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-SOUP STATION
-Oatmeal
-Strawberry Oatmeal
-Cornmeal Porridge
-
-MAIN LINE
-Scrambled Eggs
-Kale, Mushroom, Tomato Egg White Scramble
-Pancake White Chocolate Chip
-Spinach with Peppers & Onions
-Tostones
-Dominican Sausage
-
-VEGAN STATION
-Just Egg Patty
-Vegetable Medley
-Tostones
-
-NOOK
-Apple Turnover
-French Toast Sticks
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
   </div>
@@ -80,12 +58,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-Fresh Mozzarella with Arugula and Pesto
-Vegan Cheese with Arugula and Pesto
+Italian Sub
+Italian Style Tofu
 
 HOT COUNTER - LEFT LINE
-Chicken Parmigiana
-Vegan Chicken Parmigiana
+Chef Mike's Bánh Mì
+Tofu Bánh Mì
 </div>
       <br>
     </div>
@@ -93,17 +71,24 @@ Vegan Chicken Parmigiana
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Belgium Waffles
+Blueberry Pancakes
 Scrambled Eggs
-Sweet Potato Tots
-Sliced Ham
+Potato Pancakes
+Turkey Bacon
 Sausage Gravy
 Biscuits
 
+ACTION STATION
+Fish Tacos
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
 VEGAN STATION
-Baked Sweet Potato Wedge
-Tofu Scramble
-Beyond Breakfast Sausage
+Tofu Stir Fry with Tamarind Coconut Sauce
+Black Rice
+Vegetable Medley
 </div>
       <br>
     </div>
@@ -113,16 +98,25 @@ Beyond Breakfast Sausage
     <h3>JJs</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
+DAILY OFFERINGS
+Cheeseburger
+Turkey Burger
+Beyond Burger
+Black Bean Burger
+Crispy Chicken Sandwich
+Grilled Chicken
+
 MAIN LINE
-Tasty Tostone Burger
-Turkey, Gouda, and Arugula Panini
-Ragin Cajun Chicken Sandwich
-Raspberry Biscuit French Toast
-Roasted Vegetable Sandwich with Pea Pesto
-Cucumber Seaweed Wrap
+Grilled Pineapple Hawaiian Burger
+Fried Fish Sandwich
+Sausage and Peppers
+Copycat Taco Bell Chicken Quesadilla
+Vegan Chili with Frito's
+Truffle Mushroom Melt
+Shrimp and Grits
 
 GRILL
-Philly Cheese Steak Egg Rolls
+Jamaican Beef Patty
 
 FRY STATION
 Fried Items
@@ -134,34 +128,22 @@ Fried Items
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 GRILL
-Angus Burger
-Tomato & Swiss Grilled Cheese
+Chicken & Waffles Bar
+Omelet Bar
+Cajun Shrimp with Southern Cheese Grits
 
 VEGAN & VEGETARIAN STATION
-Ramen Noodle Bar
-
-DAILY PIZZAS
-The Trio Cheese Flatbread Pizza
-Sausage Pizza
-Chickpea and Cauliflower Tagine Pizza
-
-GRILL
-Shake and Bake Pork Chops
-Mac & Cheese
-Roasted Brussel Sprouts
-
-VEGAN & VEGETARIAN STATION
-Baked Potato Bar
+Vegan Taco Bar
 
 DAILY PIZZAS
 Three Cheese Pizza
-Sausage Pizza
-Chickpea and Cauliflower Tagine Flatbread Pizza
+Sausage Flatbread Pizza
+Mediterranean Focaccia with Artichoke Olives and Sundried Tomato
 
 GRAIN BOWL
-Balsamic Glazed Chicken
-Herb Tofu
-Oven Roasted Brussel Sprouts
+Jerk Chicken
+Fried Tofu
+Aloo Matar
 </div>
       <br>
     </div>
