@@ -15,9 +15,9 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Saturday, 17 February, 2024 at 11:33:54
+  Summary on Saturday, 17 February, 2024 at 14:14:13
   <br><br>
-  Ferris has nothing good today :(
+  Ferris has Popcorn Chicken today!
   <br>
   Fac House has nothing good today :(
   <br>
@@ -56,6 +56,19 @@ Chicken Sausage
 Sausage Gravy
 Biscuits
 
+VEGAN STATION
+Roasted Beets
+Tofu Scramble
+Beyond Sausage
+
+MAIN LINE
+Pancakes
+Scrambled Eggs
+Roasted Potatoes
+Chicken Sausage
+Sausage Gravy
+Biscuits
+
 ACTION STATION
 Bagel Schmear Bar
 
@@ -67,6 +80,19 @@ VEGAN STATION
 Roasted Beets
 Tofu & Spinach
 Beyond Sausage
+
+MAIN LINE
+Pernil
+Yellow Rice
+Bulgar Pilaf
+Sweet Plantains
+
+VEGAN STATION
+BBQ Jackfruit
+Roasted Eggplant
+
+ACTION STATION
+Popcorn Chicken Bowl
 </div>
       <br>
     </div>
@@ -83,12 +109,6 @@ Beef Lo Mein
 Strawberry Cheesecake Stuffed French Toast
 Vegan Meatball Sub Sandwich
 Black Bean Burger with Swiss and Caramelized Onions
-
-GRILL
-Southwest Chicken Eggrolls
-
-FRY STATION
-Fried Items
 </div>
     <br>
     </div>
