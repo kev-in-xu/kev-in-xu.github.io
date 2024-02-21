@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 21 February, 2024 at 14:52:10
+  Summary on Wednesday, 21 February, 2024 at 14:55:47
   <br><br>
   Ferris has Grilled Cheese today!
   <br>
@@ -140,9 +140,20 @@ Quesadilla Bar
   </div>
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
-    <h3>JJs</h3>
+    <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
+GRAIN BOWL
+Tandoori Chicken
+Roasted Tomato and Cauliflower
+Spicy Eggplant
+</div>
+    <br>
+    </div>
+    <div class="w3-card w3-container" style="min-height:400px">
+      <h3>JJs</h3>
+      <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
+      <div class="list">
 MAIN LINE
 Breakfast Burger
 Chicken Fettuccini Alfredo Bowl
@@ -150,17 +161,6 @@ BBQ Beef Grilled Cheese with Pickled Onions
 Red Velvet Pancakes with Cream Cheese Icing
 Grilled Vegetables with Vegan Kalamata Aioli
 Pizza Grilled Cheese
-</div>
-    <br>
-    </div>
-    <div class="w3-card w3-container" style="min-height:400px">
-      <h3>Grace Dodge</h3>
-      <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-GRAIN BOWL
-Tandoori Chicken
-Roasted Tomato and Cauliflower
-Spicy Eggplant
 </div>
       <br>
     </div>
