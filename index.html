@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 21 February, 2024 at 11:20:33
+  Summary on Wednesday, 21 February, 2024 at 12:28:04
   <br><br>
   Ferris has Grilled Cheese today!
   <br>
@@ -113,12 +113,6 @@ BBQ Beef Grilled Cheese with Pickled Onions
 Red Velvet Pancakes with Cream Cheese Icing
 Grilled Vegetables with Vegan Kalamata Aioli
 Pizza Grilled Cheese
-
-GRILL
-White Pizza Grilled Cheese
-
-FRY STATION
-Fried Items
 </div>
     <br>
     </div>
