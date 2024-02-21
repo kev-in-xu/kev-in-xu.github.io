@@ -15,13 +15,13 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 21 February, 2024 at 12:28:04
+  Summary on Wednesday, 21 February, 2024 at 14:52:10
   <br><br>
   Ferris has Grilled Cheese today!
   <br>
   Fac House has nothing good today :(
   <br>
-  Chef Mike's has nothing good today :(
+  Chef Mike's has Pastrami today !
   <br>
 </div>
 <div class="w3-row-padding w3-center w3-margin-top">
@@ -43,27 +43,29 @@ Steamed Broccoli
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-MAIN LINE
-Beef Barbacoa
-Coconut Rice & Peas
-Wheatberries
-Butternut Squash
-Northern Bean
+PASTA STATION
+Marinara Sauce
+Roasted Red Pepper Sauce
+Garlic Oil
+Tri-Color Pasta
+Whole Wheat Pasta
+Turkey Bolognese
 
-HALAL STATION
-Beef Tacos
-Butternut Squash
-Coconut Rice & Peas
+SOUP STATION
+Chicken Noodle Soup
+Tomato Bisque
 
-GLUTEN FREE STATION
-Beef Tacos
-Butternut Squash
-Coconut Rice & peas
+FUSION STATION
+Mediterranean Beef with Feta and Tomato
+Falafel
+Veggie Limpin' Susan
 
-VEGAN STATION
-Impossible Beef Tacos
-Butternut Squash
-Coconut Rice & Peas
+GRILL
+Grilled Cheese Sandwich
+Beyond Sausage
+
+ACTION STATION
+Chickpea and Mushroom Marsala
 </div>
       <br>
     </div>
@@ -72,12 +74,33 @@ Coconut Rice & Peas
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+COLD COUNTER - MIDDLE LINE
+Chicken with Swiss Cheese
+Tempeh with Grill Veggies
+
+HOT COUNTER - LEFT LINE
+Hot Pastrami
+Spicy Potato & Tofu
+</div>
       <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
+MAIN LINE
+French Toast
+Scrambled Eggs
+Roasted Potatoes
+Pork Bacon
+Sausage Gravy
+Biscuits
+
+VEGAN STATION
+Tofu Scramble
+Ratatouille
+Beyond Breakfast Sausage
+
 MAIN LINE
 French Toast
 Scrambled Eggs
@@ -97,6 +120,20 @@ VEGAN STATION
 Baked Sweet Potatoes
 Savory Black Beans
 Roasted Corn
+
+MAIN LINE
+London Broil
+Eggplant & Squash
+Barley Pilaf
+Pinto Beans
+
+VEGAN STATION
+Sweet & Sour Tofu
+Green Beans & Mushrooms
+Jasmine Rice
+
+ACTION STATION
+Quesadilla Bar
 </div>
       <br>
     </div>
@@ -120,17 +157,10 @@ Pizza Grilled Cheese
       <h3>Grace Dodge</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-GRILL
-Chipotle Bacon Burger
-Three Cheese Texas Toast
-
-VEGAN & VEGETARIAN STATION
-Fried Edamame Dumplings
-
-DAILY PIZZAS
-Three Cheese Flatbread Pizza
-Sausage Pizza
-Mushroom Pizza
+GRAIN BOWL
+Tandoori Chicken
+Roasted Tomato and Cauliflower
+Spicy Eggplant
 </div>
       <br>
     </div>
