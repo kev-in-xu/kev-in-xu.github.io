@@ -15,9 +15,9 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 20 February, 2024 at 17:19:37
+  Summary on Wednesday, 21 February, 2024 at 11:20:33
   <br><br>
-  Ferris has nothing good today :(
+  Ferris has Grilled Cheese today!
   <br>
   Fac House has nothing good today :(
   <br>
@@ -30,12 +30,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Baked Cod with Pesto Cream
-Chana Masala (Chickpeas)
+BBQ Chicken
+Yellow Dal (Lentils)
 Mac & Cheese
-Rice Pilaf
-Mixed Grains Pilaf
-Mixed Vegetables
+Roasted Sweet Potatoes
+Couscous Pilaf
+Steamed Broccoli
 </div>
     <br>
     </div>
@@ -44,25 +44,26 @@ Mixed Vegetables
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Polish Hunter's Stew
-Barley
-Vegetable Medley
-Kidney Beans
+Beef Barbacoa
+Coconut Rice & Peas
+Wheatberries
+Butternut Squash
+Northern Bean
 
 HALAL STATION
-Chicken Paprikash
-Vegetable Medley
-Mashed Potatoes
+Beef Tacos
+Butternut Squash
+Coconut Rice & Peas
 
 GLUTEN FREE STATION
-Chicken Paprikash
-Vegetable Medley
-Mashed Potatoes
+Beef Tacos
+Butternut Squash
+Coconut Rice & peas
 
 VEGAN STATION
-Cajun Tofu Nuggets
-Stewed Okra & Tomatoes
-Dirty Rice
+Impossible Beef Tacos
+Butternut Squash
+Coconut Rice & Peas
 </div>
       <br>
     </div>
@@ -71,32 +72,31 @@ Dirty Rice
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-COLD COUNTER - MIDDLE LINE
-Fresh Mozzarella
-Miso Marinated Portobello Mushrooms
-
-HOT COUNTER - LEFT LINE
-Philly Cheesesteak
-Vegan Cheesesteak
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Fried Chicken
-Mac & Cheese
-Yams
-Green Beans
-
-VEGAN STATION
-Jambalaya
-BBQ Jack Fruit
+French Toast
+Scrambled Eggs
+Roasted Potatoes
+Pork Bacon
+Sausage Gravy
+Biscuits
 
 ACTION STATION
-Po' Boy Sandwiches
+Grilled Cheese Bar
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
+VEGAN STATION
+Baked Sweet Potatoes
+Savory Black Beans
+Roasted Corn
 </div>
       <br>
     </div>
@@ -107,12 +107,18 @@ Po' Boy Sandwiches
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 MAIN LINE
-Mushroom Swiss Burger
-Pot Roast Po' Boy
-Brown Stew Chicken Over Rice
-Carnitas Quesadilla
-Mushroom & Vegan Provolone Beyond Burger
-Edamame Dumplings with Chili Crisp
+Breakfast Burger
+Chicken Fettuccini Alfredo Bowl
+BBQ Beef Grilled Cheese with Pickled Onions
+Red Velvet Pancakes with Cream Cheese Icing
+Grilled Vegetables with Vegan Kalamata Aioli
+Pizza Grilled Cheese
+
+GRILL
+White Pizza Grilled Cheese
+
+FRY STATION
+Fried Items
 </div>
     <br>
     </div>
@@ -121,15 +127,16 @@ Edamame Dumplings with Chili Crisp
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 GRILL
-Jambalaya Dinner
+Chipotle Bacon Burger
+Three Cheese Texas Toast
 
 VEGAN & VEGETARIAN STATION
-Chicken Cacciatore
+Fried Edamame Dumplings
 
 DAILY PIZZAS
-Three Cheese Pizza
-Chicken Parm Flatbread Pizza
-Mushroom Flatbread Pizza
+Three Cheese Flatbread Pizza
+Sausage Pizza
+Mushroom Pizza
 </div>
       <br>
     </div>
