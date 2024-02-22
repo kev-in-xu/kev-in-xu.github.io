@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 21 February, 2024 at 14:55:47
+  Summary on Wednesday, 21 February, 2024 at 20:05:43
   <br><br>
   Ferris has Grilled Cheese today!
   <br>
@@ -43,29 +43,27 @@ Steamed Broccoli
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-PASTA STATION
-Marinara Sauce
-Roasted Red Pepper Sauce
-Garlic Oil
-Tri-Color Pasta
-Whole Wheat Pasta
-Turkey Bolognese
+MAIN LINE
+Fried Pollock
+Red Rice
+Corn Bread
+Asparagus with Roasted Tomatoes
+Northern Bean and Butternut Squash
 
-SOUP STATION
-Chicken Noodle Soup
-Tomato Bisque
+HALAL STATION
+Roasted Salmon
+Asparagus with Roasted Tomatoes
+Red Rice
 
-FUSION STATION
-Mediterranean Beef with Feta and Tomato
-Falafel
-Veggie Limpin' Susan
+GLUTEN FREE STATION
+Roasted Salmon
+Asparagus with Roasted Tomatoes
+Red Rice
 
-GRILL
-Grilled Cheese Sandwich
-Beyond Sausage
-
-ACTION STATION
-Chickpea and Mushroom Marsala
+VEGAN STATION
+Vegan Fish
+Asparagus with Roasted Tomatoes
+Red Rice
 </div>
       <br>
     </div>
@@ -133,7 +131,7 @@ Green Beans & Mushrooms
 Jasmine Rice
 
 ACTION STATION
-Quesadilla Bar
+Philly Cheese Steak
 </div>
       <br>
     </div>
@@ -143,6 +141,29 @@ Quesadilla Bar
     <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
+GRILL
+Chipotle Bacon Burger
+Three Cheese Texas Toast
+
+VEGAN & VEGETARIAN STATION
+Fried Edamame Dumplings
+
+DAILY PIZZAS
+Three Cheese Flatbread Pizza
+Sausage Pizza
+Mushroom Pizza
+
+GRILL
+Rotisserie Chicken Dinner
+
+VEGAN & VEGETARIAN STATION
+Grilled Tofu Bowl
+
+DAILY PIZZAS
+Three Cheese Flatbread Pizza
+Sausage Pizza
+Mushroom Pizza
+
 GRAIN BOWL
 Tandoori Chicken
 Roasted Tomato and Cauliflower
