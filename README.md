@@ -15,9 +15,9 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 21 February, 2024 at 20:05:43
+  Summary on Thursday, 22 February, 2024 at 11:57:15
   <br><br>
-  Ferris has Grilled Cheese today!
+  Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
@@ -30,12 +30,11 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-BBQ Chicken
-Yellow Dal (Lentils)
-Mac & Cheese
-Roasted Sweet Potatoes
-Couscous Pilaf
-Steamed Broccoli
+Chicken Palak (Chicken & Spinach)
+Dal Makhani (Lentils & Butter)
+Potatoes, Carrots, Peas & Cauliflower Masala
+Steamed Jasmine Rice
+Green Beans
 </div>
     <br>
     </div>
@@ -44,26 +43,26 @@ Steamed Broccoli
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Fried Pollock
-Red Rice
-Corn Bread
-Asparagus with Roasted Tomatoes
-Northern Bean and Butternut Squash
+Jerk Chicken
+Roasted Potatoes
+Barley
+Vegetable Medley
+Black Eyed Peas
 
 HALAL STATION
-Roasted Salmon
-Asparagus with Roasted Tomatoes
-Red Rice
+Jerk Chicken
+Roasted Potatoes
+Vegetable Medley
 
 GLUTEN FREE STATION
-Roasted Salmon
-Asparagus with Roasted Tomatoes
-Red Rice
+Jerk Chicken
+Roasted Potatoes
+Vegetable Medley
 
 VEGAN STATION
-Vegan Fish
-Asparagus with Roasted Tomatoes
-Red Rice
+Vegan Chicken with Jerk Sauce
+Roasted Potaotes
+Vegetable Medley
 </div>
       <br>
     </div>
@@ -74,12 +73,12 @@ Red Rice
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 COLD COUNTER - MIDDLE LINE
-Chicken with Swiss Cheese
+Chicken & Swiss Sub
 Tempeh with Grill Veggies
 
 HOT COUNTER - LEFT LINE
 Hot Pastrami
-Spicy Potato & Tofu
+Spicy Potato & Tofu Sub
 </div>
       <br>
     </div>
@@ -87,51 +86,25 @@ Spicy Potato & Tofu
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-French Toast
+Belgium Waffles
 Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
-Sausage Gravy
-Biscuits
-
-VEGAN STATION
-Tofu Scramble
-Ratatouille
-Beyond Breakfast Sausage
-
-MAIN LINE
-French Toast
-Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
+Sweet Potato Tots
+Sliced Ham
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Grilled Cheese Bar
+Buffalo Chicken Wrap
+Buffalo Cauliflower Wrap
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Baked Sweet Potatoes
-Savory Black Beans
-Roasted Corn
-
-MAIN LINE
-London Broil
-Eggplant & Squash
-Barley Pilaf
-Pinto Beans
-
-VEGAN STATION
-Sweet & Sour Tofu
-Green Beans & Mushrooms
-Jasmine Rice
-
-ACTION STATION
-Philly Cheese Steak
+Smoked BBQ Tofu
+Plantains
+Baked Beans
 </div>
       <br>
     </div>
@@ -142,32 +115,17 @@ Philly Cheese Steak
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 GRILL
-Chipotle Bacon Burger
-Three Cheese Texas Toast
+Angus Burger
+Bacon, Brie & Fig Jam Grilled Cheese
+Oat Bread, Swiss & Tomato Grilled Cheese
 
 VEGAN & VEGETARIAN STATION
-Fried Edamame Dumplings
+Tortellini Bar
 
 DAILY PIZZAS
-Three Cheese Flatbread Pizza
-Sausage Pizza
-Mushroom Pizza
-
-GRILL
-Rotisserie Chicken Dinner
-
-VEGAN & VEGETARIAN STATION
-Grilled Tofu Bowl
-
-DAILY PIZZAS
-Three Cheese Flatbread Pizza
-Sausage Pizza
-Mushroom Pizza
-
-GRAIN BOWL
-Tandoori Chicken
-Roasted Tomato and Cauliflower
-Spicy Eggplant
+Traditional Cheese Flatbread Pizza
+Pepperoni Pizza
+Vegan Tandoori Cauliflower Pizza
 </div>
     <br>
     </div>
@@ -176,12 +134,18 @@ Spicy Eggplant
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Breakfast Burger
-Chicken Fettuccini Alfredo Bowl
-BBQ Beef Grilled Cheese with Pickled Onions
-Red Velvet Pancakes with Cream Cheese Icing
-Grilled Vegetables with Vegan Kalamata Aioli
-Pizza Grilled Cheese
+Turkey Burger w/ Grilled Corn Cotija Salad & Avocado
+Meatball Sub on Garlic Loaf
+B.A.M Sandwich
+Korean Popcorn Chicken Quesadilla
+Tofu Parm Hero
+Elote Black Bean Burger
+
+GRILL
+Lemongrass Chicken Potstickers
+
+FRY STATION
+Fried Items
 </div>
       <br>
     </div>
