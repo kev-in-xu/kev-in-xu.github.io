@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Thursday, 22 February, 2024 at 11:57:15
+  Summary on Thursday, 22 February, 2024 at 14:51:40
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -42,27 +42,28 @@ Green Beans
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-MAIN LINE
-Jerk Chicken
-Roasted Potatoes
-Barley
-Vegetable Medley
-Black Eyed Peas
+PASTA STATION
+Marinara Sauce
+Primavera Sauce
+Rosemary Oil
+Ziti
+Beef Bolognese
 
-HALAL STATION
-Jerk Chicken
-Roasted Potatoes
-Vegetable Medley
+SOUP STATION
+Pasta E Fagioli
+Three Bean Chili
 
-GLUTEN FREE STATION
-Jerk Chicken
-Roasted Potatoes
-Vegetable Medley
+FUSION STATION
+Roasted Lemon Chicken
+Falafel
+Lemon Potatoes
 
-VEGAN STATION
-Vegan Chicken with Jerk Sauce
-Roasted Potaotes
-Vegetable Medley
+GRILL
+Meatball Sub
+Beyond Burger
+
+ACTION STATION
+Rasta Pasta with Shrimp
 </div>
       <br>
     </div>
@@ -73,7 +74,7 @@ Vegetable Medley
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 COLD COUNTER - MIDDLE LINE
-Chicken & Swiss Sub
+Beef & Swiss Sub
 Tempeh with Grill Veggies
 
 HOT COUNTER - LEFT LINE
@@ -85,6 +86,19 @@ Spicy Potato & Tofu Sub
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
+MAIN LINE
+Belgium Waffles
+Scrambled Eggs
+Sweet Potato Tots
+Sliced Ham
+Sausage Gravy
+Biscuits
+
+VEGAN STATION
+Zucchini & Squash
+Tofu Scramble
+Beyond Breakfast Sausage
+
 MAIN LINE
 Belgium Waffles
 Scrambled Eggs
@@ -105,6 +119,20 @@ VEGAN STATION
 Smoked BBQ Tofu
 Plantains
 Baked Beans
+
+MAIN LINE
+Blackened Fish
+Yucca
+Farro
+Black Beans
+
+VEGAN STATION
+Curry Vegan Chicken
+Polenta
+Cauliflower, Asparagus, Carrots
+
+ACTION STATION
+Quesadilla Bar
 </div>
       <br>
     </div>
@@ -114,18 +142,10 @@ Baked Beans
     <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-GRILL
-Angus Burger
-Bacon, Brie & Fig Jam Grilled Cheese
-Oat Bread, Swiss & Tomato Grilled Cheese
-
-VEGAN & VEGETARIAN STATION
-Tortellini Bar
-
-DAILY PIZZAS
-Traditional Cheese Flatbread Pizza
-Pepperoni Pizza
-Vegan Tandoori Cauliflower Pizza
+GRAIN BOWL
+Bulgogi Chicken
+Orange Glaze Tofu
+Lemon Jasmine Rice
 </div>
     <br>
     </div>
@@ -140,12 +160,6 @@ B.A.M Sandwich
 Korean Popcorn Chicken Quesadilla
 Tofu Parm Hero
 Elote Black Bean Burger
-
-GRILL
-Lemongrass Chicken Potstickers
-
-FRY STATION
-Fried Items
 </div>
       <br>
     </div>
