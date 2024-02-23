@@ -15,13 +15,13 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Thursday, 22 February, 2024 at 14:51:40
+  Summary on Friday, 23 February, 2024 at 12:50:41
   <br><br>
   Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
-  Chef Mike's has Pastrami today !
+  Chef Mike's has nothing good today :(
   <br>
 </div>
 <div class="w3-row-padding w3-center w3-margin-top">
@@ -30,41 +30,19 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Chicken Palak (Chicken & Spinach)
-Dal Makhani (Lentils & Butter)
-Potatoes, Carrots, Peas & Cauliflower Masala
-Steamed Jasmine Rice
-Green Beans
+General Tso Beef
+Potato, Peas & Carrot Curry
+Linguine in Garlic Oil
+Steamed Mix Vegetables
+Mixed Grains Pilaf
+Jasmine Rice
 </div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-PASTA STATION
-Marinara Sauce
-Primavera Sauce
-Rosemary Oil
-Ziti
-Beef Bolognese
-
-SOUP STATION
-Pasta E Fagioli
-Three Bean Chili
-
-FUSION STATION
-Roasted Lemon Chicken
-Falafel
-Lemon Potatoes
-
-GRILL
-Meatball Sub
-Beyond Burger
-
-ACTION STATION
-Rasta Pasta with Shrimp
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
   </div>
@@ -73,13 +51,19 @@ Rasta Pasta with Shrimp
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
+BUILD YOUR OWN - RIGHT LINE
+Protein
+Cheese
+Toppings
+Dressings
+
 COLD COUNTER - MIDDLE LINE
-Beef & Swiss Sub
-Tempeh with Grill Veggies
+Grilled Chicken Spinach, Swiss Cheese with Ranch
+Sweet Spicy Curry Chickpea Cool Cucumber
 
 HOT COUNTER - LEFT LINE
-Hot Pastrami
-Spicy Potato & Tofu Sub
+Hot Roast Beef and Mozzarella
+Seitan French Dip Hero
 </div>
       <br>
     </div>
@@ -87,52 +71,23 @@ Spicy Potato & Tofu Sub
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Belgium Waffles
+Blueberry Pancakes
 Scrambled Eggs
-Sweet Potato Tots
-Sliced Ham
-Sausage Gravy
-Biscuits
-
-VEGAN STATION
-Zucchini & Squash
-Tofu Scramble
-Beyond Breakfast Sausage
-
-MAIN LINE
-Belgium Waffles
-Scrambled Eggs
-Sweet Potato Tots
-Sliced Ham
+Potato Pancakes
+Turkey Bacon
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Buffalo Chicken Wrap
-Buffalo Cauliflower Wrap
+Fish Tacos
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Smoked BBQ Tofu
-Plantains
-Baked Beans
-
-MAIN LINE
-Blackened Fish
-Yucca
-Farro
-Black Beans
-
-VEGAN STATION
-Curry Vegan Chicken
-Polenta
-Cauliflower, Asparagus, Carrots
-
-ACTION STATION
-Quesadilla Bar
+Korean Seitan
+Scallion Rice
 </div>
       <br>
     </div>
@@ -142,10 +97,24 @@ Quesadilla Bar
     <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
+GRILL
+Chicken & Waffles
+Shrimp & Grits
+Cook to Order Omelettes
+
+DAILY PIZZAS
+Three Cheese Pizza
+Pepperoni Pizza
+Vegan Sausage & Peppers Flatbread Pizza
+
+VEGAN & VEGETARIAN STATION
+Falafel Bar
+
 GRAIN BOWL
-Bulgogi Chicken
-Orange Glaze Tofu
-Lemon Jasmine Rice
+Mediterranean Chicken
+Mediterranean Butter Beans
+Zucchini, Squash, & Cauliflower
+Farro
 </div>
     <br>
     </div>
@@ -154,12 +123,13 @@ Lemon Jasmine Rice
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Turkey Burger w/ Grilled Corn Cotija Salad & Avocado
-Meatball Sub on Garlic Loaf
-B.A.M Sandwich
-Korean Popcorn Chicken Quesadilla
-Tofu Parm Hero
-Elote Black Bean Burger
+Poblano Burger
+Peruvian Chicken
+Chorizo & Refried Bean Burrito
+Tres Leches French Toast
+Vegan Fish Tacos
+Samosas with Tamarind Sauce
+Shrimp and Grits
 </div>
       <br>
     </div>
