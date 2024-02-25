@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Saturday, 24 February, 2024 at 16:48:05
+  Summary on Sunday, 25 February, 2024 at 11:34:23
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -34,7 +34,30 @@ Dining Info
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+MAIN LINE
+Scrambled Eggs
+Southwest Sweet Potato Hash with Chicken
+Succotash
+Biscuits
+
+HALAL STATION
+Scrambled Eggs
+Southwest Sweet Potato Hash with Chicken
+Biscuits
+Succotash
+
+GLUTEN FREE STATION
+Scrambled Eggs
+Southwest Sweet Potato Hash with Chicken
+Succotash
+
+VEGAN STATION
+Just Egg Patty
+Vegan Sausage Patty
+Southwest Sweet Potato Hash
+Succotash
+</div>
       <br>
     </div>
   </div>
@@ -51,49 +74,22 @@ Dining Info
 MAIN LINE
 Pancakes
 Scrambled Eggs
-Roasted Potatoes
-Chicken Sausage
-Sausage Gravy
-Biscuits
-
-VEGAN STATION
-Roasted Beets
-Tofu Scramble
-Beyond Sausage
-
-MAIN LINE
-Pancakes
-Scrambled Eggs
-Roasted Potatoes
-Chicken Sausage
+Potato Pancake
+Turkey Sausage
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Bagel Schmear Bar
+Waffle Bar
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Roasted Beets
+Garlic Broccoli
 Tofu Scramble
 Beyond Sausage
-
-MAIN LINE
-Roasted Pork Loin
-Tostones
-Quinoa
-Corn & Green Beans
-
-VEGAN STATION
-Chickpea Chana Masala
-Baked Sweet Potato
-Broccoli
-
-ACTION STATION
-Nacho Bar
 </div>
       <br>
     </div>
@@ -108,7 +104,28 @@ Nacho Bar
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>JJs</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+MAIN LINE
+Red White and Blue Burger
+Philly Cheesesteak Hero
+Southwest Chicken Eggrolls with Queso Sauce
+Spinach and Artichoke Dip Quesadilla
+Beyond Meat Taco
+Blue Cheese/ Onion Jam Black Bean Burger
+
+FRY STATION
+Dino Nuggets
+Mac and Cheese Bites
+Krinkle Coated Fries
+
+GRILL
+Pizza Bagel
+
+FRY STATION
+Dino Nuggets
+Mac and Cheese Bites
+Krinkle Coated Fries
+</div>
       <br>
     </div>
   </div>
