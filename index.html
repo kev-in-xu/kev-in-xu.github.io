@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 27 February, 2024 at 08:09:58
+  Summary on Tuesday, 27 February, 2024 at 10:21:08
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -28,7 +28,15 @@ Dining Info
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
-    <div class="list">No data on menu items</div>
+    <div class="list">
+MAIN LINE
+Meatball Parmesan
+Dal Makhani (Lentils)
+Linguine in Garlic Oil
+Steamed Broccoli
+Mixed Grains Pilaf
+Garlic Bread
+</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
@@ -57,72 +65,6 @@ Roasted Potatoes
 NOOK
 French Toast
 Waffle Sticks
-
-MAIN LINE
-Pollo Guisado
-Moro de Guandules
-Wheatberries
-Roasted Root Vegetables
-
-HALAL STATION
-Pollo Guisado
-Moro de Guandules
-Roasted Root Vegetables
-
-GLUTEN FREE STATION
-Pollo Guisado
-Moro de Guandules
-
-VEGAN STATION
-Jackfruit Guisado
-Moro de Guandules
-Roasted Root Vegetables
-
-MAIN LINE
-Pernil
-Maduros
-White Rice
-Stewed Eggplant
-Habichuelas Guisadas
-
-HALAL STATION
-Roasted Chicken
-Maduros
-Stewed Eggplant
-
-GLUTEN FREE STATION
-Roasted Chicken
-Maduros
-Stewed Eggplant
-
-VEGAN STATION
-Impossible Pastelon
-Stewed Eggplant
-White Rice
-
-PASTA STATION
-Marinara
-Sundried Tomato Pesto
-Basil Oil
-Ziti
-Dominican spaghetti
-
-SOUP STATION
-Sancocho
-White Rice
-
-FUSION STATION
-Fried Pollock
-Pinto Beans
-Yellow Rice
-Vegetable Medley
-
-ACTION STATION
-Ham & Cheese Pressed Sandwich
-
-GRILL
-Chimichurri Burger
-Vegan Hot Dog
 </div>
       <br>
     </div>
