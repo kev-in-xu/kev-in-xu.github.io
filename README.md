@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Sunday, 25 February, 2024 at 11:34:23
+  Summary on Tuesday, 27 February, 2024 at 08:09:58
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -35,28 +35,94 @@ Dining Info
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
+HOT COUNTER - LEFT LINE
+Oatmeal
+Avena Dominicana
+Cream of Wheat
+
 MAIN LINE
 Scrambled Eggs
-Southwest Sweet Potato Hash with Chicken
-Succotash
-Biscuits
-
-HALAL STATION
-Scrambled Eggs
-Southwest Sweet Potato Hash with Chicken
-Biscuits
-Succotash
-
-GLUTEN FREE STATION
-Scrambled Eggs
-Southwest Sweet Potato Hash with Chicken
-Succotash
+Peppers, Onion, Mushrooms Egg White Scramble
+Banana Pancakes
+Green Beans with Tomatoes
+Roasted Fingerling Potatoes
+Chicken Sausage
 
 VEGAN STATION
 Just Egg Patty
-Vegan Sausage Patty
-Southwest Sweet Potato Hash
-Succotash
+Incogmeato Sausage
+Green Beans with Tomatoes
+Roasted Potatoes
+
+NOOK
+French Toast
+Waffle Sticks
+
+MAIN LINE
+Pollo Guisado
+Moro de Guandules
+Wheatberries
+Roasted Root Vegetables
+
+HALAL STATION
+Pollo Guisado
+Moro de Guandules
+Roasted Root Vegetables
+
+GLUTEN FREE STATION
+Pollo Guisado
+Moro de Guandules
+
+VEGAN STATION
+Jackfruit Guisado
+Moro de Guandules
+Roasted Root Vegetables
+
+MAIN LINE
+Pernil
+Maduros
+White Rice
+Stewed Eggplant
+Habichuelas Guisadas
+
+HALAL STATION
+Roasted Chicken
+Maduros
+Stewed Eggplant
+
+GLUTEN FREE STATION
+Roasted Chicken
+Maduros
+Stewed Eggplant
+
+VEGAN STATION
+Impossible Pastelon
+Stewed Eggplant
+White Rice
+
+PASTA STATION
+Marinara
+Sundried Tomato Pesto
+Basil Oil
+Ziti
+Dominican spaghetti
+
+SOUP STATION
+Sancocho
+White Rice
+
+FUSION STATION
+Fried Pollock
+Pinto Beans
+Yellow Rice
+Vegetable Medley
+
+ACTION STATION
+Ham & Cheese Pressed Sandwich
+
+GRILL
+Chimichurri Burger
+Vegan Hot Dog
 </div>
       <br>
     </div>
@@ -65,30 +131,37 @@ Succotash
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+BUILD YOUR OWN - RIGHT LINE
+Protein
+Cheese
+Toppings
+Dressings
+
+COLD COUNTER - MIDDLE LINE
+Roast Beef Sub
+Portabella & Eggplant Sub
+
+HOT COUNTER - LEFT LINE
+Philly Cheesesteak
+Tempeh Cheesesteak
+</div>
       <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Pancakes
+Apple Pancakes
 Scrambled Eggs
-Potato Pancake
-Turkey Sausage
+Hash Brown Patty
+Chicken Sausage
 Sausage Gravy
 Biscuits
 
-ACTION STATION
-Waffle Bar
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
 VEGAN STATION
-Garlic Broccoli
-Tofu Scramble
+Curry Cauliflower
+Just Egg
 Beyond Sausage
 </div>
       <br>
@@ -98,7 +171,31 @@ Beyond Sausage
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-    <div class="list">No data on menu items</div>
+    <div class="list">
+GRILL
+BLT Burger
+Tomato & Swiss Grilled Cheese
+
+VEGAN & VEGETARIAN STATION
+Mac & Cheese Bar
+
+DAILY PIZZAS
+Traditional Cheese Pizza
+Sausage Pizza
+Mushroom Pizza
+
+GRILL
+Pernil
+Rice & Beans
+
+VEGAN & VEGETARIAN STATION
+Vegan Sancocho
+
+GRAIN BOWL
+Korean BBQ Chicken
+Kimchi Style Cabbage
+Maple Ginger Sweet Potato
+</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
@@ -106,25 +203,20 @@ Beyond Sausage
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Red White and Blue Burger
-Philly Cheesesteak Hero
-Southwest Chicken Eggrolls with Queso Sauce
-Spinach and Artichoke Dip Quesadilla
-Beyond Meat Taco
-Blue Cheese/ Onion Jam Black Bean Burger
+Chimi Burger
+Locrio de Pollo
+Dominican Pulled Pork Sandwich
+Vegan Sancocho
+Vegan Pollo Guisado
 
 FRY STATION
-Dino Nuggets
-Mac and Cheese Bites
-Krinkle Coated Fries
+Fried Items
 
 GRILL
-Pizza Bagel
+Buffalo Chicken Taco
 
 FRY STATION
-Dino Nuggets
-Mac and Cheese Bites
-Krinkle Coated Fries
+Fried Items
 </div>
       <br>
     </div>
