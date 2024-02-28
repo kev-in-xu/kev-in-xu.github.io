@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 27 February, 2024 at 10:21:08
+  Summary on Tuesday, 27 February, 2024 at 22:18:11
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -65,6 +65,75 @@ Roasted Potatoes
 NOOK
 French Toast
 Waffle Sticks
+
+MAIN LINE
+Pollo Guisado
+Moro de Guandules
+Wheatberries
+Roasted Root Vegetables
+
+HALAL STATION
+Pollo Guisado
+Moro de Guandules
+Roasted Root Vegetables
+
+GLUTEN FREE STATION
+Pollo Guisado
+Moro de Guandules
+
+VEGAN STATION
+Jackfruit Guisado
+Moro de Guandules
+Roasted Root Vegetables
+
+GRILL
+Grill Special: Mangu con Los Tres Golpes
+
+MAIN LINE
+Pernil
+Maduros
+White Rice
+Stewed Eggplant
+Habichuelas Guisadas
+
+HALAL STATION
+Roasted Chicken
+Maduros
+Stewed Eggplant
+
+GLUTEN FREE STATION
+Roasted Chicken
+Maduros
+Stewed Eggplant
+
+VEGAN STATION
+Impossible Pastelon
+Stewed Eggplant
+White Rice
+
+PASTA STATION
+Marinara
+Sundried Tomato Pesto
+Basil Oil
+Ziti
+Dominican spaghetti
+
+SOUP STATION
+Sancocho
+White Rice
+
+FUSION STATION
+Fried Pollock
+Pinto Beans
+Yellow Rice
+Vegetable Medley
+
+ACTION STATION
+Ham & Cheese Pressed Sandwich
+
+GRILL
+Chimichurri Burger
+Vegan Hot Dog
 </div>
       <br>
     </div>
@@ -105,6 +174,39 @@ VEGAN STATION
 Curry Cauliflower
 Just Egg
 Beyond Sausage
+
+MAIN LINE
+Apple Pancakes
+Scrambled Eggs
+Hash Brown Patty
+Chicken Sausage
+Sausage Gravy
+Biscuits
+
+ACTION STATION
+Panini Bar
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
+VEGAN STATION
+Baked Sweet Potato
+Savory Black Bean
+Chipotle Corn
+
+MAIN LINE
+Pollo Guisado
+Arroz con Gandules
+Yuca
+Tostones
+
+VEGAN STATION
+Arroz con Vegan Chicken
+Yuca
+
+ACTION STATION
+Dominican Chimichurri Sandwich
 </div>
       <br>
     </div>
@@ -144,16 +246,6 @@ Maple Ginger Sweet Potato
       <h3>JJs</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-MAIN LINE
-Chimi Burger
-Locrio de Pollo
-Dominican Pulled Pork Sandwich
-Vegan Sancocho
-Vegan Pollo Guisado
-
-FRY STATION
-Fried Items
-
 GRILL
 Buffalo Chicken Taco
 
