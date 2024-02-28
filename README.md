@@ -15,9 +15,9 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Tuesday, 27 February, 2024 at 22:18:11
+  Summary on Wednesday, 28 February, 2024 at 14:36:21
   <br><br>
-  Ferris has nothing good today :(
+  Ferris has Grilled Cheese today!
   <br>
   Fac House has nothing good today :(
   <br>
@@ -30,12 +30,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Meatball Parmesan
-Dal Makhani (Lentils)
-Linguine in Garlic Oil
+Teriyaki Chicken Wings
+Yellow Dal (Lentils)
+Lo Mein Noodles
 Steamed Broccoli
-Mixed Grains Pilaf
-Garlic Bread
+Quinoa Pilaf
+Steamed Jasmine Rice
 </div>
     <br>
     </div>
@@ -43,97 +43,26 @@ Garlic Bread
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-HOT COUNTER - LEFT LINE
-Oatmeal
-Avena Dominicana
-Cream of Wheat
-
-MAIN LINE
-Scrambled Eggs
-Peppers, Onion, Mushrooms Egg White Scramble
-Banana Pancakes
-Green Beans with Tomatoes
-Roasted Fingerling Potatoes
-Chicken Sausage
-
-VEGAN STATION
-Just Egg Patty
-Incogmeato Sausage
-Green Beans with Tomatoes
-Roasted Potatoes
-
-NOOK
-French Toast
-Waffle Sticks
-
-MAIN LINE
-Pollo Guisado
-Moro de Guandules
-Wheatberries
-Roasted Root Vegetables
-
-HALAL STATION
-Pollo Guisado
-Moro de Guandules
-Roasted Root Vegetables
-
-GLUTEN FREE STATION
-Pollo Guisado
-Moro de Guandules
-
-VEGAN STATION
-Jackfruit Guisado
-Moro de Guandules
-Roasted Root Vegetables
-
-GRILL
-Grill Special: Mangu con Los Tres Golpes
-
-MAIN LINE
-Pernil
-Maduros
-White Rice
-Stewed Eggplant
-Habichuelas Guisadas
-
-HALAL STATION
-Roasted Chicken
-Maduros
-Stewed Eggplant
-
-GLUTEN FREE STATION
-Roasted Chicken
-Maduros
-Stewed Eggplant
-
-VEGAN STATION
-Impossible Pastelon
-Stewed Eggplant
-White Rice
-
-PASTA STATION
-Marinara
-Sundried Tomato Pesto
-Basil Oil
-Ziti
-Dominican spaghetti
-
 SOUP STATION
-Sancocho
-White Rice
+Manhattan Clam Chowder
+Three Bean Chili
 
 FUSION STATION
-Fried Pollock
-Pinto Beans
-Yellow Rice
+Chicken Tinga
+Black Beans
+Green Rice
 Vegetable Medley
 
-ACTION STATION
-Ham & Cheese Pressed Sandwich
-
 GRILL
-Chimichurri Burger
-Vegan Hot Dog
+Shrimp Tacos
+
+PASTA STATION
+Marinara Sauce
+Pesto Cream
+Garlic Oil
+Fettucine
+Whole Wheat Pasta
+Turkey Bolognese
 </div>
       <br>
     </div>
@@ -150,12 +79,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-Roast Beef Sub
-Portabella & Eggplant Sub
+The Fran
+Taiwanese Pckled Carrots and Cucumbers with Teriyaki Chicken
 
 HOT COUNTER - LEFT LINE
-Philly Cheesesteak
-Tempeh Cheesesteak
+Buffalo Chicken and Ranch
+Buffalo Cauliflower
 </div>
       <br>
     </div>
@@ -163,50 +92,50 @@ Tempeh Cheesesteak
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Apple Pancakes
+French Toast
 Scrambled Eggs
-Hash Brown Patty
-Chicken Sausage
+Roasted Potatoes
+Pork Bacon
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
-Curry Cauliflower
-Just Egg
-Beyond Sausage
+Tofu Scramble
+Vegetable Medley
+Beyond Breakfast Sausage
 
 MAIN LINE
-Apple Pancakes
+French Toast
 Scrambled Eggs
-Hash Brown Patty
-Chicken Sausage
+Roasted Potatoes
+Pork Bacon
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Panini Bar
+Grilled Cheese Bar
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Baked Sweet Potato
-Savory Black Bean
-Chipotle Corn
+Tofu Cauliflower Korma
+Basmati Rice
+Chips
 
 MAIN LINE
-Pollo Guisado
-Arroz con Gandules
-Yuca
-Tostones
+Chimichurri Beef
+Black Bean & Rice
+Red Pepper Quinoa
+Roasted Squash
 
 VEGAN STATION
-Arroz con Vegan Chicken
-Yuca
+Beyond Sausage with Onions & Peppers
+Pasta
 
 ACTION STATION
-Dominican Chimichurri Sandwich
+Quesadilla Bar
 </div>
       <br>
     </div>
@@ -217,28 +146,25 @@ Dominican Chimichurri Sandwich
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 GRILL
-BLT Burger
-Tomato & Swiss Grilled Cheese
+3 Cheese Grilled Cheese
+Beef Burger with Mushrooms & Onions
 
 VEGAN & VEGETARIAN STATION
-Mac & Cheese Bar
+Risoto Bar
 
 DAILY PIZZAS
 Traditional Cheese Pizza
-Sausage Pizza
-Mushroom Pizza
+Pepperoni Pizza
+Mushroom & Spinach Pizza
 
 GRILL
-Pernil
-Rice & Beans
+Fried Chicken
 
 VEGAN & VEGETARIAN STATION
-Vegan Sancocho
+BBQ Pulled Jackfruit
 
-GRAIN BOWL
-Korean BBQ Chicken
-Kimchi Style Cabbage
-Maple Ginger Sweet Potato
+DAILY PIZZAS
+Pizza
 </div>
     <br>
     </div>
@@ -246,8 +172,13 @@ Maple Ginger Sweet Potato
       <h3>JJs</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-GRILL
-Buffalo Chicken Taco
+MAIN LINE
+Chicken Bacon Avocado Salad Sandwich
+Old Bay Shrimp Wrap
+Spicy Pork Belly Quesadilla
+Curried Chickpea Wrap
+Eggplant Greek Fries
+Chimi Burger
 
 FRY STATION
 Fried Items
