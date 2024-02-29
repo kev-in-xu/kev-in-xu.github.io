@@ -15,28 +15,20 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 28 February, 2024 at 14:36:21
+  Summary on Thursday, 29 February, 2024 at 08:12:24
   <br><br>
-  Ferris has Grilled Cheese today!
+  Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
-  Chef Mike's has nothing good today :(
+  Chef Mike's has Chef Mike's Grandma Special today !
   <br>
 </div>
 <div class="w3-row-padding w3-center w3-margin-top">
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
-    <div class="list">
-MAIN LINE
-Teriyaki Chicken Wings
-Yellow Dal (Lentils)
-Lo Mein Noodles
-Steamed Broccoli
-Quinoa Pilaf
-Steamed Jasmine Rice
-</div>
+    <div class="list">No data on menu items</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
@@ -44,25 +36,94 @@ Steamed Jasmine Rice
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 SOUP STATION
-Manhattan Clam Chowder
-Three Bean Chili
+Oatmeal
+Oatmeal Raisin Cookie
+Grits
 
-FUSION STATION
-Chicken Tinga
-Black Beans
-Green Rice
-Vegetable Medley
+MAIN LINE
+Scrambled Eggs
+Spinach, Mushroom, Tomato Egg White Scramble
+Chocolate Chip Pancakes
+Roasted Peppers and Spinach
+Potato Medley
+Andouille Sausage
 
-GRILL
-Shrimp Tacos
+VEGAN STATION
+Just Egg Patty
+Roasted Peppers and Spinach
+Potato Medley
+
+NOOK
+Thick Sliced French Toast
+Waffle
+
+MAIN LINE
+Grilled Buffalo Chicken Breast
+Sweet Potato Mash
+Bulgur
+Roasted Brussel Sprouts
+Black Eyed Peas
+
+HALAL STATION
+Grilled Buffalo Chicken
+Roasted Brussel Sprouts
+Sweet Potato Mash
+
+GLUTEN FREE STATION
+Grilled Buffalo Chicken
+Roasted Brussel Sprouts
+Sweet Potato Mash
+
+VEGAN STATION
+Buffalo Tofu Nuggets
+Roasted Brussel Sprouts
+Sweet Potato Mash
+
+MAIN LINE
+Jerk Salmon
+Roasted Potato Wedges
+Cous Cous with Dried Fruits
+Green Beans, Wax Beans, & Carrots
+Pigeon Peas
+
+HALAL STATION
+Jerk Salmon
+Roasted Potato Wedges
+Green Beans, Wax Beans, & Carrots
+
+GLUTEN FREE STATION
+Jerk Salmon
+Green Beans, Wax Beans, & Carrots
+Roasted Potato Wedges
+
+VEGAN STATION
+Seitan
+Green Beans, Wax Beans, & Carrots
+Roasted Potato Wedges
 
 PASTA STATION
 Marinara Sauce
-Pesto Cream
-Garlic Oil
-Fettucine
-Whole Wheat Pasta
-Turkey Bolognese
+Red Pepper Tomato Sauce
+Linguini
+Spaghetti
+Beef Bolognese
+
+SOUP STATION
+Lentil Soup
+Chicken Noodle
+
+FUSION STATION
+Beef Fajita
+Pinto Beans
+White Rice
+Fiesta Vegetable Medley
+
+GRILL
+Chicken Po Boy
+Vegan Burger
+
+ACTION STATION
+Curried Shrimp
 </div>
       <br>
     </div>
@@ -79,12 +140,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-The Fran
-Taiwanese Pckled Carrots and Cucumbers with Teriyaki Chicken
+Italian Sub
+Italian Baked Tofu Hero
 
 HOT COUNTER - LEFT LINE
-Buffalo Chicken and Ranch
-Buffalo Cauliflower
+Chef Mike's Grandma Special
+Chef Mike's Vegan Grandma's Special
 </div>
       <br>
     </div>
@@ -92,50 +153,17 @@ Buffalo Cauliflower
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-French Toast
+Belgium Waffles
 Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
+Sweet Potato Tots
+Sliced Ham
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
+Baked Sweet Potato Wedge
 Tofu Scramble
-Vegetable Medley
 Beyond Breakfast Sausage
-
-MAIN LINE
-French Toast
-Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
-Sausage Gravy
-Biscuits
-
-ACTION STATION
-Grilled Cheese Bar
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
-VEGAN STATION
-Tofu Cauliflower Korma
-Basmati Rice
-Chips
-
-MAIN LINE
-Chimichurri Beef
-Black Bean & Rice
-Red Pepper Quinoa
-Roasted Squash
-
-VEGAN STATION
-Beyond Sausage with Onions & Peppers
-Pasta
-
-ACTION STATION
-Quesadilla Bar
 </div>
       <br>
     </div>
@@ -146,25 +174,32 @@ Quesadilla Bar
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 GRILL
-3 Cheese Grilled Cheese
-Beef Burger with Mushrooms & Onions
+Angus Burger
+Beyond Burger
 
 VEGAN & VEGETARIAN STATION
-Risoto Bar
+Ramen Noodle Bar
 
 DAILY PIZZAS
 Traditional Cheese Pizza
 Pepperoni Pizza
-Mushroom & Spinach Pizza
+Mushroom Pizza
 
 GRILL
-Fried Chicken
+Bibimbap Bowl
 
 VEGAN & VEGETARIAN STATION
-BBQ Pulled Jackfruit
+Baked Potato Bar
 
 DAILY PIZZAS
-Pizza
+Three Cheese Pizza
+Pepperoni Pizza
+Mushroom Pizza
+
+GRAIN BOWL
+Balsamic Glazed Chicken
+Basil Pesto Tofu
+Oven Roasted Brussel Sprouts
 </div>
     <br>
     </div>
@@ -173,12 +208,15 @@ Pizza
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Chicken Bacon Avocado Salad Sandwich
-Old Bay Shrimp Wrap
-Spicy Pork Belly Quesadilla
-Curried Chickpea Wrap
-Eggplant Greek Fries
-Chimi Burger
+Caprese Burger
+Tostone and Shaved Steak Sandwich
+Tacos Al Pastor
+Banana Pudding Pancakes
+Veggie Lo mein
+Caprese Grilled Cheese
+
+GRILL
+Mexican Street Corn
 
 FRY STATION
 Fried Items
