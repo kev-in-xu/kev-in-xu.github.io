@@ -15,13 +15,13 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Thursday, 29 February, 2024 at 08:12:24
+  Summary on Friday, 01 March, 2024 at 10:27:56
   <br><br>
   Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
-  Chef Mike's has Chef Mike's Grandma Special today !
+  Chef Mike's has nothing good today :(
   <br>
 </div>
 <div class="w3-row-padding w3-center w3-margin-top">
@@ -34,97 +34,7 @@ Dining Info
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-SOUP STATION
-Oatmeal
-Oatmeal Raisin Cookie
-Grits
-
-MAIN LINE
-Scrambled Eggs
-Spinach, Mushroom, Tomato Egg White Scramble
-Chocolate Chip Pancakes
-Roasted Peppers and Spinach
-Potato Medley
-Andouille Sausage
-
-VEGAN STATION
-Just Egg Patty
-Roasted Peppers and Spinach
-Potato Medley
-
-NOOK
-Thick Sliced French Toast
-Waffle
-
-MAIN LINE
-Grilled Buffalo Chicken Breast
-Sweet Potato Mash
-Bulgur
-Roasted Brussel Sprouts
-Black Eyed Peas
-
-HALAL STATION
-Grilled Buffalo Chicken
-Roasted Brussel Sprouts
-Sweet Potato Mash
-
-GLUTEN FREE STATION
-Grilled Buffalo Chicken
-Roasted Brussel Sprouts
-Sweet Potato Mash
-
-VEGAN STATION
-Buffalo Tofu Nuggets
-Roasted Brussel Sprouts
-Sweet Potato Mash
-
-MAIN LINE
-Jerk Salmon
-Roasted Potato Wedges
-Cous Cous with Dried Fruits
-Green Beans, Wax Beans, & Carrots
-Pigeon Peas
-
-HALAL STATION
-Jerk Salmon
-Roasted Potato Wedges
-Green Beans, Wax Beans, & Carrots
-
-GLUTEN FREE STATION
-Jerk Salmon
-Green Beans, Wax Beans, & Carrots
-Roasted Potato Wedges
-
-VEGAN STATION
-Seitan
-Green Beans, Wax Beans, & Carrots
-Roasted Potato Wedges
-
-PASTA STATION
-Marinara Sauce
-Red Pepper Tomato Sauce
-Linguini
-Spaghetti
-Beef Bolognese
-
-SOUP STATION
-Lentil Soup
-Chicken Noodle
-
-FUSION STATION
-Beef Fajita
-Pinto Beans
-White Rice
-Fiesta Vegetable Medley
-
-GRILL
-Chicken Po Boy
-Vegan Burger
-
-ACTION STATION
-Curried Shrimp
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
   </div>
@@ -140,12 +50,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-Italian Sub
-Italian Baked Tofu Hero
+Turkey BLT
+Smokey Seitan, Guacamole, and Tomato
 
 HOT COUNTER - LEFT LINE
-Chef Mike's Grandma Special
-Chef Mike's Vegan Grandma's Special
+Chicken Parmesan
+Vegan Chicken Parmigiana
 </div>
       <br>
     </div>
@@ -153,16 +63,16 @@ Chef Mike's Vegan Grandma's Special
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Belgium Waffles
+Blueberry Pancakes
 Scrambled Eggs
-Sweet Potato Tots
-Sliced Ham
+Potato Pancakes
+Turkey Bacon
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
-Baked Sweet Potato Wedge
-Tofu Scramble
+Warm Quinoa & Mixed Berries
+Just Egg Patty
 Beyond Breakfast Sausage
 </div>
       <br>
@@ -174,32 +84,21 @@ Beyond Breakfast Sausage
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
 GRILL
-Angus Burger
-Beyond Burger
-
-VEGAN & VEGETARIAN STATION
-Ramen Noodle Bar
+Cajun Shrimp with Southern Cheese Grits
+Chicken and Waffles
 
 DAILY PIZZAS
-Traditional Cheese Pizza
-Pepperoni Pizza
+Trio Cheese Flatbread
+Sausage Flatbread Pizza
 Mushroom Pizza
-
-GRILL
-Bibimbap Bowl
 
 VEGAN & VEGETARIAN STATION
-Baked Potato Bar
-
-DAILY PIZZAS
-Three Cheese Pizza
-Pepperoni Pizza
-Mushroom Pizza
+Taco Bar
 
 GRAIN BOWL
-Balsamic Glazed Chicken
-Basil Pesto Tofu
-Oven Roasted Brussel Sprouts
+Jerk Chicken
+Fried Tofu
+Fingerling Potatoes
 </div>
     <br>
     </div>
@@ -208,15 +107,16 @@ Oven Roasted Brussel Sprouts
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Caprese Burger
-Tostone and Shaved Steak Sandwich
-Tacos Al Pastor
-Banana Pudding Pancakes
-Veggie Lo mein
-Caprese Grilled Cheese
+Chipotle Mushroom Burger
+Spaghetti and Meatball Bowl
+Fish Taco
+Hot Honey Chicken Quesadilla
+Sweet Potato Avocado Wrap
+Buffalo Cauliflower Po' Boy
+Shrimp and Grits
 
 GRILL
-Mexican Street Corn
+Jamaica Beef Patty
 
 FRY STATION
 Fried Items
