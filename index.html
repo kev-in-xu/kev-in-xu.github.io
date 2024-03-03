@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Friday, 01 March, 2024 at 10:27:56
+  Summary on Sunday, 03 March, 2024 at 10:01:35
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -34,7 +34,26 @@ Dining Info
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+SOUP STATION
+Oatmeal
+Caramel Coconut Fudge Oatmeal
+Farina
+
+MAIN LINE
+Scrambled Eggs
+Vegetable Medley
+Kimchi Fried Rice
+Asian Meatballs
+Vegetable Medley
+Pancakes
+
+VEGAN STATION
+Just Egg Patty
+Vegan Sausage Patty
+Vegetable Medley
+Kimchi Fried Rice
+</div>
       <br>
     </div>
   </div>
@@ -42,38 +61,31 @@ Dining Info
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-BUILD YOUR OWN - RIGHT LINE
-Protein
-Cheese
-Toppings
-Dressings
-
-COLD COUNTER - MIDDLE LINE
-Turkey BLT
-Smokey Seitan, Guacamole, and Tomato
-
-HOT COUNTER - LEFT LINE
-Chicken Parmesan
-Vegan Chicken Parmigiana
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Blueberry Pancakes
+French Toast Sticks
 Scrambled Eggs
-Potato Pancakes
-Turkey Bacon
+Potato Pancake
+Turkey Sausage
 Sausage Gravy
 Biscuits
 
+ACTION STATION
+Waffle Bar
+
+DAILY PIZZAS
+Cheese Pizza
+Vegan Cheese Pizza
+
 VEGAN STATION
-Warm Quinoa & Mixed Berries
-Just Egg Patty
-Beyond Breakfast Sausage
+Garlic Broccoli
+Tofu Scramble
+Beyond Sausage
 </div>
       <br>
     </div>
@@ -82,24 +94,7 @@ Beyond Breakfast Sausage
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-    <div class="list">
-GRILL
-Cajun Shrimp with Southern Cheese Grits
-Chicken and Waffles
-
-DAILY PIZZAS
-Trio Cheese Flatbread
-Sausage Flatbread Pizza
-Mushroom Pizza
-
-VEGAN & VEGETARIAN STATION
-Taco Bar
-
-GRAIN BOWL
-Jerk Chicken
-Fried Tofu
-Fingerling Potatoes
-</div>
+    <div class="list">No data on menu items</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
@@ -107,16 +102,14 @@ Fingerling Potatoes
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Chipotle Mushroom Burger
-Spaghetti and Meatball Bowl
-Fish Taco
-Hot Honey Chicken Quesadilla
-Sweet Potato Avocado Wrap
-Buffalo Cauliflower Po' Boy
-Shrimp and Grits
+Pulled Pork and Cheddar Burger
+Cheesy Mashed Potato Quesadilla
+Beyond Sausage and Peppers
+Jalapeno Popper Grilled Cheese
+Creole Chicken Sandwich
 
 GRILL
-Jamaica Beef Patty
+Potato & Cheese Perogies
 
 FRY STATION
 Fried Items
