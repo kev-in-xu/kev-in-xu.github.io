@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Sunday, 03 March, 2024 at 10:01:35
+  Summary on Tuesday, 05 March, 2024 at 08:14:47
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -28,7 +28,15 @@ Dining Info
   <div class="w3-third">
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Fac House</h3>
-    <div class="list">No data on menu items</div>
+    <div class="list">
+MAIN LINE
+Beef Stew
+Chana Masala
+Mac & Cheese
+Steamed Broccoli
+Bulgur Wheat Pilaf
+Mashed Potatoes
+</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
@@ -37,22 +45,91 @@ Dining Info
       <div class="list">
 SOUP STATION
 Oatmeal
-Caramel Coconut Fudge Oatmeal
-Farina
+Triple Berry Oatmeal
+Cream of Wheat
 
 MAIN LINE
 Scrambled Eggs
-Vegetable Medley
-Kimchi Fried Rice
-Asian Meatballs
-Vegetable Medley
-Pancakes
+Pico, Jalapeno, and Cilantro Egg Whites
+Cereal Pancake
+Roasted Root Vegetables
+Tater Tots
+Chicken Sausage
 
 VEGAN STATION
 Just Egg Patty
-Vegan Sausage Patty
-Vegetable Medley
-Kimchi Fried Rice
+Roasted Root Vegetables
+Tater Tots
+
+NOOK
+Cinnamon Roll
+Waffle Stix
+
+MAIN LINE
+Pepper Steak
+Jasmine Rice
+Kasha
+Roasted Carrots
+Cannelloni Beans
+
+HALAL STATION
+Pepper Steak
+Jasmine Rice
+Roasted Carrots
+
+GLUTEN FREE STATION
+Pepper Steak
+Jasmine Rice
+Roasted Carrots
+
+VEGAN STATION
+Vegan Pepper Steak
+Jasmine Rice
+Roasted Carrots
+
+MAIN LINE
+Chicken Marsala
+Egg Noodle
+Kasha
+Broccoli Rabe with Sundried Tomato
+Cranberry Beans
+
+HALAL STATION
+Chicken Marsala
+Broccoli Rabe with Sundried Tomato
+Egg Noodles
+
+GLUTEN FREE STATION
+Chicken Marsala
+Broccoli with Sundried Tomatoes
+Mushroom & Green Pea Risotto
+
+VEGAN STATION
+Vegan Chicken Marsala
+Broccoli Rabe with Sundried Tomato
+Mushroom & Green Pea Risotto
+
+PASTA STATION
+Marinara Sauce
+Meat Sauce
+Basil Oil
+Ziti
+Whole Wheat Pasta
+Vegan Meatballs
+
+SOUP STATION
+New England Clam Chowder
+Lentil Soup
+
+FUSION STATION
+Ramen Bowl
+
+ACTION STATION
+Sesame Garlic Chicken with White Rice
+
+GRILL
+Beef & Lamb Gyro
+Falafel
 </div>
       <br>
     </div>
@@ -61,31 +138,38 @@ Kimchi Fried Rice
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Chef Mike's</h3>
     <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+BUILD YOUR OWN - RIGHT LINE
+Protein
+Cheeses
+Toppings
+Dressings
+
+COLD COUNTER - MIDDLE LINE
+The Ultimate Fig-Brie
+Fig jam & Ricotta Sub
+
+HOT COUNTER - LEFT LINE
+Chicken Tikka Masala Sub
+Curry Seitan with Vegetables
+</div>
       <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-French Toast Sticks
+Apple Pancakes
 Scrambled Eggs
-Potato Pancake
-Turkey Sausage
+Hash Brown Patty
+Chicken Sausage
 Sausage Gravy
 Biscuits
 
-ACTION STATION
-Waffle Bar
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
 VEGAN STATION
-Garlic Broccoli
-Tofu Scramble
-Beyond Sausage
+Curried Cauliflower
+Just Egg
+Vegan Sausage
 </div>
       <br>
     </div>
@@ -102,16 +186,17 @@ Beyond Sausage
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-Pulled Pork and Cheddar Burger
-Cheesy Mashed Potato Quesadilla
-Beyond Sausage and Peppers
-Jalapeno Popper Grilled Cheese
-Creole Chicken Sandwich
+Italian Burger
+Salmon Avocado Wrap
+Lamb and Beef Gyro with Tzatziki
+Pot Roast Quesadilla
+Beyond Italian Burger
+Creamy Tomato Soup in Grilled Cheese Bread Bowl
 
 GRILL
-Potato & Cheese Perogies
+Chipotle Steak Taco
 
-FRY STATION
+MAIN LINE
 Fried Items
 </div>
       <br>
