@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 06 March, 2024 at 12:14:41
+  Summary on Wednesday, 06 March, 2024 at 21:38:21
   <br><br>
   Ferris has Grilled Cheese today!
   <br>
@@ -43,6 +43,28 @@ Mixed Dal (Lentils)
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
+SOUP STATION
+Oatmeal
+Pineapple Upsidedown Cake
+Farina
+
+MAIN LINE
+Scrambled Eggs
+Leek, Mushroom, Asparagus Egg Whites
+Pancakes
+Sliced Marinated Tomatoes
+Tri Patty
+Corned Beef Hash
+
+VEGAN STATION
+Just Egg Patty
+Sliced Marinated Tomatoes
+Tri Patty
+
+NOOK
+French Toast Sticks
+Biscuits
+
 ACTION STATION
 Jerk Chicken
 Pumpkin Rice
@@ -64,6 +86,53 @@ VEGAN STATION
 Jerk Vegan Chicken
 Broccoli and Cauliflower
 Pumpkin Rice
+
+MAIN LINE
+Beef Chili
+Garlic Rice
+Kasha
+Roasted Root Vegetables
+Garbanzo Beans
+
+HALAL STATION
+Beef Chili
+Roasted Root Vegetables
+Garlic Rice
+
+GLUTEN FREE STATION
+Beef Chili
+Roasted Root Vegetables
+Garlic Rice
+
+VEGAN STATION
+Tempeh Cacciatore
+Roasted Root Vegetable
+Garlic Rice
+
+PASTA STATION
+Marinara Sauce
+Wild Mushroom Cream Sauce
+Garlic Oil
+Spaghetti
+Whole Wheat Pasta
+Turkey Bolognese
+
+SOUP STATION
+Chicken Dumpling
+Tomato Bisque
+
+FUSION STATION
+Pulled Chicken Banh Mi
+Pulled Vegan Chicken Banh Mi
+Sticky Rice
+Vegetable Medley
+
+ACTION STATION
+Thai Basil Beef with Jasmine Rice
+
+GRILL
+Cajun Popcorn Shrimp
+Beyond Sausage
 </div>
       <br>
     </div>
@@ -100,6 +169,19 @@ Pork Bacon
 Sausage Gravy
 Biscuits
 
+VEGAN STATION
+Tofu Scramble
+Vegetable Medley
+Beyond Breakfast Sausage
+
+MAIN LINE
+French Toast
+Scrambled Eggs
+Roasted Potatoes
+Pork Bacon
+Sausage Gravy
+Biscuits
+
 ACTION STATION
 Grilled Cheese Bar
 
@@ -111,6 +193,20 @@ VEGAN STATION
 Tofu Cauliflower Korma
 Green Beans
 Basmati Rice
+
+MAIN LINE
+Country Fried Steak
+Mac & Cheese
+Farro Pilaf
+Asparagus
+
+VEGAN STATION
+BBQ Jack Fruit
+Barley Pilaf
+Succotash
+
+ACTION STATION
+Philly Cheese Steak
 </div>
       <br>
     </div>
@@ -131,6 +227,26 @@ DAILY PIZZAS
 3 Cheese Flatbread Pizza
 Pepperoni Pizza
 Mushroom Flatbread Pizza
+
+GRILL
+Shake & Bake Pork Chops
+Green Rice
+Vegetable Medley
+
+VEGAN & VEGETARIAN STATION
+Grilled Tofu
+Cauliflower Rice
+Baked Tomatoes
+
+DAILY PIZZAS
+3 Cheese Pizza
+Pepperoni Pizza
+Mushroom Flatbread Pizza
+
+GRAIN BOWL
+Tandoori Chicken
+Roasted Tomato & Cauliflower
+Spicy Eggplant
 </div>
     <br>
     </div>
