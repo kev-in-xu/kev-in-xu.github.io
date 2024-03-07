@@ -15,9 +15,9 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Wednesday, 06 March, 2024 at 21:38:21
+  Summary on Thursday, 07 March, 2024 at 14:34:49
   <br><br>
-  Ferris has Grilled Cheese today!
+  Ferris has nothing good today :(
   <br>
   Fac House has nothing good today :(
   <br>
@@ -30,12 +30,12 @@ Dining Info
     <h3>Fac House</h3>
     <div class="list">
 MAIN LINE
-Chicken Parmesan
-Linguine with Garlic Oil
-Garlic Bread
+Teriyaki Chicken Wings
+Lo Mein
+Chana Dal (Split Chickpeas)
 Steamed Broccoli
-Quinoa Pilaf
-Mixed Dal (Lentils)
+Mixed Grains Pilaf
+Jasmine Rice
 </div>
     <br>
     </div>
@@ -43,96 +43,28 @@ Mixed Dal (Lentils)
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-SOUP STATION
-Oatmeal
-Pineapple Upsidedown Cake
-Farina
-
-MAIN LINE
-Scrambled Eggs
-Leek, Mushroom, Asparagus Egg Whites
-Pancakes
-Sliced Marinated Tomatoes
-Tri Patty
-Corned Beef Hash
-
-VEGAN STATION
-Just Egg Patty
-Sliced Marinated Tomatoes
-Tri Patty
-
-NOOK
-French Toast Sticks
-Biscuits
-
-ACTION STATION
-Jerk Chicken
-Pumpkin Rice
-Bulgar w/ Vegetables
-Broccoli and Cauliflower
-Roasted Garlic White Beans
-
-HALAL STATION
-Jerk Chicken
-Broccoli and Cauliflower
-Pumpkin Rice
-
-GLUTEN FREE STATION
-Jerk Chicken
-Broccoli and Cauliflower
-Pumpkin Rice
-
-VEGAN STATION
-Jerk Vegan Chicken
-Broccoli and Cauliflower
-Pumpkin Rice
-
-MAIN LINE
-Beef Chili
-Garlic Rice
-Kasha
-Roasted Root Vegetables
-Garbanzo Beans
-
-HALAL STATION
-Beef Chili
-Roasted Root Vegetables
-Garlic Rice
-
-GLUTEN FREE STATION
-Beef Chili
-Roasted Root Vegetables
-Garlic Rice
-
-VEGAN STATION
-Tempeh Cacciatore
-Roasted Root Vegetable
-Garlic Rice
-
 PASTA STATION
 Marinara Sauce
-Wild Mushroom Cream Sauce
-Garlic Oil
-Spaghetti
+Pomodoro Sauce
+Rosemary Oil
 Whole Wheat Pasta
-Turkey Bolognese
+Beef Bolognese
 
 SOUP STATION
-Chicken Dumpling
-Tomato Bisque
+Chicken Noodle Soup
+Minestrone Soup
 
 FUSION STATION
-Pulled Chicken Banh Mi
-Pulled Vegan Chicken Banh Mi
-Sticky Rice
-Vegetable Medley
-
-ACTION STATION
-Thai Basil Beef with Jasmine Rice
+Garlic Beef
+Vegetable Lo Mein
+Chili Seitan
+Fried Rice
 
 GRILL
-Cajun Popcorn Shrimp
-Beyond Sausage
+Grilled Chicken with Basil Dressing
+
+ACTION STATION
+Seafood Dip
 </div>
       <br>
     </div>
@@ -149,12 +81,12 @@ Toppings
 Dressings
 
 COLD COUNTER - MIDDLE LINE
-BLT
-Grilled Veggies, Quinoa, Beans, and Roasted Eggplant
+Chicken Caesar Sub
+Sweet Spicy Curry Chickpea Cool Cucumber
 
 HOT COUNTER - LEFT LINE
-Mike's Hot Honey Chicken with Mozzarella
-Buffalo Breaded Cauliflower
+Brisket, Pickle, Coleslaw, BBQ Sauce
+Roasted Eggplant Sub
 </div>
       <br>
     </div>
@@ -162,51 +94,52 @@ Buffalo Breaded Cauliflower
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-French Toast
+Belgium Waffles
 Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
+Sweet Potato Tots
+Sliced Ham
 Sausage Gravy
 Biscuits
 
 VEGAN STATION
+Sweet Potato Tots
 Tofu Scramble
-Vegetable Medley
 Beyond Breakfast Sausage
 
 MAIN LINE
-French Toast
+Belgium Waffles
 Scrambled Eggs
-Roasted Potatoes
-Pork Bacon
+Sweet Potato Tots
+Sliced Ham
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Grilled Cheese Bar
+Buffalo Chicken Wrap
+Buffalo Cauliflower Wrap
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Tofu Cauliflower Korma
-Green Beans
-Basmati Rice
+Vegan Chicken Nuggets with Adobe
+Latin Style RIce
+Blackeye Peas
 
 MAIN LINE
-Country Fried Steak
-Mac & Cheese
-Farro Pilaf
-Asparagus
+Beef Fajita
+Pinto Beans
+Yellow Rice
+Zucchini & Squash
 
 VEGAN STATION
-BBQ Jack Fruit
-Barley Pilaf
-Succotash
+Jerk Tofu
+Cous Cous
+Cabbage
 
 ACTION STATION
-Philly Cheese Steak
+Quesadilla Bar
 </div>
       <br>
     </div>
@@ -216,37 +149,10 @@ Philly Cheese Steak
     <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
     <div class="list">
-GRILL
-Greek Meditteranean Burger
-Grilled Three Cheese on Texas Toast
-
-VEGAN & VEGETARIAN STATION
-Fried Edamame Dumplings
-
-DAILY PIZZAS
-3 Cheese Flatbread Pizza
-Pepperoni Pizza
-Mushroom Flatbread Pizza
-
-GRILL
-Shake & Bake Pork Chops
-Green Rice
-Vegetable Medley
-
-VEGAN & VEGETARIAN STATION
-Grilled Tofu
-Cauliflower Rice
-Baked Tomatoes
-
-DAILY PIZZAS
-3 Cheese Pizza
-Pepperoni Pizza
-Mushroom Flatbread Pizza
-
 GRAIN BOWL
-Tandoori Chicken
-Roasted Tomato & Cauliflower
-Spicy Eggplant
+Peach Bulgogi chicken
+Miso Tofu
+Ginger Spice Acorn Squash
 </div>
     <br>
     </div>
@@ -255,12 +161,12 @@ Spicy Eggplant
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
 MAIN LINE
-JJ's Garbage Plate
-Fish and Chips
-Chicken Bacon Ranch Sandwich
-Coconut Pineapple Pancakes
-Root Vegetable Wrap with Dijon Tahini Dressing
-Spinach & Artichoke Dip Grilled Cheese
+Fried Onion, Muenster, Bacon Burger
+Chipotle Salmon Sliders
+Grilled Chicken Sandwich with Provolone, Hot Honey, and Grilled Onions
+Jerk Chicken Quesadilla with Tamarind Sauce
+Vegan Philly (Fable Mushroom)
+Fried Onion and Muenster Grilled Cheese
 </div>
       <br>
     </div>
