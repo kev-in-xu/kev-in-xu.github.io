@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Saturday, 09 March, 2024 at 15:49:30
+  Summary on Friday, 15 March, 2024 at 12:21:35
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -49,51 +49,24 @@ Dining Info
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Pancakes
+Blueberry Pancakes
 Scrambled Eggs
-Hash Brown Patty
-Chicken Sausage
-Sausage Gravy
-Biscuits
-
-VEGAN STATION
-Roasted Beets
-Tofu Scramble
-Beyond Sausage
-
-MAIN LINE
-Pancakes
-Scrambled Eggs
-Hash Brown Patty
-Chicken Sausage
+Potato Pancake
+Turkey Bacon
 Sausage Gravy
 Biscuits
 
 ACTION STATION
-Bagel Schmear Bar
+Fish Tacos
 
 DAILY PIZZAS
 Cheese Pizza
 Vegan Cheese Pizza
 
 VEGAN STATION
-Roasted Beets
-Tofu Scramble
-Beyond Sausage
-
-MAIN LINE
-Sweet & Sour Pork
-Basmati Rice
-Wheatberries
-Lentils
-
-VEGAN STATION
-Santa Fe Seitan
-Roasted Sweet Potatoes
-Broccoli
-
-ACTION STATION
-Nacho Bar
+Stir Fry Seitan
+Vegetable Lo Mein
+Stir Fry Vegetables
 </div>
       <br>
     </div>
@@ -102,7 +75,26 @@ Nacho Bar
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-    <div class="list">No data on menu items</div>
+    <div class="list">
+GRILL
+Omelet Bar
+French Toast
+Hash Browns
+Turkey Sausage
+
+GRILL
+Pasta Station
+
+DAILY PIZZAS
+Three Cheese Pizza
+Sausage Flatbread Pizza
+Mushroom Pizza
+
+GRAIN BOWL
+Curry Chicken
+Tandoori Tofu
+Roasted Potatoes
+</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
