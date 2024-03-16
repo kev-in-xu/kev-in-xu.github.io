@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Friday, 15 March, 2024 at 12:21:35
+  Summary on Saturday, 16 March, 2024 at 10:37:28
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -49,24 +49,12 @@ Dining Info
       <h3>Ferris</h3>
       <div class="list">
 MAIN LINE
-Blueberry Pancakes
+Pancakes
 Scrambled Eggs
-Potato Pancake
-Turkey Bacon
+Hash Brown Patty
+Chicken Sausage
 Sausage Gravy
 Biscuits
-
-ACTION STATION
-Fish Tacos
-
-DAILY PIZZAS
-Cheese Pizza
-Vegan Cheese Pizza
-
-VEGAN STATION
-Stir Fry Seitan
-Vegetable Lo Mein
-Stir Fry Vegetables
 </div>
       <br>
     </div>
@@ -75,32 +63,27 @@ Stir Fry Vegetables
     <div class="w3-card w3-container" style="min-height:400px">
     <h3>Grace Dodge</h3>
     <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-    <div class="list">
-GRILL
-Omelet Bar
-French Toast
-Hash Browns
-Turkey Sausage
-
-GRILL
-Pasta Station
-
-DAILY PIZZAS
-Three Cheese Pizza
-Sausage Flatbread Pizza
-Mushroom Pizza
-
-GRAIN BOWL
-Curry Chicken
-Tandoori Tofu
-Roasted Potatoes
-</div>
+    <div class="list">No data on menu items</div>
     <br>
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>JJs</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+LUNCH & DINNER
+Caramelized Onion Arugula Burger
+Chicken Parmesan Sandwich
+Beef Lo Mein
+Strawberry Cheesecake Stuffed French Toast
+Vegan Meatball Sub Sandwich
+Black Bean Burger with Swiss and Caramelized Onions
+
+GRILL
+Southwest Chicken Eggrolls
+
+FRY STATION
+Fried Items
+</div>
       <br>
     </div>
   </div>
