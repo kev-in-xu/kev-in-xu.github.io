@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Saturday, 16 March, 2024 at 10:37:28
+  Summary on Sunday, 17 March, 2024 at 19:15:48
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -34,7 +34,29 @@ Dining Info
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">No data on menu items</div>
+      <div class="list">
+MAIN LINE
+Korean Meatballs
+Green Beans, Carrots, and Mushrooms
+Kimchi Fried Rice
+Farro Pilaf
+Garbanzo Beans
+
+HALAL STATION
+Korean Meatballs
+Green Beans, Carrots, and Mushrooms
+Kimchi Fried Rice
+
+GLUTEN FREE STATION
+Korean Meatballs
+Green Beans, Carrots, and Mushrooms
+Kimchi fried rice
+
+VEGAN STATION
+Korean Vegan Meatballs
+Green Beans, Carrots, and Mushrooms
+Kimchi Fried rice
+</div>
       <br>
     </div>
   </div>
@@ -47,15 +69,7 @@ Dining Info
     </div>
     <div class="w3-card w3-container" style="min-height:400px">
       <h3>Ferris</h3>
-      <div class="list">
-MAIN LINE
-Pancakes
-Scrambled Eggs
-Hash Brown Patty
-Chicken Sausage
-Sausage Gravy
-Biscuits
-</div>
+      <div class="list">No data on menu items</div>
       <br>
     </div>
   </div>
@@ -70,19 +84,13 @@ Biscuits
       <h3>JJs</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-LUNCH & DINNER
-Caramelized Onion Arugula Burger
-Chicken Parmesan Sandwich
-Beef Lo Mein
-Strawberry Cheesecake Stuffed French Toast
-Vegan Meatball Sub Sandwich
-Black Bean Burger with Swiss and Caramelized Onions
-
 GRILL
-Southwest Chicken Eggrolls
-
-FRY STATION
-Fried Items
+Greek Burger
+"J.F.C." Popcorn Chicken and Mashed Potato Bowl
+BBQ Riblet Sandwich
+Chorizo Quesadilla with Spicy Ranchero Sauce
+Veggie Spring Rolls
+Sriracha Hummus and Cauliflower wrap
 </div>
       <br>
     </div>
