@@ -15,7 +15,7 @@ Dining Info
         <div class="body-content">
             
 <div class="summary">
-  Summary on Sunday, 17 March, 2024 at 19:15:48
+  Summary on Sunday, 17 March, 2024 at 21:24:14
   <br><br>
   Ferris has nothing good today :(
   <br>
@@ -35,6 +35,46 @@ Dining Info
       <h3>John Jay</h3>
       <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
+SOUP STATION
+Oatmeal
+Peach Oatmeal
+Farina
+
+MAIN LINE
+Scrambled Eggs
+Chicken with Chili Basil Vinaigrette
+Roasted Broccoli with Tomatoes
+Herbed Potatoes
+
+VEGAN STATION
+Just Egg Patty
+Roasted Broccoli with Tomatoes
+Herbed Potatoes
+
+NOOK
+Old Fashioned French Toast
+Belgian Waffles
+
+MAIN LINE
+Chicken with Chili and a Basil Vinaigrette
+Herbed Potatoes
+Roasted Broccoli & Tomatoes
+
+HALAL STATION
+Chicken with Chili and a Basil Vinaigrette & Scrambled Eggs
+Herbed Potatoes
+Roasted Broccoli and Tomatoes
+
+GLUTEN FREE STATION
+Chicken with Chili and a Basil Vinaigrette & Scrambled Eggs
+Roasted Broccoli and Tomatoes
+Herbed Potatoes
+
+VEGAN STATION
+Just Egg Patty
+Roasted Broccoli and Tomatoes
+Herbed Potatoes
+
 MAIN LINE
 Korean Meatballs
 Green Beans, Carrots, and Mushrooms
@@ -56,6 +96,32 @@ VEGAN STATION
 Korean Vegan Meatballs
 Green Beans, Carrots, and Mushrooms
 Kimchi Fried rice
+
+PASTA STATION
+Marinara Sauce
+Pink Tomato Sauce
+Garlic Oil
+Tri Color Bowtie
+Whole Wheat Pasta
+Sunday Sauce
+
+SOUP STATION
+Chicken Noodle
+Lentil Soup
+
+FUSION STATION
+Fried Pollock
+Red Lentil Dahl
+Orange Basmati Rice
+Red Chili Potatoes
+Roasted Eggplant
+
+GRILL
+Pancake Bar
+Vegan Burger
+
+ACTION STATION
+Vegan Butter Bean Curry
 </div>
       <br>
     </div>
@@ -84,13 +150,8 @@ Kimchi Fried rice
       <h3>JJs</h3>
       <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
       <div class="list">
-GRILL
-Greek Burger
-"J.F.C." Popcorn Chicken and Mashed Potato Bowl
-BBQ Riblet Sandwich
-Chorizo Quesadilla with Spicy Ranchero Sauce
-Veggie Spring Rolls
-Sriracha Hummus and Cauliflower wrap
+FRY STATION
+Fried Items
 </div>
       <br>
     </div>
