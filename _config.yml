@@ -11,7 +11,6 @@ author:
   bio: "CS + Bio at Columbia"
 
 # Theme Settings
-theme: minimal-mistakes-jekyll
 minimal_mistakes_skin: default  # other options: dark, contrast, neon, etc.
 
 # Build Settings
