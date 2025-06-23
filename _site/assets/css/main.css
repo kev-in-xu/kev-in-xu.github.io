@@ -5098,5 +5098,12 @@ body {
     height: 1px !important;
   }
 }
+/* Tighter font and spacing for bookshelf */
+.tight-bookshelf .page__content {
+  font-size: 0.95em; /* Slightly smaller font */
+  line-height: 1.3; /* Tighter line spacing */
+  margin-bottom: 0.4em; /* Less space between items */
+  padding: 0;
+}
 
 /*# sourceMappingURL=main.css.map */

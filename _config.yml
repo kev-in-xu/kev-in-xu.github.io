@@ -27,7 +27,8 @@ defaults:
       layout: single
       author_profile: true
 
-# Includes
+# Display Options
+heading_anchors: false
 
 # Footer Links
 footer:
