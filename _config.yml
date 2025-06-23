@@ -27,12 +27,9 @@ defaults:
       layout: single
       author_profile: true
 
-# Navigation Links
-header_pages:
-  - _pages/about.md
-  - _pages/projects.md
-  - _pages/bookshelf.md
-  - _pages/misc.md
+# Includes
+includes:
+  - _pages
 
 # Footer Links
 footer:
