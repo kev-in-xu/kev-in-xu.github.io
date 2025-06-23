@@ -28,8 +28,6 @@ defaults:
       author_profile: true
 
 # Includes
-includes:
-  - _pages
 
 # Footer Links
 footer:
