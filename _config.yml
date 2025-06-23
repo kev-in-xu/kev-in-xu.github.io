@@ -36,6 +36,7 @@ header_pages:
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-include-cache
 
 # Optional Analytics (leave blank if not using)
 google_analytics: ""
