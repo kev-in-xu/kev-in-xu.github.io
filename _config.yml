@@ -29,8 +29,20 @@ defaults:
 
 # Navigation Links
 header_pages:
-  - about.md
-  - projects.md
+  - _pages/about.md
+  - _pages/projects.md
+  - _pages/bookshelf.md
+  - _pages/misc.md
+
+# Footer Links
+footer:
+    links:
+      - label: "LinkedIn"
+        icon: "fab fa-fw fa-linkedin"
+        url: "https://www.linkedin.com/in/kevin-k-xu/"
+      - label: "GitHub"
+        icon: "fab fa-fw fa-github"
+        url: "https://github.com/kev-in-xu"
 
 # Plugins (only those supported by GitHub Pages)
 plugins:
