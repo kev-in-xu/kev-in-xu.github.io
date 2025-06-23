@@ -1,218 +1,80 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>
-Dining Info
-</title>
-        <link rel="stylesheet" type="text/css" href="/static/dining.css" />
-    </head>
+# [Garth](https://garth.darn.es/)
+[![Gem Version](https://badge.fury.io/rb/garth-jekyll-theme.svg)](https://badge.fury.io/rb/garth-jekyll-theme)
 
-    <body>
-        <div class="navbar">
-            <a href="" class="navbar-brand">Home</a>
-        </div>
-        <div class="body-content">
-            
-<div class="summary">
-  Summary on Monday, 18 March, 2024 at 10:47:26
-  <br><br>
-  Ferris has nothing good today :(
-  <br>
-  Fac House has nothing good today :(
-  <br>
-  Chef Mike's has nothing good today :(
-  <br>
-</div>
-<div class="w3-row-padding w3-center w3-margin-top">
-  <div class="w3-third">
-    <div class="w3-card w3-container" style="min-height:400px">
-    <h3>Fac House</h3>
-    <div class="list">
-MAIN LINE
-Broiled Cod in Saffron Cream Sauce
-Mac & Cheese
-Chana Masala (Chickpeas)
-Steamed Green Beans
-Bulgur Wheat Pilaf
-Jasmine Rice
-</div>
-    <br>
-    </div>
-    <div class="w3-card w3-container" style="min-height:400px">
-      <h3>John Jay</h3>
-      <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-SOUP STATION
-Oatmeal
-Blueberry Oatmeal
-Grits
+🥁 A really basic theme for Jekyll, using the official Jekyll theme implementation.
 
-MAIN LINE
-Scramble Eggs
-Red Bell Pepper Egg White Scramble
-Pancake
-Green Beans and Tomato
-Diced Potatoes
-Chicken Sausage Link
+[<img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" width="217"/>](https://buymeacoffee.com/daviddarnes#support)
 
-VEGAN STATION
-Just Egg Patty
-Green Beans and Tomato
-Diced Potatoes
+![Screenshot](https://raw.githubusercontent.com/daviddarnes/garth/master/screenshot.png)
 
-NOOK
-French Toast Sticks
-Sausage, Egg, & Cheese Biscuit
+## Contents
+- [Installation](#installation)
+- [Customising](#customising)
+- [Site settings](#site-settings)
+- [Page layouts](#page-layouts)
+- [Credits](#credits)
 
-MAIN LINE
-Chicken Picatta
-Sautéed Broccoli Rabe with Garlic
-Garlic Bread
-Bulgar with Vegetables
-Red Beans
+## Installation
 
-HALAL STATION
-Chicken Picatta
-Sautéed Broccoli Rabe with Garlic
-Garlic Bread
+### Quick setup
 
-GLUTEN FREE STATION
-Chicken Picatta
-Sautéed Broccoli Rabe with Garlic
-Gluten Free Penne with Garlic, Oil, and Herbs
+To give you a running start I've put together some starter kits that you can download, fork or even deploy immediately:
 
-VEGAN STATION
-Aloo Gobi
-Green Beans
-Basmati Rice
+- Vanilla Jekyll starter kit:  
+  [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/daviddarnes/garth-kit)
+- Stackbit starter kit:  
+  [![Create with Stackbit](https://assets.stackbit.com/badge/create-with-stackbit.svg)](https://app.stackbit.com/create?theme=https://github.com/daviddarnes/garth-stackbit-kit)
+- GitHub Pages with remote theme kit - **[Download kit](https://github.com/daviddarnes/garth-kit/archive/remote-theme.zip)**
 
-PASTA STATION
-Marinara Sauce
-Boursin Cream Sauce
-Shallot Oil
-Rigatoni
-Whole Wheat Pasta
-Chicken Alfredo
+### As a Jekyll theme
 
-SOUP STATION
-Pasta Fagioli
-Broccoli Cheddar Soup
+1. Add `gem "garth-jekyll-theme"` to your `Gemfile` to add the theme as a dependancy
+2. Run the command `bundle install` in the root of project to install the theme and its dependancies
+3. Add `theme: garth-jekyll-theme` to your `_config.yml` file to set the site theme
+4. Run `bundle exec jekyll serve` to build and serve your site
+5. Done! Use the example [`_config.yml`](https://github.com/daviddarnes/garth/blob/master/_config.yml) file to set site-wide options
 
-FUSION STATION
-Chicken Tikka Masala
-Tandoori Tofu
-Red Chili Potatoes
-Stewed Tomatoes
+### As a GitHub Pages remote theme
 
-ACTION STATION
-Spicy Keema Spaghetti
+1. Add `gem "jekyll-remote-theme"` to your `Gemfile` to add the theme as a dependancy
+2. Run the command `bundle install` in the root of project to install the jekyll remote theme gem as a dependancy
+3. Add `jekyll-remote-theme` to the list of `plugins` in your `_config.yml` file
+4. Add `remote_theme: daviddarnes/garth` to your `_config.yml` file to set the site theme
+5. Run `bundle exec jekyll serve` to build and serve your site
+6. Done! Use the example [`_config.yml`](https://github.com/daviddarnes/garth/blob/master/_config.yml) file to set site-wide options
 
-GRILL
-Spinach Artichoke Flatbread
-</div>
-      <br>
-    </div>
-  </div>
-  <div class="w3-third">
-    <div class="w3-card w3-container" style="min-height:400px">
-    <h3>Chef Mike's</h3>
-    <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-BUILD YOUR OWN - RIGHT LINE
-Protein
-Cheese
-Toppings
-Dressings
+### As a Boilerplate / Fork
 
-COLD COUNTER - MIDDLE LINE
-Southwest Chipotle Chicken
-Southwest Chipotle Tempeh
+_(deprecated, not recommended)_
 
-HOT COUNTER - LEFT LINE
-Italian Beef
-Tricolor Potato, Beans, Quinoa, and Vegan Cheese
-</div>
-      <br>
-    </div>
-    <div class="w3-card w3-container" style="min-height:400px">
-      <h3>Ferris</h3>
-      <div class="list">
-MAIN LINE
-Pancakes
-Scrambled Eggs
-Tater Tots
-Turkey Sausage
-Sausage Gravy
-Biscuits
+1. [Fork the repo](https://github.com/daviddarnes/garth#fork-destination-box)
+2. Replace the `Gemfile` with one stating all the gems used in your project
+3. Delete the following unnecessary files/folders: `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `LICENSE`, `screenshot.png`, `CNAME` and `garth-jekyll-theme.gemspec`
+4. Run the command `bundle install` in the root of project to install the jekyll remote theme gem as a dependancy
+5. Run `bundle exec jekyll serve` to build and serve your site
+6. Done! Use the example [`_config.yml`](https://github.com/daviddarnes/garth/blob/master/_config.yml) file to set site-wide options
 
-VEGAN STATION
-Steamed Broccoli
-Beyond Sausage
-Tofu Scramble
-</div>
-      <br>
-    </div>
-  </div>
-  <div class="w3-third">
-    <div class="w3-card w3-container" style="min-height:400px">
-    <h3>Grace Dodge</h3>
-    <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-    <div class="list">
-GRILL
-BBQ Fried Onion Ring Burger
-3 Cheese Grilled Cheese
+## Customising
 
-VEGAN & VEGETARIAN STATION
-Vegetable Lo Mein
+When using Garth as a theme means you can take advantage of the file overriding method. This allows you to overwrite any file in this theme with your own custom file, by matching the file name and path. The most common example of this would be if you want to add your own styles or change the core style settings.
 
-DAILY PIZZAS
-Three Cheese Pizza
-Mushroom Flatbread Pizza
+To add your own styles copy the [`styles.scss`](https://github.com/daviddarnes/garth/blob/master/assets/styles.scss) into your own project with the same file path (`assets/styles.scss`). From there you can add your own styles, you can even optionally ignore the theme styles by removing the `@import "garth";` line.
 
-GRILL
-Fried Chicken
-Mac & Cheese
+If you're looking to set your own colours copy the [`_colors.scss`](https://github.com/daviddarnes/garth/blob/master/_sass/_colors.scss) and main theme styles file [`garth.scss`](https://github.com/daviddarnes/garth/blob/master/_sass/garth.scss) into your project at the same file path (`_sass/`) and change variables however you wish. The settings are a mixture of custom variables and settings from [Sassline](https://medium.com/@jakegiltsoff/sassline-v2-0-e424b2881e7e) - follow the link to find out how to configure the typographic settings.
 
-VEGAN & VEGETARIAN STATION
-Pasta Dinner
+## Site settings
 
-GRAIN BOWL
-Chicken Ceviche
-Black Eyed Peas
-Trio Roasted Peppers with Corn
-</div>
-    <br>
-    </div>
-    <div class="w3-card w3-container" style="min-height:400px">
-      <h3>JJs</h3>
-      <i class="fa fa-diamond w3-margin-bottom w3-text-theme" style="font-size:10px"></i>
-      <div class="list">
-MAIN LINE
-Mexi Burger
-Pesto Grilled Chicken Sandwich
-Prosciutto, Mozzarella, and Pesto Mayo Panini
-Trix Pancakes with Cereal Milk Glaze
-Falafel Bowl with Tahini and Fresh Salad
-Mexi Black Bean Burger
+You'll need to change the `description`, `title` and `url` to match with the project.
 
-GRILL
-Beef Empanadas
+## Page layouts
 
-FRY STATION
-Fried Items
-</div>
-      <br>
-    </div>
-  </div>
-</div>
+There are 3 layouts; `page`, `post` and `home` (home acts as the font page blog).
 
+> **Note:** The Post List Page options are actually in the collection data within the `_config.yml` file, this is so they can be edited with CMSs such as [Siteleaf](https://siteleaf.com)
 
+## Credits
 
-            <hr/>
-            <footer>
-                <p>by Kevin Xu &#128512;</p>
-            </footer>
-        </div>
-    </body>
-</html>
+- Thanks to [Sassline](https://sassline.com/) for the typographic basis, by [Jake Giltsoff](https://twitter.com/jakegiltsoff)
+- Thanks to [Flexbox mixin](https://github.com/mastastealth/sass-flex-mixin) by [Brian Franco](https://twitter.com/brianfranco)
+- Thanks to [Normalize](https://necolas.github.io/normalize.css/) by [Nicolas Gallagher](https://twitter.com/necolas) and [Jonathan Neal](https://twitter.com/jon_neal).
+- Thanks to [pygments-css](http://richleland.github.io/pygments-css/) for the autumn syntax highlighting, by [Rich Leland](https://twitter.com/richleland)
