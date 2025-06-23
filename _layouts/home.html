@@ -1,26 +1,20 @@
 ---
-layout: default
+layout: archive
 ---
 
-{% include site-header.html %}
+{{ content }}
 
-<main class="main  container">
+<h3 class="archive__subtitle">{{ site.data.ui-text[site.locale].recent_posts | default: "Recent Posts" }}</h3>
 
-	<div class="content">
+{% if paginator %}
+  {% assign posts = paginator.posts %}
+{% else %}
+  {% assign posts = site.posts %}
+{% endif %}
 
-    <article class="article  article--page  typeset">
+{% assign entries_layout = page.entries_layout | default: 'list' %}
+<div class="entries-{{ entries_layout }}">
+  {% include documents-collection.html entries=posts type=entries_layout %}
+</div>
 
-			{% assign collectiondata = site.collections | where: "label", page.collectionpage | first %}
-			<h1>{{ collectiondata.title }}</h1>
-
-			{{ collectiondata.description | markdownify }}
-
-    </article>
-
-    {% include post-list.html %}
-
-  </div>
-
-</main>
-
-{% include site-footer.html %}
+{% include paginator.html %}
