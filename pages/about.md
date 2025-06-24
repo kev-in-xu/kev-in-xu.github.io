@@ -1,22 +1,22 @@
 ---
 layout: single
-title: "About"
+title: "Me, Kevin Xu"
 permalink: /about/
 author_profile: true
 ---
 Kevin Xu
 
-CS + Bio @ Columbia
+[BioWorks](/projects/) podcaster, BIOL 2005/6 TA, Syn Bio at the [Danino Lab](https://daninolab.nyc/).
 
-Syn Bio at the [Danino Lab](https://daninolab.nyc/).
+AoC enthusiast, 
 
 Photographer of plants, fungi, and on occasion, stationary animals.
 
 {% 
 include figure 
-image_path="/assets/images/i-yam.jpg" 
+image_path="/assets/images/i-yam.png" 
 alt="I yam what I yam." 
 caption="Source: Poorly Drawn Lines" 
 %}
 
-Or, feel free to check out my resume <a href="/assets/files/resume.pdf" target="_blank" class="btn btn--primary">here</a>
+Or, feel free to check out my resume <a href="/assets/files/resume.pdf" target="_blank" style="color: gray; text-decoration: none;">here</a>

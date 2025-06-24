@@ -15,3 +15,24 @@ search: false
   margin-bottom: 0.4em;   /* Less space between items */
   padding: 0;
 }
+
+.reveal-word {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  color: black;
+  font-weight: 600;
+}
+
+.reveal-word .highlight-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: #c8c8c8; /* highlight color */
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+
+.reveal-word.revealed .highlight-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
