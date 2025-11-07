@@ -1,8 +1,8 @@
 ---
 layout: single
 title: Snake (Play in Browser)
-permalink: /games/snake/
-classes: wide
+permalink: /projects/snake/
+author_profile: true
 ---
 
 <!--
