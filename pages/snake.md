@@ -26,7 +26,7 @@ Learning notes are sprinkled throughout as comments.
 
 <div class="snake-wrapper">
   <div class="panel">
-    <canvas id="game" width="520" height="520" aria-label="Snake game canvas" role="img"></canvas>
+    <canvas id="game" aria-label="Snake game canvas" role="img"></canvas>
     <div style="margin-top:0.75rem; display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
       <button id="restart" class="btn">Restart (R)</button>
       <button id="pause" class="btn">Pause (P)</button>
@@ -56,9 +56,14 @@ Learning notes are sprinkled throughout as comments.
 <script>
 (() => {
   // ===== Game configuration =====
-  const GRID_W = 15;     // grid columns (roughly width from your Python version)
+  // Grid settings
+  const GRID_W = 15;     // grid columns
   const GRID_H = 15;     // grid rows
-  const CELL   = 20;     // pixel size of a grid cell (canvas is 520x520)
+  const CELL   = 20;     // pixel size of a grid cell
+  const CANVAS_WIDTH = GRID_W * CELL;  // calculate canvas width
+  const CANVAS_HEIGHT = GRID_H * CELL; // calculate canvas height
+  
+  // Speed settings
   const TICK_MS_START = 150; // base speed (lower = faster)
   const TICK_MS_MIN   = 60;  // cap the minimum tick for difficulty ramp
   const SPEEDUP_EVERY = 3;   // every N apples eaten, speed up a bit
@@ -77,6 +82,8 @@ Learning notes are sprinkled throughout as comments.
 
   // ===== Canvas setup =====
   const canvas = document.getElementById('game');
+  canvas.width = CANVAS_WIDTH;   // Set canvas size programmatically
+  canvas.height = CANVAS_HEIGHT; // Set canvas size programmatically
   const ctx = canvas.getContext('2d');
   const ui = {
     score: document.getElementById('score'),
@@ -166,7 +173,7 @@ Learning notes are sprinkled throughout as comments.
     if (e.code === 'KeyR') { reset(); return; }
     pushInput(e.code);
   });
-  
+
   ui.pause.addEventListener('click', () => { if (state === State.RUN) state = State.PAUSE; else if (state === State.PAUSE) state = State.RUN; });
   ui.restart.addEventListener('click', reset);
 
