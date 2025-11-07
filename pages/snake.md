@@ -56,20 +56,20 @@ Learning notes are sprinkled throughout as comments.
 <script>
 (() => {
   // ===== Game configuration =====
-  const GRID_W = 26;     // grid columns (roughly width from your Python version)
-  const GRID_H = 26;     // grid rows
+  const GRID_W = 15;     // grid columns (roughly width from your Python version)
+  const GRID_H = 15;     // grid rows
   const CELL   = 20;     // pixel size of a grid cell (canvas is 520x520)
-  const TICK_MS_START = 120; // base speed (lower = faster)
+  const TICK_MS_START = 150; // base speed (lower = faster)
   const TICK_MS_MIN   = 60;  // cap the minimum tick for difficulty ramp
-  const SPEEDUP_EVERY = 5;   // every N apples eaten, speed up a bit
+  const SPEEDUP_EVERY = 3;   // every N apples eaten, speed up a bit
   const SPEEDUP_DELTA = 8;   // ms removed per speedup step
 
   // Colors
   const COLORS = {
     bg:   '#111',
     grid: '#1b1b1b',
-    head: '#5eead4', // teal
-    body: '#14b8a6',
+    head: '#15a521ff', // green
+    body: '#137f29ff',
     apple:'#ef4444', // red
     text: '#e5e7eb',
     fade: 'rgba(0,0,0,0.25)'
@@ -155,12 +155,18 @@ Learning notes are sprinkled throughout as comments.
   }
 
   window.addEventListener('keydown', (e) => {
+    // Prevent scrolling for arrow keys
+    if (e.code.startsWith('Arrow')) {
+        e.preventDefault();
+    }
+    
     if (e.code === 'KeyP') {
-      if (state === State.RUN) state = State.PAUSE; else if (state === State.PAUSE) state = State.RUN; return;
+        if (state === State.RUN) state = State.PAUSE; else if (state === State.PAUSE) state = State.RUN; return;
     }
     if (e.code === 'KeyR') { reset(); return; }
     pushInput(e.code);
   });
+  
   ui.pause.addEventListener('click', () => { if (state === State.RUN) state = State.PAUSE; else if (state === State.PAUSE) state = State.RUN; });
   ui.restart.addEventListener('click', reset);
 
@@ -173,14 +179,14 @@ Learning notes are sprinkled throughout as comments.
     }
 
     const head = snake[0];
-    const nh = { x: head.x + dir.x, y: head.y + dir.y };
+    const nh = { x: head.x + dir.x, y: head.y + dir.y }; // new head
 
     // walls -> game over
     if (nh.x < 0 || nh.x >= GRID_W || nh.y < 0 || nh.y >= GRID_H) {
       state = State.OVER; return;
     }
 
-    const eating = eq(nh, apple);
+    const eating = eq(nh, apple); // new head on apple
 
     // self collision: allow moving into the tail IF not eating (tail will move away)
     const bodyToCheck = eating ? snake : snake.slice(0, snake.length - 1);

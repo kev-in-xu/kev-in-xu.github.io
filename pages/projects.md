@@ -16,4 +16,8 @@ permalink: /projects/
 - [BioWorks](https://open.spotify.com/show/3NHurpbqtRjjwgDwkkozZd?si=8ae1509247734939)
 - [CVP VentureTalks](https://open.spotify.com/show/4ngKWNOO64MNbo5l0WOnYS?si=49adac7460ff4ccb)
 
+
+## 2. Games 🎮
+- [Snake Game](/projects/snake/) - Classic snake game implemented in HTML5 Canvas
+
 More to come
