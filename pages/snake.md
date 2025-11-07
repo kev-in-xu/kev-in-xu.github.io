@@ -1,6 +1,6 @@
 ---
 layout: single
-title: Snake (Play in Browser)
+title: Snake
 permalink: /projects/snake/
 author_profile: true
 ---
@@ -13,6 +13,9 @@ How to use on GitHub Pages (Jekyll + Minimal Mistakes):
 
 Learning notes are sprinkled throughout as comments.
 -->
+Game logic originally coded in Python. Now implemented in HTML5 Canvas + JS.
+
+How to play: Use <b>Arrow Keys</b> or <b>WASD</b> to move. Press <b>P</b> to pause/resume. Press <b>R</b> to restart.
 
 <style>
   /* Page layout */
@@ -28,8 +31,6 @@ Learning notes are sprinkled throughout as comments.
   <div class="panel">
     <canvas id="game" aria-label="Snake game canvas" role="img"></canvas>
     <div style="margin-top:0.75rem; display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
-      <button id="restart" class="btn">Restart (R)</button>
-      <button id="pause" class="btn">Pause (P)</button>
       <span class="stat">Score: <span id="score">0</span></span>
       <span class="stat">Best: <span id="best">0</span></span>
       <span class="stat">Speed: <span id="speed">1.00x</span></span>
@@ -37,11 +38,6 @@ Learning notes are sprinkled throughout as comments.
   </div>
 
   <div class="panel">
-    <h2>How to play</h2>
-    <ul>
-      <li>Use <b>Arrow Keys</b> or <b>WASD</b> to move.</li>
-      <li>Press <b>P</b> to pause/resume. Press <b>R</b> to restart.</li>
-    </ul>
     <h3>Learning notes</h3>
     <ol>
       <li>This is an <b>HTML5 Canvas</b> game. The canvas is a 2D grid we paint every frame.</li>
@@ -89,8 +85,6 @@ Learning notes are sprinkled throughout as comments.
     score: document.getElementById('score'),
     best:  document.getElementById('best'),
     speed: document.getElementById('speed'),
-    pause: document.getElementById('pause'),
-    restart: document.getElementById('restart')
   };
 
   // Persisted best score
@@ -174,9 +168,6 @@ Learning notes are sprinkled throughout as comments.
     pushInput(e.code);
   });
 
-  ui.pause.addEventListener('click', () => { if (state === State.RUN) state = State.PAUSE; else if (state === State.PAUSE) state = State.RUN; });
-  ui.restart.addEventListener('click', reset);
-
   // ===== Core step =====
   function step() {
     // apply queued input if present
@@ -251,9 +242,9 @@ Learning notes are sprinkled throughout as comments.
     ctx.fillStyle = COLORS.fade; ctx.fillRect(0,0,canvas.width, canvas.height);
     ctx.fillStyle = COLORS.text;
     ctx.textAlign = 'center';
-    ctx.font = 'bold 28px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial';
+    ctx.font = 'bold 20px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial';
     ctx.fillText(text, canvas.width/2, canvas.height/2 - 10);
-    ctx.font = '16px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial';
+    ctx.font = '14px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial';
     if (sub) ctx.fillText(sub, canvas.width/2, canvas.height/2 + 20);
   }
 
@@ -290,5 +281,14 @@ Learning notes are sprinkled throughout as comments.
   reset();
   requestAnimationFrame(loop);
 })();
+/*
+To dos:
+- Add high score sharing
+- Change speedup to percentage rathe than flat time decrease
+- 
+
+
+
+*/
 </script>
 {% endraw %}
