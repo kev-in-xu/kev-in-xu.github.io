@@ -11,7 +11,8 @@ Frankenstein
 Imagineers of War  
 Nothing but the Night  
 Pale Fire  
-Bad Blood  
+Bad Blood
+Americanah (audio)
   
 ## 2024  
 Hitchhiker's Guide  
