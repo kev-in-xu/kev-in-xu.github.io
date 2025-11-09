@@ -18,6 +18,9 @@ permalink: /projects/
 
 
 ## 2. Games 🎮
-- [Snake Game](/projects/snake/) - Classic snake game implemented in HTML5 Canvas
+<small>
+  recreated some simple games for fun and practice
+</small>
+- [Snake Game](/projects/snake/) - A classic
 
 More to come
