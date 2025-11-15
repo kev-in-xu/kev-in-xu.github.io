@@ -12,13 +12,14 @@ Imagineers of War
 Nothing but the Night  
 Pale Fire  
 Bad Blood
-Americanah (audio)
+Americanah (audio)  
+Everything is Tuberculosis (audio)
   
-## 2024  
+## 2024 
 Hitchhiker's Guide  
 Interpreter of Maladies  
 Miguel Street (audio)  
-Man's Search for Meaning (audio)  
+**Man's Search for Meaning** (audio)  
 When We Cease to Understand the World (audio)  
 All the Light We Cannot See  
 Genentech (audio)  
@@ -47,7 +48,7 @@ The Lives of a Cell: Notes of a Biology Watcher (partial)
 The Overstory (audio)  
 On Grand Strategy  
 Perks of Being a Wallflower (audio)  
-**When Breath Becomes Air (audio)**  
+**When Breath Becomes Air** (audio)  
 **Fortune Smiles**  
 The Mosquito: Human History (partial)  
 Bright Magic (partial)  

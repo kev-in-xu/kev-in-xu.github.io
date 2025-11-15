@@ -92,6 +92,31 @@ Eat apples, not yourself
   const colorInput = document.getElementById('lb-color');
   const DEFAULT_COLOR = '#15a521';
   colorInput.value = DEFAULT_COLOR;
+  const BEST_KEY = 'snake-best-v1';
+  const BEST_SUBMITTED_KEY = 'snake-best-submitted-v1';
+  const submitBtn = document.querySelector('#lb-form button[type="submit"]');
+  const msgEl = document.getElementById('lb-msg');
+  const SUBMIT_LOCK_MESSAGE = "You've already submitted this best score. Beat it to submit again.";
+  // Sync submit button state with localStorage
+  const getStoredBest = () => Number(localStorage.getItem(BEST_KEY) || 0);
+  const getSubmittedScore = () => Number(localStorage.getItem(BEST_SUBMITTED_KEY) || 0);
+  // Disable submit if current best is already submitted
+  function syncSubmitLock(currentBest = getStoredBest()) {
+    const submitted = getSubmittedScore();
+    const shouldLock = Number.isFinite(currentBest) && currentBest > 0 && submitted >= currentBest;
+    if (submitBtn) submitBtn.disabled = shouldLock; // if the button exists?
+    if (shouldLock) {
+      msgEl.textContent = SUBMIT_LOCK_MESSAGE;
+    } else if (msgEl.textContent === SUBMIT_LOCK_MESSAGE) {
+      msgEl.textContent = "";
+    }
+    return shouldLock;
+  }
+  window.addEventListener('snake-best-changed', (evt) => {
+    const newBest = Number(evt?.detail?.score) || 0; // '?' makes it so that if evt or evt.detail is undefined, it won't throw an error
+    syncSubmitLock(newBest);
+  });
+  syncSubmitLock();
   async function loadLeaderboard() {
     const list = document.getElementById('lb-list');
     list.innerHTML = "<li>Loading…</li>";
@@ -126,29 +151,34 @@ Eat apples, not yourself
   }
   document.getElementById('lb-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const msg = document.getElementById('lb-msg');
     const initials = document.getElementById('lb-initials').value.trim().toUpperCase();
     const color = document.getElementById('lb-color').value;
     const score = window.SnakeGame?.getBestScore?.() ?? 0;
     if (!validateInitials(initials)) {
-      msg.textContent = "Please enter two letters (A–Z).";
+      msgEl.textContent = "Please enter two letters (A–Z).";
       return;
     }
     if (!validateHex(color)) {
-      msg.textContent = "Pick a valid color.";
+      msgEl.textContent = "Pick a valid color.";
       return;
     }
     if (!Number.isFinite(score) || score <= 0) {
-      msg.textContent = "Play a round and set a best score before submitting.";
+      msgEl.textContent = "Play a round and set a best score before submitting.";
+      return;
+    }
+    if (syncSubmitLock(score)) {
+      msgEl.textContent = SUBMIT_LOCK_MESSAGE;
       return;
     }
     // Insert
     const { error } = await sb.from('scores').insert([{ initials, color, score }]);
     if (error) {
-      msg.textContent = `Submit failed: ${error.message}`;
+      msgEl.textContent = `Submit failed: ${error.message}`;
       return;
     }
-    msg.textContent = "Score submitted!";
+    localStorage.setItem(BEST_SUBMITTED_KEY, String(score));
+    syncSubmitLock(score);
+    msgEl.textContent = "Score submitted!";
     e.target.reset();
     colorInput.value = DEFAULT_COLOR;
     loadLeaderboard();
@@ -200,6 +230,10 @@ Eat apples, not yourself
   ui.best.textContent = String(bestScore);
   window.SnakeGame = window.SnakeGame || {};
   window.SnakeGame.getBestScore = () => bestScore;
+  const notifyBestChange = () => {
+    window.dispatchEvent(new CustomEvent('snake-best-changed', { detail: { score: bestScore } }));
+  };
+  notifyBestChange();
 
   // ===== Helpers =====
   const rnd = (n) => Math.floor(Math.random() * n);
@@ -307,7 +341,12 @@ Eat apples, not yourself
       if (eaten % SPEEDUP_EVERY === 0) {
         tickMs = Math.max(TICK_MS_MIN, Math.round(tickMs * 0.95));
       }
-      if (score > bestScore) { bestScore = score; localStorage.setItem(BEST_KEY, String(bestScore)); ui.best.textContent = String(bestScore); }
+      if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem(BEST_KEY, String(bestScore));
+        ui.best.textContent = String(bestScore);
+        notifyBestChange();
+      }
     } else {
       snake.pop(); // remove tail
     }
@@ -392,12 +431,8 @@ Eat apples, not yourself
 })();
 /*
 To dos:
-- Add high score sharing
-- Change speedup to percentage rathe than flat time decrease
-- 
-
-
-
+- Add localStorage for whether best score has been submitted, and disallow resubmission
+- Do not set default color for color picker and require initials and color to be set before submitting
 */
 </script>
 {% endraw %}

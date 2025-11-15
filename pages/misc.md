@@ -33,7 +33,7 @@ gallery:
 
 
 <div id="rss-feeds">
-    <h2>My Radar 📡</h2>
+    <h2>Feeds 📡</h2>
   </div>
 
   <style>

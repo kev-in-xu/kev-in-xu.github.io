@@ -39,6 +39,9 @@ footer:
       - label: "GitHub"
         icon: "fab fa-fw fa-github"
         url: "https://github.com/kev-in-xu"
+      - label: "Email"
+        icon: "far fa-fw fa-envelope"
+        url: "mailto:kevinxu116@gmail.com"
 
 # Plugins (only those supported by GitHub Pages)
 plugins:

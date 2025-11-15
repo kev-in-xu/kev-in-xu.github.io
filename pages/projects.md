@@ -13,8 +13,8 @@ permalink: /projects/
   coined by BBC journalist Ben Hammersley in 2004
 </small>
 
-- [BioWorks](https://open.spotify.com/show/3NHurpbqtRjjwgDwkkozZd?si=8ae1509247734939)
-- [CVP VentureTalks](https://open.spotify.com/show/4ngKWNOO64MNbo5l0WOnYS?si=49adac7460ff4ccb)
+- [BioWorks](https://open.spotify.com/show/3NHurpbqtRjjwgDwkkozZd?si=8ae1509247734939) - Bio, Tech, and Business
+- [CVP VentureTalks](https://open.spotify.com/show/4ngKWNOO64MNbo5l0WOnYS?si=49adac7460ff4ccb) - Startups and VC
 
 
 ## 2. Games 🎮

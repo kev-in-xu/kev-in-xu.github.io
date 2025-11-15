@@ -11,12 +11,10 @@ Columbiamenus creator, [AoC](https://adventofcode.com/) enthusiast, web dev dabb
 Photographer of plants, fungi, and on occasion, stationary animals.
 
 Semi-regular dinner party host.
-{% 
-include figure 
-image_path="/assets/images/i-yam.png" 
-alt="I yam what I yam." 
-caption="Source: <a href='https://poorlydrawnlines.com/'>Poorly Drawn Lines</a>"
-class="align-center width-half"
-%}
+
+<figure class="align-center" style="max-width: 400px; margin: 2em auto;">
+  <img src="/assets/images/i-yam.png" alt="I yam what I yam." style="width: 100%; border-radius: 4px;">
+  <figcaption>Source: <a href='https://poorlydrawnlines.com/'>Poorly Drawn Lines</a></figcaption>
+</figure>
 
 Or, feel free to check out my resume <a href="/assets/files/resume.pdf" target="_blank" style="color: gray; text-decoration: none;">here</a>
