@@ -1,4 +1,9 @@
 @charset "UTF-8";
+/*
+// 1. YOUR CUSTOM VARIABLE OVERRIDES GO HERE
+$sidebar-width: 250px; 
+$right-sidebar-width: 250px;
+*/
 /* ==========================================================================
    Default skin
    ========================================================================== */
@@ -5098,6 +5103,13 @@ body {
     height: 1px !important;
   }
 }
+/*
+@media screen and (min-width: $large) { 
+  .layout--single {
+    padding-left: $sidebar-width; 
+  }
+}
+  */
 /* Tighter font and spacing for bookshelf */
 .tight-bookshelf .page__content {
   font-size: 0.95em; /* Slightly smaller font */
@@ -5125,6 +5137,84 @@ body {
 .reveal-word.revealed .highlight-overlay {
   opacity: 0;
   pointer-events: none;
+}
+
+.page__content h1 .header-link,
+.page__content h2 .header-link,
+.page__content h3 .header-link,
+.page__content h4 .header-link,
+.page__content h5 .header-link,
+.page__content h6 .header-link {
+  display: none !important;
+}
+
+/* CUSTOM CSS */
+.feed h5 {
+  margin-bottom: 0.2rem;
+  margin-top: 1rem;
+}
+
+.feed ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.feed li {
+  margin: 0.2rem 0;
+}
+
+.feed li a {
+  font-size: 0.85rem;
+  color: #555;
+  text-decoration: none;
+}
+
+.feed li a:hover {
+  text-decoration: underline;
+}
+
+/* Tippy.js Custom Theme for your tooltips */
+.tippy-box[data-theme~=custom] {
+  /* 🌟 ROUNDED CORNERS */
+  border-radius: 7px;
+  /* 🌟 RECTANGLE BACKGROUND */
+  background-color: #d1d0d0;
+  /* 🌟 LARGER TEXT */
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  /* Ensure the max width is reasonable for readability */
+  max-width: 600px;
+}
+
+/* Style the text color if needed */
+.tippy-box[data-theme~=custom] .tippy-content {
+  color: rgb(53, 53, 53);
+}
+
+/* Style the arrow */
+.tippy-box[data-theme~=custom] .tippy-arrow {
+  border-top-color: #333;
+  border-bottom-color: #333;
+}
+
+.hidden-feed-item {
+  display: none; /* Ensure it overrides any default list item display */
+}
+
+/* Optional: Style the button */
+.show-more-button {
+  background: #eee;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 5px 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border-radius: 4px;
+}
+
+.show-more-button:hover {
+  background: #ddd;
 }
 
 /*# sourceMappingURL=main.css.map */

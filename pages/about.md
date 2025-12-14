@@ -1,10 +1,10 @@
 ---
 layout: single
-title: "About Me"
+title: "About"
 permalink: /about/
 author_profile: true
 ---
-Syn Bio at the [Danino Lab](https://daninolab.nyc/), BIOL 2005/6 TA, [BioWorks](/projects/) podcaster.
+Syn Bio at the [Danino Lab](https://daninolab.nyc/), Intro Bio TA, [BioWorks](/projects/) podcaster.
 
 Columbiamenus creator, [AoC](https://adventofcode.com/) enthusiast, web dev dabbler.
 

@@ -429,10 +429,5 @@ Eat apples, not yourself
   reset();
   requestAnimationFrame(loop);
 })();
-/*
-To dos:
-- Add localStorage for whether best score has been submitted, and disallow resubmission
-- Do not set default color for color picker and require initials and color to be set before submitting
-*/
 </script>
 {% endraw %}
