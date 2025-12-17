@@ -1,11 +1,11 @@
 ---
 layout: single
-title: CVP's Feed 📡
-permalink: /projects/cvp-feed/
+title: Kevin's Feed
+permalink: /projects/kevin-feed/
 author_profile: false
-classes: page--cvp-feed
+classes: page--kevin-feed
 ---
-<small>Collection of interesting articles and podcasts recommended by the members of <a href="https://www.columbiaventurepartners.org/" target="_blank" rel="noopener noreferrer">Columbia Venture Partners</a></small>
+<small>personal feed</small>
 <hr>
 <div id="rss-feeds">
   <small>
@@ -21,6 +21,10 @@ classes: page--cvp-feed
   <div id="loading" style="margin-top: 1rem; color: #666;">Loading feeds...</div>
 </div>
 
+<style>
+  
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
@@ -33,12 +37,12 @@ classes: page--cvp-feed
     const selectElement = document.getElementById('date-range-select');
 
     // Initial load: Use the default selected value (14)
-    loadFeeds(parseInt(selectElement.value), ['CVP']); 
+    loadFeeds(parseInt(selectElement.value), ['Kevin']); 
     
     // Add event listener to re-run the fetch when the dropdown changes
     selectElement.addEventListener('change', (event) => {
       const days = parseInt(event.target.value);
-      loadFeeds(days, ['CVP']); // Re-fetch the data from the server
+      loadFeeds(days, ['Kevin']); // Re-fetch the data from the server
     });
   });
 </script>

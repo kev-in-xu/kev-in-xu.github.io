@@ -24,6 +24,6 @@ permalink: /projects/
 - [Snake Game](/projects/snake/) - A classic
 
 ## 3. CVP 🌱
-- [CVP's feed aggregator](/projects/cvp-feed/) - Club-wide feed of interesting articles and podcasts
+- [CVP Feed Aggregator](/projects/cvp-feed/) - Club-wide feed of interesting articles and podcasts
 
 More to come

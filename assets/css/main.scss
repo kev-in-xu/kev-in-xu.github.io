@@ -114,3 +114,13 @@ $right-sidebar-width: 250px;
 .show-more-button:hover {
     background: #ddd;
 }
+
+/* Target links in H3s, but ONLY on the 'My Feed' page */
+.page--cvp-feed h5 a {
+  color: #006825; /* Example: Bright Red */
+}
+
+.page--cvp-feed h5 a:hover {
+  color: #00682487; /* Example: Lighter Red on hover */
+  text-decoration: underline; 
+}

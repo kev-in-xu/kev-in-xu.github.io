@@ -5217,4 +5217,14 @@ body {
   background: #ddd;
 }
 
+/* Target links in H3s, but ONLY on the 'My Feed' page */
+.page--cvp-feed h5 a {
+  color: #006825; /* Example: Bright Red */
+}
+
+.page--cvp-feed h5 a:hover {
+  color: rgba(0, 104, 36, 0.5294117647); /* Example: Lighter Red on hover */
+  text-decoration: underline;
+}
+
 /*# sourceMappingURL=main.css.map */
