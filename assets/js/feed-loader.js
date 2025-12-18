@@ -1,10 +1,11 @@
 // TODO add a summary block where you can prompt LLMs to generate a highlight from all the scraped data
+// TODO updated supabase edge function to see if I can put the feed items manually
 
 // 2. Initialize Supabase
 // Replace these with your actual Project URL and Anon Key (sb_publishable...)
 const SUPABASE_URL = 'https://lljbzkmtshufnzfnzawp.supabase.co'; 
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsamJ6a210c2h1Zm56Zm56YXdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MTM1NDksImV4cCI6MjA3ODI4OTU0OX0.F-ARDzmDyzgLl49CWroQupwO6mbttQxgvxIxup92fv0';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const MS_PER_DAY = 24 * 60 * 60 * 1000; // Define the millisecond constants globally
 
 // Helper: Truncates titles that are too long
@@ -138,7 +139,7 @@ async function loadFeeds(daysAgo = 14, audience = ['CVP']) {
 
     // 3. Query: Fetch items + the name of the feed they belong to
     // We order by feed name first to make grouping easier, then by date
-    const { data: feeds, error } = await supabase
+    const { data: feeds, error } = await supabaseClient
       .from('feeds')
       .select(`
         name,

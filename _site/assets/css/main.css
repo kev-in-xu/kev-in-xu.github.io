@@ -5227,4 +5227,42 @@ body {
   text-decoration: underline;
 }
 
+@media (min-width: 80em) {
+  .sidebar__right {
+    /* Set the width to the narrower size (200px) */
+    width: 200px;
+    /* Crucially, the negative margin MUST match the width */
+    margin-inline-end: -200px;
+  }
+}
+/* Optional: If you also want to narrow the left sidebar */
+@media (min-width: 80em) {
+  .sidebar {
+    /* Using the narrower calc(200px - 1em) value */
+    width: calc(200px - 1em);
+  }
+}
+@media (min-width: 80em) {
+  .page {
+    width: calc(100% - 200px);
+    padding-inline-end: 200px;
+  }
+}
+@media (min-width: 80em) {
+  .page__related {
+    width: calc(100% - 200px);
+  }
+}
+@media (min-width: 80em) {
+  .archive {
+    width: calc(100% - 200px);
+    padding-inline-end: 200px;
+  }
+}
+@media (min-width: 80em) {
+  .archive .grid__wrapper {
+    margin-inline-end: -200px;
+  }
+}
+
 /*# sourceMappingURL=main.css.map */
