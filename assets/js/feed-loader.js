@@ -205,8 +205,8 @@ async function loadFeeds(daysAgo = 14, audience = ['CVP']) {
     }
 
     // 6. Organize and Render Feeds by Type
-    renderTypeSection("Newsletters", groupedByType.newsletter, rssFeedsContainer);
-    renderTypeSection("Podcasts", groupedByType.podcast, rssFeedsContainer);
+    renderTypeSection("Newsletters 📰", groupedByType.newsletter, rssFeedsContainer);
+    renderTypeSection("Podcasts 🎧", groupedByType.podcast, rssFeedsContainer);
 
     // 7. Set up show more buttons
     setupShowMoreListeners(); 
