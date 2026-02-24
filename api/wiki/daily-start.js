@@ -4,7 +4,7 @@ import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { cacheGetJson, cacheSetJson, blobPutJson, detectCacheBackends } from './_cache.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 
-const TARGET_PAGE = "https://en.wikipedia.org/wiki/Artificial_general_intelligence";
+const TARGET_PAGE = toWikiPageRef({ title: 'Artificial general intelligence' });
 const MAX_ATTEMPTS = 25;
 const CACHE_PREFIX = 'wiki-race:daily-start:';
 
