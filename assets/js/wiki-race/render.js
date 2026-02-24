@@ -11,6 +11,11 @@ export function createRenderer(rootEl) {
     article: rootEl.querySelector('[data-region="article"]'),
     route: rootEl.querySelector('[data-region="route"]')
   };
+  let lastArticleHtml = null;
+  let lastAllowedLinksKey = '';
+  let lastRouteText = null;
+  let lastStatusText = null;
+  let lastStatusHtml = null;
 
   function renderState(state) {
     els.timer.textContent = formatElapsedMs(state.elapsedMs || 0);
@@ -25,33 +30,96 @@ export function createRenderer(rootEl) {
     els.abandonBtn.disabled = !isRunning;
 
     if (state.status === 'loading_start') {
-      els.status.textContent = 'Loading today\'s start page...';
+      const next = 'Loading today\'s start page...';
+      if (lastStatusText !== next || lastStatusHtml !== null) {
+        els.status.textContent = next;
+        lastStatusText = next;
+        lastStatusHtml = null;
+      }
     } else if (state.status === 'won') {
-      els.status.textContent = `Finished in ${state.clickCount} clicks, ${formatElapsedMs(state.elapsedMs || 0)}.`;
+      const next = `Finished in ${state.clickCount} clicks, ${formatElapsedMs(state.elapsedMs || 0)}.`;
+      if (lastStatusText !== next || lastStatusHtml !== null) {
+        els.status.textContent = next;
+        lastStatusText = next;
+        lastStatusHtml = null;
+      }
     } else if (state.status === 'abandoned') {
-      els.status.textContent = 'Run abandoned.';
+      const next = 'Run abandoned.';
+      if (lastStatusText !== next || lastStatusHtml !== null) {
+        els.status.textContent = next;
+        lastStatusText = next;
+        lastStatusHtml = null;
+      }
     } else if (state.status === 'error') {
-      els.status.textContent = state.errorMessage || 'An error occurred. Start again.';
+      const next = state.errorMessage || 'An error occurred. Start again.';
+      if (lastStatusText !== next || lastStatusHtml !== null) {
+        els.status.textContent = next;
+        lastStatusText = next;
+        lastStatusHtml = null;
+      }
     } else if (isIdle) {
-      els.status.innerHTML = 'Click <strong>Start</strong> to reveal today&apos;s article.';
+      const nextHtml = 'Click <strong>Start</strong> to reveal today&apos;s article.';
+      if (lastStatusHtml !== nextHtml) {
+        els.status.innerHTML = nextHtml;
+        lastStatusHtml = nextHtml;
+        lastStatusText = null;
+      }
     } else if (isRunning) {
-      els.status.textContent = state.currentPageTitle
+      const next = state.currentPageTitle
         ? `Current page: ${state.currentPageTitle}`
         : 'Run started.';
+      if (lastStatusText !== next || lastStatusHtml !== null) {
+        els.status.textContent = next;
+        lastStatusText = next;
+        lastStatusHtml = null;
+      }
     } else if (isTerminal) {
-      els.status.textContent = state.status;
+      const next = state.status;
+      if (lastStatusText !== next || lastStatusHtml !== null) {
+        els.status.textContent = next;
+        lastStatusText = next;
+        lastStatusHtml = null;
+      }
     }
 
-    if (state.articleHtml) {
+    const allowedLinksKey = (state.allowedLinkPaths || []).join('|');
+    const shouldUpdateArticleHtml = state.articleHtml && state.articleHtml !== lastArticleHtml;
+    const shouldRefreshLinkStates = shouldUpdateArticleHtml || allowedLinksKey !== lastAllowedLinksKey;
+
+    if (shouldUpdateArticleHtml) {
       els.article.innerHTML = state.articleHtml;
+      els.article.querySelectorAll('.wiki-race-categories').forEach((node) => node.remove());
+      lastArticleHtml = state.articleHtml;
     }
 
-    els.route.textContent = state.routeTitles?.length ? state.routeTitles.join(' -> ') : '-';
+    if (shouldRefreshLinkStates && state.articleHtml) {
+      const allowedPaths = new Set(state.allowedLinkPaths || []);
+      els.article.querySelectorAll('a[href]').forEach((anchor) => {
+        const path = anchor.getAttribute('data-wiki-path') || anchor.getAttribute('href') || '';
+        if (!allowedPaths.has(path)) {
+          anchor.setAttribute('data-disabled', 'true');
+          anchor.setAttribute('aria-disabled', 'true');
+          anchor.setAttribute('tabindex', '-1');
+        } else {
+          anchor.removeAttribute('data-disabled');
+          anchor.removeAttribute('aria-disabled');
+          anchor.removeAttribute('tabindex');
+        }
+      });
+      lastAllowedLinksKey = allowedLinksKey;
+    }
+
+    const routeText = state.routeTitles?.length ? state.routeTitles.join(' -> ') : '-';
+    if (routeText !== lastRouteText) {
+      els.route.textContent = routeText;
+      lastRouteText = routeText;
+    }
   }
 
   function onArticleLinkClick(handler) {
     els.article.addEventListener('click', (event) => {
-      const link = event.target.closest('a');
+      const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+      const link = target?.closest?.('a');
       if (!link || !els.article.contains(link)) return;
       handler(event, link);
     });

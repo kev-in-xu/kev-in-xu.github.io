@@ -162,39 +162,6 @@ function normalizeLinks($, $root) {
   return linkIndex;
 }
 
-function appendCategories($root, categories, linkIndex) {
-  const visibleCategories = (categories || [])
-    .map((c) => String(c?.title || ''))
-    .filter((title) => title.startsWith('Category:'))
-    .filter((title) => !/hidden categories/i.test(title));
-
-  if (!visibleCategories.length) return false;
-
-  const existingPaths = new Set(linkIndex.map((l) => l.path));
-  const items = [];
-
-  for (const categoryTitle of visibleCategories) {
-    const path = `/wiki/${encodeURIComponent(categoryTitle.replace(/ /g, '_')).replace(/%3A/g, ':')}`;
-    const label = categoryTitle.replace(/^Category:/, '').replace(/_/g, ' ');
-    items.push(`<li><a href="${path}" data-wiki-path="${path}">${label}</a></li>`);
-    if (!existingPaths.has(path)) {
-      linkIndex.push({
-        href: path,
-        path,
-        title: categoryTitle.replace(/_/g, ' '),
-        normalizedTitle: categoryTitle.replace(/ /g, '_'),
-        text: label
-      });
-      existingPaths.add(path);
-    }
-  }
-
-  $root.append(
-    `<section class="wiki-race-categories"><h3>Categories</h3><ul>${items.join('')}</ul></section>`
-  );
-  return true;
-}
-
 export function sanitizeWikiArticleHtml({ rawHtml, displayTitle, categories = [] }) {
   const $ = load('<div id="__root"></div>', { decodeEntities: false });
   $('#__root').html(String(rawHtml || ''));
@@ -212,12 +179,11 @@ export function sanitizeWikiArticleHtml({ rawHtml, displayTitle, categories = []
   });
 
   cleanupAttributes($, $body);
+  void categories;
   const linkIndex = normalizeLinks($, $body);
-  const hasCategories = appendCategories($body, categories, linkIndex);
 
   const html = [
     '<article class="wiki-race-article-body">',
-    `<h2>${stripHtmlTags(displayTitle)}</h2>`,
     $body.html() || '<p>No article content available.</p>',
     '</article>'
   ].join('');
@@ -227,7 +193,7 @@ export function sanitizeWikiArticleHtml({ rawHtml, displayTitle, categories = []
     linkIndex,
     metrics: {
       validOutboundLinkCount: linkIndex.length,
-      hasCategories
+      hasCategories: false
     }
   };
 }

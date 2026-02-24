@@ -58,7 +58,17 @@ export function isValidStartPage(flags, title) {
 export function normalizeAndValidateWikiPath(href) {
   if (!href) return null;
   try {
-    const url = new URL(href, 'https://en.wikipedia.org');
+    const raw = String(href).trim();
+    if (!raw || raw.startsWith('#')) return null;
+
+    let url;
+    if (raw.startsWith('./')) {
+      if (raw.includes('?') || raw.includes('#')) return null;
+      url = new URL(`/wiki/${raw.slice(2)}`, 'https://en.wikipedia.org');
+    } else {
+      url = new URL(raw, 'https://en.wikipedia.org');
+    }
+
     if (url.hostname !== 'en.wikipedia.org') return null;
     if (!url.pathname.startsWith('/wiki/')) return null;
     if (url.hash) return null;

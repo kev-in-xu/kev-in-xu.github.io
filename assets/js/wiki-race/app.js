@@ -20,6 +20,7 @@ function normalizePathFromHref(href) {
 }
 
 function buildUiState(gameState, elapsedMs, historyController) {
+  const allowedLinkPaths = gameState.currentPage?.linkIndex?.map((link) => link.path) || [];
   return {
     status: gameState.status,
     errorMessage: gameState.errorMessage,
@@ -28,8 +29,25 @@ function buildUiState(gameState, elapsedMs, historyController) {
     canGoBack: historyController.canGoBack(),
     currentPageTitle: gameState.currentPage?.displayTitle || null,
     articleHtml: gameState.currentPage?.html || null,
-    routeTitles: gameState.route.map((step) => step.title)
+    routeTitles: gameState.route.map((step) => step.title),
+    allowedLinkPaths
   };
+}
+
+function isAllowedCurrentPageLink(currentPage, path) {
+  if (!currentPage?.linkIndex?.length) return false;
+  return currentPage.linkIndex.some((link) => link.path === path);
+}
+
+function isTargetPageMatch(pagePayload, targetPage) {
+  if (!pagePayload?.page || !targetPage) return false;
+  const targetPath = targetPage.path;
+  const currentPath = pagePayload.page.path;
+  if (targetPath && currentPath && targetPath === currentPath) return true;
+
+  const targetNorm = targetPage.normalizedTitle;
+  const currentNorm = pagePayload.page.normalizedTitle;
+  return Boolean(targetNorm && currentNorm && targetNorm === currentNorm);
 }
 
 async function bootstrap() {
@@ -116,7 +134,7 @@ async function bootstrap() {
     const state = store.getState();
     if (state.status !== 'running' || !state.currentPage) return;
 
-    const targetPath = state.targetPage?.path || '/wiki/Internet';
+    const targetPath = state.targetPage?.path || '/wiki/Artificial_general_intelligence';
     const winningClick = path === targetPath;
     const snapshot = {
       page: state.currentPage,
@@ -133,6 +151,12 @@ async function bootstrap() {
 
     try {
       const page = await getWikiPageByPath(path);
+      const reachedTarget = winningClick || isTargetPageMatch(page, store.getState().targetPage);
+      let finalElapsedMs = null;
+      if (reachedTarget && store.getState().status === 'running') {
+        finalElapsedMs = timer.stop();
+      }
+
       store.updateState((prev) => {
         const clickCount = prev.clickCount + (winningClick ? 0 : 1);
         const route = [...prev.route, {
@@ -146,11 +170,11 @@ async function bootstrap() {
           currentPage: page,
           clickCount,
           route,
-          status: winningClick ? 'won' : 'running',
+          status: reachedTarget ? 'won' : 'running',
           errorMessage: null
         };
       });
-      renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
+      renderer.renderState(buildUiState(store.getState(), finalElapsedMs ?? timer.getElapsedMs(), historyController));
     } catch (err) {
       store.updateState((prev) => ({
         ...prev,
@@ -162,6 +186,11 @@ async function bootstrap() {
   }
 
   renderer.onControl('start', () => {
+    renderer.els.startBtn?.scrollIntoView({
+      block: 'start',
+      inline: 'nearest',
+      behavior: 'smooth'
+    });
     startRun();
   });
 
@@ -186,9 +215,19 @@ async function bootstrap() {
       return;
     }
 
-    const path = normalizePathFromHref(link.getAttribute('href'));
+    const path = link.getAttribute('data-wiki-path') || normalizePathFromHref(link.getAttribute('href'));
     if (!path) {
       event.preventDefault();
+      return;
+    }
+
+    if (!isAllowedCurrentPageLink(state.currentPage, path)) {
+      event.preventDefault();
+      store.updateState((prev) => ({
+        ...prev,
+        errorMessage: 'That link is not allowed in this game.'
+      }));
+      renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
       return;
     }
 

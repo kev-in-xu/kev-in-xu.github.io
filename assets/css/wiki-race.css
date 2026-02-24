@@ -18,12 +18,12 @@
     var(--wr-bg);
   border: 1px solid var(--wr-border);
   border-radius: 14px;
-  padding: 1rem;
+  padding: 0.6rem;
   box-shadow: var(--wr-shadow);
 }
 
 .wiki-race-header {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.35rem;
 }
 
 .wiki-race-title {
@@ -35,6 +35,13 @@
 .wiki-race-subtitle {
   margin: 0.4rem 0 0;
   color: var(--wr-muted);
+  font-size: 0.66rem;
+  line-height: 1.25;
+}
+
+.wiki-race-subtitle a {
+  color: var(--wr-accent-2);
+  text-decoration-thickness: 1px;
 }
 
 .wiki-race-toolbar {
@@ -42,7 +49,7 @@
   flex-wrap: wrap;
   gap: 0.5rem 0.75rem;
   align-items: center;
-  margin: 0.75rem 0;
+  margin: 0.4rem 0;
 }
 
 .wiki-race-btn {
@@ -76,31 +83,45 @@
 }
 
 .wiki-race-status {
+  margin: 0 0 0.35rem;
+  color: var(--wr-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.wiki-race-route-panel {
   background: var(--wr-panel);
   border: 1px solid var(--wr-border);
-  border-radius: 10px;
-  padding: 0.6rem 0.75rem;
-  margin-bottom: 0.75rem;
+  border-radius: 6px;
+  padding: 0.45rem 0.45rem;
+  margin-bottom: 0.25rem;
+}
+
+.wiki-race-route-panel h2 {
+  margin: 0 0 0.15rem;
+  font-size: 0.95rem;
 }
 
 .wiki-race-main {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  gap: 0.75rem;
-  align-items: start;
+  display: block;
 }
 
-.wiki-race-article,
-.wiki-race-sidebar {
+.wiki-race-article {
   background: var(--wr-panel);
   border: 1px solid var(--wr-border);
   border-radius: 10px;
-  padding: 0.85rem;
+  padding: 0.65rem;
   min-height: 240px;
+}
+
+.wiki-race-article {
+  max-height: 70vh;
+  overflow: auto;
 }
 
 .wiki-race-article a {
   color: var(--wr-accent-2);
+  text-decoration-thickness: 1px;
 }
 
 .wiki-race-article a[data-disabled="true"] {
@@ -114,22 +135,44 @@
   margin: 0;
 }
 
-.wiki-race-sidebar h2 {
+.wiki-race-article h2,
+.wiki-race-article h3,
+.wiki-race-article h4 {
+  margin-top: 1rem;
+}
+
+.wiki-race-article h2:first-child {
   margin-top: 0;
-  font-size: 1rem;
+}
+
+.wiki-race-article p,
+.wiki-race-article ul,
+.wiki-race-article ol,
+.wiki-race-article table {
+  margin-bottom: 0.8rem;
+}
+
+.wiki-race-article table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.wiki-race-article th,
+.wiki-race-article td {
+  border: 1px solid var(--wr-border);
+  padding: 0.25rem 0.4rem;
 }
 
 .wiki-race-route {
   color: var(--wr-text);
   white-space: normal;
   word-break: break-word;
+  font-size: 0.75rem;
 }
 
 @media (max-width: 960px) {
-  .wiki-race-main {
-    grid-template-columns: 1fr;
-  }
-
   .wiki-race-stats {
     width: 100%;
     margin-left: 0;

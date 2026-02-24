@@ -22,6 +22,7 @@ permalink: /projects/
   recreated some simple games for fun and practice
 </small>
 - [Snake Game](/projects/snake/) - A classic
+- [Race to AGI (wiki game)](/projects/wiki-race) - Daily Wikipedia navigation challenge
 
 ## 3. CVP 🌱
 - [CVP Feed Aggregator](/projects/cvp-feed/) - Club-wide feed of interesting articles and podcasts

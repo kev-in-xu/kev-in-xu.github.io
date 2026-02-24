@@ -1,11 +1,11 @@
 import { fetchMwJson, toWikiPageRef } from './_mw.js';
 import { isValidStartPage } from './_filter.js';
 import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
-import { cacheGetJson, cacheSetJson, blobPutJson } from './_cache.js';
+import { cacheGetJson, cacheSetJson, blobPutJson, detectCacheBackends } from './_cache.js';
 
-const TARGET_PAGE = toWikiPageRef({ title: 'Internet' });
+const TARGET_PAGE = "https://en.wikipedia.org/wiki/Artificial_general_intelligence";
 const MAX_ATTEMPTS = 25;
-const KV_PREFIX = 'wiki-race:daily-start:';
+const CACHE_PREFIX = 'wiki-race:daily-start:';
 
 function utcDateKey(d = new Date()) {
   const year = d.getUTCFullYear();
@@ -35,7 +35,8 @@ export default async function handler(req, res) {
   }
 
   const dateKey = req.query?.date ? String(req.query.date) : utcDateKey();
-  const cacheKey = `${KV_PREFIX}${dateKey}`;
+  const cacheKey = `${CACHE_PREFIX}${dateKey}`;
+  const backends = await detectCacheBackends();
 
   try {
     const cached = await cacheGetJson(cacheKey);
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
       res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
       return res.status(200).json({
         ...cached,
-        seedSource: 'kv'
+        seedSource: backends.primary === 'supabase' ? 'supabase' : 'memory'
       });
     }
   } catch (_err) {
