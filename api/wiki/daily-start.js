@@ -2,6 +2,7 @@ import { fetchMwJson, toWikiPageRef } from './_mw.js';
 import { isValidStartPage } from './_filter.js';
 import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { cacheGetJson, cacheSetJson, blobPutJson, detectCacheBackends } from './_cache.js';
+import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 
 const TARGET_PAGE = "https://en.wikipedia.org/wiki/Artificial_general_intelligence";
 const MAX_ATTEMPTS = 25;
@@ -30,6 +31,9 @@ async function fetchRandomArticleTitle() {
 }
 
 export default async function handler(req, res) {
+  if (handleCorsPreflight(req, res)) return;
+  applyWikiApiCors(req, res);
+
   if (req.method && req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

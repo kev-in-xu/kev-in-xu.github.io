@@ -1,6 +1,22 @@
+function getApiBaseUrl() {
+  const root = document.getElementById('wiki-race-app');
+  const fromData = root?.dataset?.apiBase?.trim();
+  const fromWindow = typeof window !== 'undefined' && typeof window.WIKI_RACE_API_BASE === 'string'
+    ? window.WIKI_RACE_API_BASE.trim()
+    : '';
+  return fromWindow || fromData || '';
+}
+
+function buildApiUrl(pathWithQuery) {
+  const base = getApiBaseUrl();
+  if (!base) return pathWithQuery;
+  return `${base.replace(/\/+$/, '')}${pathWithQuery}`;
+}
+
 async function fetchJson(url) {
   const response = await fetch(url, {
-    headers: { Accept: 'application/json' }
+    headers: { Accept: 'application/json' },
+    mode: 'cors'
   });
 
   let body;
@@ -22,13 +38,13 @@ async function fetchJson(url) {
 }
 
 export function getDailyStart() {
-  return fetchJson('/api/wiki/daily-start');
+  return fetchJson(buildApiUrl('/api/wiki/daily-start'));
 }
 
 export function getWikiPageByTitle(title) {
-  return fetchJson(`/api/wiki/page?title=${encodeURIComponent(title)}`);
+  return fetchJson(buildApiUrl(`/api/wiki/page?title=${encodeURIComponent(title)}`));
 }
 
 export function getWikiPageByPath(path) {
-  return fetchJson(`/api/wiki/page?path=${encodeURIComponent(path)}`);
+  return fetchJson(buildApiUrl(`/api/wiki/page?path=${encodeURIComponent(path)}`));
 }

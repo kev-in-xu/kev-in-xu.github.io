@@ -1,4 +1,5 @@
 import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
+import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 
 function parseTitleOrPath(req) {
   const title = req.query?.title ? String(req.query.title).trim() : '';
@@ -12,6 +13,9 @@ function parseTitleOrPath(req) {
 }
 
 export default async function handler(req, res) {
+  if (handleCorsPreflight(req, res)) return;
+  applyWikiApiCors(req, res);
+
   if (req.method && req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

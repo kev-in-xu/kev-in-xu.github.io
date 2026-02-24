@@ -7,7 +7,7 @@ author_profile: false
 
 <link rel="stylesheet" href="/assets/css/wiki-race.css">
 
-<div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence">
+<div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="">
   <div class="wiki-race-shell">
     <header class="wiki-race-header">
       <p class="wiki-race-subtitle">
