@@ -1,8 +1,11 @@
 ---
-layout: single
+layout: single-full
 title: Race to AGI (wiki game)
 permalink: /projects/wiki-race
 author_profile: false
+classes:
+  - wide
+  - wiki-race-page
 ---
 
 <link rel="stylesheet" href="/assets/css/wiki-race.css">

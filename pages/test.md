@@ -1,5 +1,4 @@
 ---
-layout: single
 title: "Testpage"
 permalink: /test/
 ---

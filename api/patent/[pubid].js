@@ -42,6 +42,11 @@ export default async function handler(req, res) {
       status: r.related_doc_status,     // PV status text
       published_date: r.related_doc_published_date
       }));
+
+      const json = {
+      ...base,
+      related
+      };
   
   
       // Cache at the edge so repeat lookups are free/instant

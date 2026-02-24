@@ -1,8 +1,6 @@
 ---
-layout: single
 title: Snake
 permalink: /projects/snake/
-author_profile: false
 ---
 
 <!--

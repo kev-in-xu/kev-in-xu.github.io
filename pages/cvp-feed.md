@@ -1,8 +1,6 @@
 ---
-layout: single
 title: CVP's Feed 📡
 permalink: /projects/cvp-feed/
-author_profile: false
 classes: page--cvp-feed
 ---
 <small>Collection of interesting newsletters and podcasts recommended by members of <a href="https://www.columbiaventurepartners.org/" target="_blank" rel="noopener noreferrer">Columbia Venture Partners</a></small>

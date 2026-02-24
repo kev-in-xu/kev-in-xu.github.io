@@ -1,8 +1,6 @@
 ---
-layout: single
 title: Kevin's Feed
 permalink: /projects/kevin-feed/
-author_profile: false
 classes: page--kevin-feed
 ---
 <small>personal feed</small>

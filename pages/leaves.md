@@ -1,5 +1,4 @@
 ---
-layout: single
 title: "Loose Leaves"
 permalink: /leaves/
 classes: tight-bookshelf

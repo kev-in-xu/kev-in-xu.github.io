@@ -1,5 +1,4 @@
 ---
-layout: single
 title: "Bookshelf"
 permalink: /bookshelf/
 classes: tight-bookshelf

@@ -63,6 +63,19 @@ $right-sidebar-width: 250px;
 
 /* CUSTOM CSS */
 
+@media (min-width: 1024px) {
+  .layout--single-full #main {
+    max-width: min(1700px, 96vw);
+    padding-inline: 2rem;
+  }
+
+  .layout--single-full .page,
+  .layout--single-full .page__related {
+    width: 100%;
+    padding-inline-end: 0;
+  }
+}
+
 .feed h5 { margin-bottom: 0.2rem; margin-top: 1rem; }
 .feed ul { list-style: none; padding-left: 0; }
 .feed li { margin: 0.2rem 0; }
