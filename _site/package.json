@@ -21,6 +21,11 @@
   "engines": {
     "node": ">= 0.10.0"
   },
+  "dependencies": {
+    "@vercel/blob": "^1.1.1",
+    "@vercel/kv": "^1.0.1",
+    "cheerio": "^1.1.2"
+  },
   "devDependencies": {
     "uglify-js": "^3.17.4"
   }

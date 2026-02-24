@@ -76,7 +76,8 @@ function renderTypeSection(title, feedsGroup, container) {
 
     // Render the individual feed groups within this section
     Object.keys(feedsGroup).forEach(name => {
-        renderFeedGroup(name, feedsGroup[name].url, feedsGroup[name].items, feedsGroup[name].description);
+        renderFeedGroup(name, feedsGroup[name].url, 
+            feedsGroup[name].items, feedsGroup[name].description);
     });
 }
 

@@ -1,0 +1,78 @@
+import { fetchMwJson, toWikiPageRef } from './_mw.js';
+import { computePageFlags } from './_filter.js';
+import { sanitizeWikiArticleHtml } from './_sanitize.js';
+
+function pickPageFromQuery(query) {
+  const pages = Object.values(query?.pages || {});
+  return pages[0] || null;
+}
+
+function stripDisplayTitle(displayTitle, fallback) {
+  const stripped = String(displayTitle || '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return stripped || fallback;
+}
+
+export async function buildWikiPagePayloadByTitle(title) {
+  const queryData = await fetchMwJson({
+    action: 'query',
+    prop: 'info|pageprops|categories',
+    inprop: 'url',
+    clshow: '!hidden',
+    cllimit: 'max',
+    titles: title
+  });
+
+  const pageMeta = pickPageFromQuery(queryData.query);
+  if (!pageMeta || pageMeta.missing) {
+    const err = new Error('Wikipedia page not found');
+    err.status = 404;
+    throw err;
+  }
+
+  const parseData = await fetchMwJson({
+    action: 'parse',
+    page: pageMeta.title,
+    prop: 'text|displaytitle|revid'
+  });
+
+  const rawHtml = parseData?.parse?.text?.['*'] || '';
+  const cleanDisplayTitle = stripDisplayTitle(parseData?.parse?.displaytitle, pageMeta.title);
+  const sanitized = sanitizeWikiArticleHtml({
+    rawHtml,
+    displayTitle: cleanDisplayTitle,
+    categories: pageMeta.categories || []
+  });
+
+  const flags = computePageFlags({
+    title: pageMeta.title,
+    categories: pageMeta.categories || [],
+    pageprops: pageMeta.pageprops || {},
+    validOutboundLinkCount: sanitized.metrics.validOutboundLinkCount,
+    html: rawHtml
+  });
+
+  const pageRef = toWikiPageRef({ title: pageMeta.title, pageid: pageMeta.pageid });
+
+  return {
+    page: pageRef,
+    canonicalPath: pageRef.path,
+    displayTitle: cleanDisplayTitle,
+    html: sanitized.html,
+    linkIndex: sanitized.linkIndex,
+    metrics: sanitized.metrics,
+    flags,
+    fetchedAtUtc: new Date().toISOString(),
+    cache: {
+      source: 'fresh',
+      revid: parseData?.parse?.revid
+    },
+    _internal: {
+      rawHtml,
+      pageMeta,
+      parseData
+    }
+  };
+}

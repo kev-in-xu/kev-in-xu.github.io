@@ -1,0 +1,137 @@
+.wiki-race-app {
+  --wr-bg: #f6f3ec;
+  --wr-panel: #fffdf8;
+  --wr-border: #d5ccb8;
+  --wr-text: #1f1a14;
+  --wr-muted: #6f6558;
+  --wr-accent: #155e63;
+  --wr-accent-2: #0e7490;
+  --wr-danger: #b42318;
+  --wr-shadow: 0 12px 30px rgba(40, 30, 20, 0.08);
+  color: var(--wr-text);
+}
+
+.wiki-race-shell {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(14, 116, 144, 0.09), transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(21, 94, 99, 0.08), transparent 45%),
+    var(--wr-bg);
+  border: 1px solid var(--wr-border);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: var(--wr-shadow);
+}
+
+.wiki-race-header {
+  margin-bottom: 0.75rem;
+}
+
+.wiki-race-title {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.wiki-race-subtitle {
+  margin: 0.4rem 0 0;
+  color: var(--wr-muted);
+}
+
+.wiki-race-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  margin: 0.75rem 0;
+}
+
+.wiki-race-btn {
+  border: 1px solid var(--wr-border);
+  background: var(--wr-panel);
+  color: var(--wr-text);
+  border-radius: 10px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+.wiki-race-btn:hover:not(:disabled) {
+  border-color: var(--wr-accent);
+}
+
+.wiki-race-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.wiki-race-btn-danger {
+  color: var(--wr-danger);
+}
+
+.wiki-race-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-left: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.wiki-race-status {
+  background: var(--wr-panel);
+  border: 1px solid var(--wr-border);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.wiki-race-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.wiki-race-article,
+.wiki-race-sidebar {
+  background: var(--wr-panel);
+  border: 1px solid var(--wr-border);
+  border-radius: 10px;
+  padding: 0.85rem;
+  min-height: 240px;
+}
+
+.wiki-race-article a {
+  color: var(--wr-accent-2);
+}
+
+.wiki-race-article a[data-disabled="true"] {
+  color: var(--wr-muted);
+  pointer-events: none;
+  text-decoration: line-through;
+}
+
+.wiki-race-placeholder {
+  color: var(--wr-muted);
+  margin: 0;
+}
+
+.wiki-race-sidebar h2 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.wiki-race-route {
+  color: var(--wr-text);
+  white-space: normal;
+  word-break: break-word;
+}
+
+@media (max-width: 960px) {
+  .wiki-race-main {
+    grid-template-columns: 1fr;
+  }
+
+  .wiki-race-stats {
+    width: 100%;
+    margin-left: 0;
+  }
+}
