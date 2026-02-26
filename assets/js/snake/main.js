@@ -44,8 +44,21 @@ function bootstrapSnake() {
     pauseBtn: document.getElementById('pause-btn'),
     restartBtn: document.getElementById('restart-btn')
   };
+  const isTouchUi = Boolean(
+    window.matchMedia?.('(pointer: coarse)').matches || navigator.maxTouchPoints > 0
+  );
 
   let leaderboard = null;
+  let pageScrollLocked = false;
+  const prevBodyOverflow = document.body.style.overflow;
+  const prevHtmlOverflow = document.documentElement.style.overflow;
+
+  function setPageScrollLocked(locked) {
+    if (pageScrollLocked === locked) return;
+    pageScrollLocked = locked;
+    document.body.style.overflow = locked ? 'hidden' : prevBodyOverflow;
+    document.documentElement.style.overflow = locked ? 'hidden' : prevHtmlOverflow;
+  }
 
   const game = createSnakeCore({
     gridW: GRID_W,
@@ -106,7 +119,10 @@ function bootstrapSnake() {
     const dt = t - last;
     last = t;
 
-    if (game.getState() === State.RUN) {
+    const gameState = game.getState();
+    setPageScrollLocked(isTouchUi && gameState === State.RUN);
+
+    if (gameState === State.RUN) {
       acc += dt; // how much time has accumulated since the last tick
       while (acc >= game.getTickMs()) { // loops so we can catch up if we drop frames
         acc -= game.getTickMs(); // only subtract one tick's worth of time
@@ -119,6 +135,7 @@ function bootstrapSnake() {
   }
 
   renderer.draw(game.getSnapshot());
+  setPageScrollLocked(false);
   requestAnimationFrame(loop);
 }
 
