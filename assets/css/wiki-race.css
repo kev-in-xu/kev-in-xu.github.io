@@ -112,6 +112,8 @@
   border-radius: 10px;
   padding: 0.65rem;
   min-height: 240px;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 .wiki-race-article {
@@ -150,6 +152,13 @@
 .wiki-race-article ol,
 .wiki-race-article table {
   margin-bottom: 0.8rem;
+}
+
+@media (min-width: 1024px) {
+  .wiki-race-article {
+    font-size: 0.95rem;
+    line-height: 1.35;
+  }
 }
 
 .wiki-race-article table {
