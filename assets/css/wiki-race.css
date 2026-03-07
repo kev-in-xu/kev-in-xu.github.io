@@ -9,6 +9,8 @@
   --wr-danger: #b42318;
   --wr-shadow: 0 12px 30px rgba(40, 30, 20, 0.08);
   color: var(--wr-text);
+  position: relative;
+  overflow: hidden;
 }
 
 .wiki-race-shell {
@@ -206,6 +208,26 @@
   white-space: normal;
   word-break: break-word;
   font-size: 0.75rem;
+}
+
+.wiki-race-confetti {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  contain: strict;
+  will-change: opacity;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.wiki-race-confetti.is-active {
+  opacity: 1;
+}
+
+.wiki-race-confetti svg {
+  width: 100%;
+  height: 100%;
 }
 
 @media (max-width: 960px) {

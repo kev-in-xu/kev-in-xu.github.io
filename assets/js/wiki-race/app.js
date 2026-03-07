@@ -4,8 +4,114 @@ import { createTimer } from './timer.js';
 import { createHistoryController } from './history.js';
 import { getDailyStart, getWikiPageByPath, getWikiPageByTitle } from './api-client.js';
 
+const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
+let lottieLoadPromise = null;
+
 function isFullscreenActive() {
   return Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+}
+
+function loadLottieWeb() {
+  if (window.lottie) return Promise.resolve(window.lottie);
+  if (lottieLoadPromise) return lottieLoadPromise;
+
+  lottieLoadPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = LOTTIE_WEB_CDN;
+    script.async = true;
+    script.onload = () => resolve(window.lottie || null);
+    script.onerror = () => reject(new Error('Failed to load lottie-web'));
+    document.head.appendChild(script);
+  });
+
+  return lottieLoadPromise;
+}
+
+function prefersReducedMotion() {
+  return Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
+function createWinConfetti(rootEl) {
+  const confettiSrc = rootEl?.dataset?.confettiSrc || '';
+  if (!confettiSrc || prefersReducedMotion()) {
+    return {
+      reset() {},
+      prime() {},
+      play() {}
+    };
+  }
+
+  const container = document.createElement('div');
+  container.className = 'wiki-race-confetti';
+  rootEl.appendChild(container);
+
+  let animation = null;
+  let animationReadyPromise = null;
+  let hasPlayedForRun = false;
+
+  async function ensureAnimation() {
+    if (animationReadyPromise) return animationReadyPromise;
+    const lottie = await loadLottieWeb();
+    if (!lottie) throw new Error('lottie-web unavailable');
+    animation = lottie.loadAnimation({
+      container,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      path: confettiSrc,
+      rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+      }
+    });
+    animation.setSpeed(0.32);
+    animationReadyPromise = new Promise((resolve, reject) => {
+      function onLoaded() {
+        animation.removeEventListener('DOMLoaded', onLoaded);
+        animation.removeEventListener('data_failed', onFailed);
+        resolve(animation);
+      }
+      function onFailed() {
+        animation.removeEventListener('DOMLoaded', onLoaded);
+        animation.removeEventListener('data_failed', onFailed);
+        reject(new Error('Failed to load confetti animation JSON'));
+      }
+      animation.addEventListener('DOMLoaded', onLoaded);
+      animation.addEventListener('data_failed', onFailed);
+    });
+    animation.addEventListener('complete', () => {
+      container.classList.remove('is-active');
+    });
+    return animationReadyPromise;
+  }
+
+  return {
+    reset() {
+      hasPlayedForRun = false;
+      container.classList.remove('is-active');
+      if (animation) animation.stop();
+    },
+    async prime() {
+      try {
+        const anim = await ensureAnimation();
+        anim.goToAndStop(0, true);
+      } catch (_err) {
+        // Ignore warmup failures; game remains playable.
+      }
+    },
+    async play() {
+      if (hasPlayedForRun) return;
+      hasPlayedForRun = true;
+      try {
+        const anim = await ensureAnimation();
+        container.classList.add('is-active');
+        requestAnimationFrame(() => {
+          anim.goToAndPlay(0, true);
+        });
+      } catch (_err) {
+        container.classList.remove('is-active');
+      }
+    }
+  };
 }
 
 async function requestElementFullscreen(el) {
@@ -94,6 +200,7 @@ async function bootstrap() {
   const store = createStore(createInitialGameState());
   const renderer = createRenderer(root);
   const historyController = createHistoryController();
+  const winConfetti = createWinConfetti(root);
   const fullscreenBtn = root.querySelector('[data-action="fullscreen"]');
 
   function syncFullscreenButtonLabel() {
@@ -137,6 +244,7 @@ async function bootstrap() {
   }
 
   async function startRun() {
+    winConfetti.reset();
     historyController.reset();
     timer.reset();
     store.setState({
@@ -150,7 +258,7 @@ async function bootstrap() {
       store.updateState((prev) => ({
         ...prev,
         dateKey: daily.dateKey,
-        targetPage: daily.target,
+        targetPage: daily.endPage,
         startPage: daily.startPage,
         status: 'loading_start'
       }));
@@ -223,6 +331,9 @@ async function bootstrap() {
         };
       });
       renderer.renderState(buildUiState(store.getState(), finalElapsedMs ?? timer.getElapsedMs(), historyController));
+      if (reachedTarget) {
+        void winConfetti.play();
+      }
     } catch (err) {
       store.updateState((prev) => ({
         ...prev,
@@ -321,6 +432,15 @@ async function bootstrap() {
   });
 
   renderer.renderState(buildUiState(store.getState(), 0, historyController));
+
+  const warmConfetti = () => {
+    void winConfetti.prime();
+  };
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(warmConfetti, { timeout: 1200 });
+  } else {
+    setTimeout(warmConfetti, 350);
+  }
 }
 
 bootstrap();

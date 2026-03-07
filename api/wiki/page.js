@@ -2,6 +2,11 @@ import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 import { getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
 
+/**
+ * Parses incoming page query as either title or wiki path.
+ * Input: request object with `query.title` or `query.path`.
+ * Output: `{ mode, value }` for valid input, otherwise `null`.
+ */
 function parseTitleOrPath(req) {
   const title = req.query?.title ? String(req.query.title).trim() : '';
   const path = req.query?.path ? String(req.query.path).trim() : '';
@@ -13,6 +18,11 @@ function parseTitleOrPath(req) {
   return null;
 }
 
+/**
+ * HTTP handler for `/api/wiki/page`. Called by client via api-client.js.
+ * Input: GET request with `?title=...` or `?path=/wiki/...`.
+ * Output: JSON page payload from cache or fresh Wikipedia fetch.
+ */
 export default async function handler(req, res) {
   const startedAt = Date.now();
   if (handleCorsPreflight(req, res)) return;
@@ -32,7 +42,7 @@ export default async function handler(req, res) {
     const cachedPayload = await getCachedWikiPageByTitle(parsed.value);
     const cacheLookupMs = Date.now() - cacheLookupStartedAt;
 
-    if (cachedPayload) {
+    if (cachedPayload) { // if cache lookup successful
       if (cachedPayload.flags?.isDisambiguation) {
         return res.status(422).json({
           error: 'Disambiguation pages are not allowed',
@@ -59,11 +69,11 @@ export default async function handler(req, res) {
           cacheLookupMs,
           endpointTotalMs: Date.now() - startedAt
         },
-        scaffold: false,
         todo: 'Page served from Supabase cache.'
       });
     }
 
+    // unsuccessful cache lookup -> fetch fresh page from Wikipedia, formats, and writes to cache
     const payload = await buildWikiPagePayloadByTitle(parsed.value);
 
     if (payload.flags.isDisambiguation) {
@@ -75,7 +85,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      await setCachedWikiPage(parsed.value, payload);
+      await setCachedWikiPage(parsed.value, payload); // writes
     } catch (_cacheWriteError) {
       // Non-fatal: still return fresh page if cache write fails.
     }
@@ -99,7 +109,6 @@ export default async function handler(req, res) {
         ...(payload.cache || {}),
         hit: false
       },
-      scaffold: false,
       todo: 'Page fetched from Wikipedia and written to Supabase page cache.'
     });
   } catch (err) {

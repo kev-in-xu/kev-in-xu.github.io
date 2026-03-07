@@ -22,7 +22,6 @@
     "node": ">= 0.10.0"
   },
   "dependencies": {
-    "@vercel/blob": "^1.1.1",
     "@supabase/supabase-js": "^2.57.4",
     "cheerio": "^1.1.2"
   },

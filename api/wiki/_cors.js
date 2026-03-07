@@ -6,6 +6,12 @@ const ALLOWED_ORIGINS = new Set([
   'http://127.0.0.1:3000'
 ]);
 
+/**
+ * Applies CORS headers when the request origin is allowlisted.
+ * Input: Node-style `req` and `res`.
+ * Output: No return value; mutates response headers.
+ * Logic: Checks `req.headers.origin` and writes allow headers for known origins.
+ */
 export function applyWikiApiCors(req, res) {
   const origin = req.headers?.origin;
   if (origin && ALLOWED_ORIGINS.has(origin)) {
@@ -16,6 +22,12 @@ export function applyWikiApiCors(req, res) {
   }
 }
 
+/**
+ * Handles OPTIONS preflight requests for wiki API endpoints.
+ * Input: Node-style `req` and `res`.
+ * Output: `true` if request was handled as preflight, else `false`.
+ * Logic: Reuses CORS headers and returns HTTP 204 for OPTIONS.
+ */
 export function handleCorsPreflight(req, res) {
   applyWikiApiCors(req, res);
   if (req.method === 'OPTIONS') {
@@ -24,4 +36,3 @@ export function handleCorsPreflight(req, res) {
   }
   return false;
 }
-

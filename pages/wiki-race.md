@@ -9,8 +9,11 @@ classes:
 ---
 
 <link rel="stylesheet" href="/assets/css/wiki-race.css">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js" crossorigin>
+<link rel="preload" as="fetch" href="/assets/animations/wiki-race-win-confetti.json?v=1">
 
-<div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="https://kev-in-xu-github-io.vercel.app">
+<div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="https://kev-in-xu-github-io.vercel.app" data-confetti-src="/assets/animations/wiki-race-win-confetti.json?v=1">
   <div class="wiki-race-shell">
     <header class="wiki-race-header">
       <p class="wiki-race-subtitle">

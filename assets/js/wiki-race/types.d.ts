@@ -18,11 +18,9 @@ export interface ValidLinkRef {
 
 export interface DailyStartResponse {
   dateKey: string;
-  target: WikiPageRef;
   startPage: WikiPageRef;
-  seedSource: 'kv' | 'generated';
-  generatedAtUtc: string;
-  generationAttempts?: number;
+  endPage: WikiPageRef;
+  seedSource: 'supabase' | 'memory' | 'generated';
 }
 
 export interface WikiPagePayload {
@@ -43,7 +41,7 @@ export interface WikiPagePayload {
   };
   fetchedAtUtc: string;
   cache: {
-    source: 'blob' | 'fresh';
+    source: 'cache' | 'fresh';
     key?: string;
     revid?: number;
   };

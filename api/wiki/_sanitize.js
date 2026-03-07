@@ -65,14 +65,32 @@ const REFERENCE_SECTION_TITLES = new Set([
   'works cited'
 ]);
 
+/**
+ * Removes HTML tags and normalizes whitespace.
+ * Input: string-like text.
+ * Output: Plain trimmed text.
+ * Logic: Strips tag markup and collapses consecutive whitespace.
+ */
 function stripHtmlTags(text) {
   return String(text || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 }
 
+/**
+ * Extracts normalized plain-text heading text from a cheerio node.
+ * Input: cheerio element wrapper.
+ * Output: Lowercased heading text.
+ * Logic: Reads node text and passes it through `stripHtmlTags`.
+ */
 function headingText($el) {
   return stripHtmlTags($el.text()).toLowerCase();
 }
 
+/**
+ * Removes reference-like sections and their content blocks.
+ * Input: cheerio `$` and article root `$root`.
+ * Output: No return value; mutates DOM tree.
+ * Logic: Finds matching h2/h3 headings and deletes nodes until next h2 boundary.
+ */
 function removeReferenceSections($, $root) {
   $root.find('h2, h3').each((_, heading) => {
     const $heading = $(heading);
@@ -91,6 +109,12 @@ function removeReferenceSections($, $root) {
   });
 }
 
+/**
+ * Enforces an allowlist of HTML tags and attributes.
+ * Input: cheerio `$` and article root `$root`.
+ * Output: No return value; mutates DOM tree.
+ * Logic: Replaces unsupported tags with contents and strips unsafe/unneeded attributes.
+ */
 function cleanupAttributes($, $root) {
   $root.find('*').each((_, el) => {
     const $el = $(el);
@@ -120,6 +144,12 @@ function cleanupAttributes($, $root) {
   });
 }
 
+/**
+ * Converts links to validated internal wiki paths and builds a unique link index.
+ * Input: cheerio `$` and article root `$root`.
+ * Output: Array of unique normalized link descriptors.
+ * Logic: Keeps only valid wiki article links and rewrites unsupported anchors to plain text.
+ */
 function normalizeLinks($, $root) {
   const linkIndex = [];
   const seen = new Set();
@@ -162,6 +192,12 @@ function normalizeLinks($, $root) {
   return linkIndex;
 }
 
+/**
+ * Sanitizes raw MediaWiki HTML into safe article markup for the wiki race UI.
+ * Input: `{ rawHtml, displayTitle, categories }`.
+ * Output: `{ html, linkIndex, metrics }` sanitized payload.
+ * Logic: Removes noisy elements, normalizes structure/links, and computes outbound-link metrics.
+ */
 export function sanitizeWikiArticleHtml({ rawHtml, displayTitle, categories = [] }) {
   const $ = load('<div id="__root"></div>', { decodeEntities: false });
   $('#__root').html(String(rawHtml || ''));
