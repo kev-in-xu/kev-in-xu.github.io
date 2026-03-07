@@ -9,9 +9,17 @@ classes:
 ---
 
 <link rel="stylesheet" href="/assets/css/wiki-race.css">
+<link rel="stylesheet" href="https://en.wikipedia.org/w/load.php?lang=en&modules=mediawiki.skinning.content.parsoid&only=styles&skin=vector">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js" crossorigin>
 <link rel="preload" as="fetch" href="/assets/animations/wiki-race-win-confetti.json?v=1">
+
+<script>
+  (function () {
+    var isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    if (isLocalhost) window.WIKI_RACE_API_BASE = 'http://localhost:3000';
+  })();
+</script>
 
 <div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="https://kev-in-xu-github-io.vercel.app" data-confetti-src="/assets/animations/wiki-race-win-confetti.json?v=1">
   <div class="wiki-race-shell">
@@ -42,6 +50,16 @@ classes:
     </section>
 
     <section class="wiki-race-main">
+      <aside class="wiki-race-toc-panel" data-region="toc-panel" aria-label="Article table of contents">
+        <nav class="vector-toc vector-toc-pinned" data-region="toc" aria-label="Contents">
+          <div class="vector-toc-heading">
+            <h2>Contents</h2>
+          </div>
+          <div class="vector-toc-contents">
+            <p class="wiki-race-toc-placeholder">Section links appear after you start.</p>
+          </div>
+        </nav>
+      </aside>
       <article class="wiki-race-article" data-region="article" aria-label="Article content">
         <p class="wiki-race-placeholder">Article content will appear here after you start.</p>
       </article>

@@ -132,7 +132,94 @@
 }
 
 .wiki-race-main {
-  display: block;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.wiki-race-toc-panel {
+  display: none;
+}
+
+.wiki-race-toc-panel .vector-toc {
+  background: #fff;
+  border: 1px solid #c8ccd1;
+  border-radius: 2px;
+  color: #202122;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.wiki-race-toc-panel .vector-toc-heading {
+  border-bottom: 1px solid #eaecf0;
+  padding: 0.55rem 0.75rem;
+}
+
+.wiki-race-toc-panel .vector-toc-heading h2 {
+  margin: 0;
+  border: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Noto Sans", Helvetica, Arial, sans-serif;
+}
+
+.wiki-race-toc-panel .vector-toc-contents {
+  padding: 0.35rem 0;
+}
+
+.wiki-race-toc-panel .vector-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wiki-race-toc-panel .vector-toc-list-item {
+  margin: 0;
+}
+
+.wiki-race-toc-panel .vector-toc-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  color: #202122;
+  padding: 0.25rem 0.75rem;
+  text-decoration: none;
+}
+
+.wiki-race-toc-panel .vector-toc-link:hover {
+  text-decoration: underline;
+}
+
+.wiki-race-toc-panel .vector-toc-numb {
+  color: #54595d;
+  flex: 0 0 auto;
+  min-width: 2.15rem;
+  text-align: right;
+}
+
+.wiki-race-toc-panel .vector-toc-text {
+  color: inherit;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.wiki-race-toc-panel .vector-toc-level-3 .vector-toc-link {
+  padding-left: 1.5rem;
+}
+
+.wiki-race-toc-panel .vector-toc-level-4 .vector-toc-link {
+  padding-left: 2.25rem;
+}
+
+.wiki-race-toc-panel .vector-toc-list-item-active > .vector-toc-link {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+.wiki-race-toc-placeholder {
+  margin: 0;
+  padding: 0.25rem 0.75rem 0.5rem;
+  color: #72777d;
+  font-size: 0.82rem;
 }
 
 .wiki-race-article {
@@ -159,6 +246,131 @@
   color: var(--wr-muted);
   pointer-events: none;
   text-decoration: line-through;
+}
+
+.wiki-race-article .wiki-race-article-body {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Noto Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.97rem;
+  line-height: 1.6;
+  color: #202122;
+  background: #fff;
+  padding: 0.1rem;
+}
+
+.wiki-race-article .wiki-race-article-body > :first-child {
+  margin-top: 0;
+}
+
+.wiki-race-article .wiki-race-article-body h2,
+.wiki-race-article .wiki-race-article-body h3,
+.wiki-race-article .wiki-race-article-body h4,
+.wiki-race-article .wiki-race-article-body h5,
+.wiki-race-article .wiki-race-article-body h6 {
+  margin-top: 1rem;
+  margin-bottom: 0.45rem;
+  font-family: "Linux Libertine", "Georgia", "Times New Roman", serif;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #000;
+}
+
+.wiki-race-article .wiki-race-article-body table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.wiki-race-article .wiki-race-article-body a {
+  color: #0645ad;
+  text-decoration: none;
+}
+
+.wiki-race-article .wiki-race-article-body a:hover {
+  text-decoration: underline;
+}
+
+.wiki-race-article .wiki-race-article-body a[data-disabled="true"] {
+  color: var(--wr-muted);
+  pointer-events: none;
+  text-decoration: line-through;
+}
+
+.wiki-race-article .wiki-race-article-body code,
+.wiki-race-article .wiki-race-article-body pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.wiki-race-article .wiki-race-article-body th,
+.wiki-race-article .wiki-race-article-body td {
+  border: 1px solid #a2a9b1;
+  padding: 0.3rem 0.45rem;
+}
+
+.wiki-race-article .wiki-race-article-body blockquote {
+  border-left: 2px solid #a2a9b1;
+  margin: 0.9rem 0;
+  padding: 0.2rem 0 0.2rem 0.8rem;
+  color: #54595d;
+}
+
+.wiki-race-article .wiki-race-article-body .sidebar {
+  display: block !important;
+}
+
+.wiki-race-article .wiki-race-article-body img,
+.wiki-race-article .wiki-race-article-body video,
+.wiki-race-article .wiki-race-article-body svg {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (min-width: 980px) {
+  .wiki-race-main {
+    grid-template-columns: minmax(210px, 245px) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .wiki-race-toc-panel.is-ready {
+    display: block;
+    position: sticky;
+    top: 0.4rem;
+    max-height: 70vh;
+    overflow: auto;
+  }
+
+  .wiki-race-article.has-sidebar .wiki-race-article-body {
+    position: relative;
+    padding-right: 19rem;
+  }
+
+  .wiki-race-article.has-sidebar .wiki-race-article-body .sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 17rem;
+    max-width: 45%;
+    margin: 0;
+    float: none;
+    clear: none;
+    z-index: 1;
+  }
+}
+
+@media (max-width: 979px) {
+  .wiki-race-toc-panel.is-ready {
+    display: block;
+  }
+
+  .wiki-race-article .wiki-race-article-body .sidebar {
+    position: static;
+    width: auto;
+    max-width: 100%;
+    margin: 0.8rem 0;
+  }
 }
 
 .wiki-race-placeholder {

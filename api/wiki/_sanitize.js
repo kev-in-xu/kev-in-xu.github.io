@@ -16,13 +16,7 @@ const REMOVE_SELECTORS = [
   '.references',
   'sup.reference',
   '.reference',
-  '.navbox',
-  '.vertical-navbox',
-  '.navbox-styles',
-  '.metadata',
   '.authority-control',
-  '.portal',
-  '.sistersitebox',
   '.printfooter',
   '.catlinks',
   '.shortdescription',
@@ -46,7 +40,7 @@ const STRIP_TAGS = [
 ];
 
 const ALLOWED_TAGS = new Set([
-  'article', 'section', 'div', 'span',
+  'article', 'section', 'div', 'span', 'aside', 'nav',
   'p', 'br', 'hr',
   'h2', 'h3', 'h4', 'h5', 'h6',
   'ul', 'ol', 'li', 'dl', 'dt', 'dd',
@@ -128,13 +122,15 @@ function cleanupAttributes($, $root) {
     const attrs = Object.keys(el.attribs || {});
     for (const attr of attrs) {
       const lower = attr.toLowerCase();
-      if (lower.startsWith('on') || lower === 'style' || lower === 'id') {
+      if (lower.startsWith('on') || lower === 'style') {
         $el.removeAttr(attr);
         continue;
       }
+      const keepGlobal = lower.startsWith('data-') || ['class', 'id', 'title', 'lang', 'dir'].includes(lower);
+      if (keepGlobal) continue;
 
       if (tagName === 'a') {
-        if (!['href', 'title'].includes(lower)) $el.removeAttr(attr);
+        if (lower !== 'href') $el.removeAttr(attr);
       } else if (['th', 'td'].includes(tagName)) {
         if (!['colspan', 'rowspan', 'scope'].includes(lower)) $el.removeAttr(attr);
       } else {
@@ -156,7 +152,18 @@ function normalizeLinks($, $root) {
 
   $root.find('a').each((_, a) => {
     const $a = $(a);
-    const href = $a.attr('href');
+    const href = String($a.attr('href') || '').trim();
+
+    if (href.startsWith('#')) {
+      const attrs = Object.keys(a.attribs || {});
+      for (const attr of attrs) {
+        const lower = attr.toLowerCase();
+        const keep = ['href', 'title', 'class', 'id'].includes(lower) || lower.startsWith('data-');
+        if (!keep) $a.removeAttr(attr);
+      }
+      return;
+    }
+
     const path = normalizeAndValidateWikiPath(href);
 
     if (!path) {
@@ -172,7 +179,9 @@ function normalizeLinks($, $root) {
     $a.attr('data-wiki-path', path);
     const attrs = Object.keys(a.attribs || {});
     for (const attr of attrs) {
-      if (!['href', 'title', 'data-wiki-path'].includes(attr)) {
+      const lower = attr.toLowerCase();
+      const keep = ['href', 'title', 'data-wiki-path', 'class', 'id'].includes(lower) || lower.startsWith('data-');
+      if (!keep) {
         $a.removeAttr(attr);
       }
     }
@@ -219,7 +228,7 @@ export function sanitizeWikiArticleHtml({ rawHtml, displayTitle, categories = []
   const linkIndex = normalizeLinks($, $body);
 
   const html = [
-    '<article class="wiki-race-article-body">',
+    '<article class="wiki-race-article-body mw-parser-output">',
     $body.html() || '<p>No article content available.</p>',
     '</article>'
   ].join('');

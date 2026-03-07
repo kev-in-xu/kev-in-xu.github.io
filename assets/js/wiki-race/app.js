@@ -384,7 +384,12 @@ async function bootstrap() {
       return;
     }
 
-    const path = link.getAttribute('data-wiki-path') || normalizePathFromHref(link.getAttribute('href'));
+    const href = (link.getAttribute('href') || '').trim();
+    if (href.startsWith('#')) {
+      return;
+    }
+
+    const path = link.getAttribute('data-wiki-path') || normalizePathFromHref(href);
     if (!path) {
       event.preventDefault();
       return;

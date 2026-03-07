@@ -9,6 +9,8 @@ export function createRenderer(rootEl) {
     clicks: rootEl.querySelector('[data-field="clicks"]'),
     status: rootEl.querySelector('[data-region="status"]'),
     article: rootEl.querySelector('[data-region="article"]'),
+    tocPanel: rootEl.querySelector('[data-region="toc-panel"]'),
+    toc: rootEl.querySelector('[data-region="toc"]'),
     route: rootEl.querySelector('[data-region="route"]')
   };
   let lastArticleHtml = null;
@@ -16,6 +18,162 @@ export function createRenderer(rootEl) {
   let lastRouteText = null;
   let lastStatusText = null;
   let lastStatusHtml = null;
+  let cleanupTocSync = () => {};
+
+  function ensureHeadingId(heading, fallbackText, seenIds) {
+    const preferredId = heading.getAttribute('id') || heading.querySelector('.mw-headline')?.getAttribute('id') || '';
+    if (preferredId) {
+      let uniqueId = preferredId;
+      let index = 2;
+      while (seenIds.has(uniqueId)) {
+        uniqueId = `${preferredId}_${index}`;
+        index += 1;
+      }
+      heading.setAttribute('id', uniqueId);
+      seenIds.add(uniqueId);
+      return uniqueId;
+    }
+
+    const base = String(fallbackText || 'section')
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[^\w\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '_') || 'section';
+
+    let id = base;
+    let index = 2;
+    while (seenIds.has(id)) {
+      id = `${base}_${index}`;
+      index += 1;
+    }
+    heading.setAttribute('id', id);
+    seenIds.add(id);
+    return id;
+  }
+
+  function collectHeadings(articleBody) {
+    const headingEls = articleBody.querySelectorAll('h2, h3, h4');
+    const seenIds = new Set();
+    const counters = [0, 0, 0, 0, 0, 0, 0];
+    const items = [];
+    let minLevel = 6;
+
+    headingEls.forEach((heading) => {
+      const level = Number(heading.tagName.slice(1));
+      if (!Number.isFinite(level) || level < 2 || level > 4) return;
+
+      const titleNode = heading.querySelector('.mw-headline') || heading;
+      const text = (titleNode.textContent || '').replace(/\[edit\]\s*$/i, '').trim();
+      if (!text) return;
+
+      minLevel = Math.min(minLevel, level);
+      const id = ensureHeadingId(heading, text, seenIds);
+
+      counters[level] += 1;
+      for (let i = level + 1; i < counters.length; i += 1) {
+        counters[i] = 0;
+      }
+
+      const number = [];
+      for (let i = minLevel; i <= level; i += 1) {
+        if (counters[i] > 0) number.push(counters[i]);
+      }
+
+      items.push({
+        id,
+        text,
+        level,
+        number: number.join('.'),
+        node: heading
+      });
+    });
+
+    return items;
+  }
+
+  function renderToc() {
+    cleanupTocSync();
+    cleanupTocSync = () => {};
+    if (!els.toc || !els.tocPanel) return;
+
+    const articleBody = els.article.querySelector('.wiki-race-article-body');
+    if (!articleBody) {
+      els.tocPanel.classList.remove('is-ready');
+      els.toc.querySelector('.vector-toc-contents').innerHTML = '<p class="wiki-race-toc-placeholder">Section links appear after you start.</p>';
+      return;
+    }
+
+    const headings = collectHeadings(articleBody);
+    if (!headings.length) {
+      els.tocPanel.classList.remove('is-ready');
+      els.toc.querySelector('.vector-toc-contents').innerHTML = '<p class="wiki-race-toc-placeholder">No section headings in this article.</p>';
+      return;
+    }
+
+    els.tocPanel.classList.add('is-ready');
+
+    const contents = els.toc.querySelector('.vector-toc-contents');
+    contents.innerHTML = '';
+    const list = document.createElement('ul');
+    list.className = 'vector-toc-list';
+
+    const idToLink = new Map();
+    headings.forEach((item) => {
+      const li = document.createElement('li');
+      li.className = `vector-toc-list-item vector-toc-level-${item.level}`;
+      li.dataset.anchor = item.id;
+
+      const anchor = document.createElement('a');
+      anchor.className = 'vector-toc-link';
+      anchor.href = `#${item.id}`;
+
+      const number = document.createElement('span');
+      number.className = 'vector-toc-numb';
+      number.textContent = item.number || '';
+
+      const text = document.createElement('span');
+      text.className = 'vector-toc-text';
+      text.textContent = item.text;
+
+      anchor.appendChild(number);
+      anchor.appendChild(text);
+      li.appendChild(anchor);
+      list.appendChild(li);
+      idToLink.set(item.id, li);
+    });
+    contents.appendChild(list);
+
+    const headingNodes = headings.map((item) => item.node).filter(Boolean);
+
+    function setActiveHeading() {
+      const articleTop = els.article.getBoundingClientRect().top;
+      let activeId = headings[0].id;
+      for (const headingNode of headingNodes) {
+        const delta = headingNode.getBoundingClientRect().top - articleTop;
+        if (delta <= 80) {
+          activeId = headingNode.getAttribute('id');
+        } else {
+          break;
+        }
+      }
+
+      idToLink.forEach((li, id) => {
+        li.classList.toggle('vector-toc-list-item-active', id === activeId);
+      });
+    }
+
+    const onScroll = () => setActiveHeading();
+    const onResize = () => setActiveHeading();
+    els.article.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    setActiveHeading();
+
+    cleanupTocSync = () => {
+      els.article.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+    };
+  }
 
   function renderState(state) {
     els.timer.textContent = formatElapsedMs(state.elapsedMs || 0);
@@ -89,12 +247,24 @@ export function createRenderer(rootEl) {
     if (shouldUpdateArticleHtml) {
       els.article.innerHTML = state.articleHtml;
       els.article.querySelectorAll('.wiki-race-categories').forEach((node) => node.remove());
+      const hasSidebar = Boolean(
+        els.article.querySelector('.wiki-race-article-body .sidebar, .wiki-race-article-body [role="navigation"]')
+      );
+      els.article.classList.toggle('has-sidebar', hasSidebar);
       lastArticleHtml = state.articleHtml;
+      renderToc();
     }
 
     if (shouldRefreshLinkStates && state.articleHtml) {
       const allowedPaths = new Set(state.allowedLinkPaths || []);
       els.article.querySelectorAll('a[href]').forEach((anchor) => {
+        const href = (anchor.getAttribute('href') || '').trim();
+        if (href.startsWith('#')) {
+          anchor.removeAttribute('data-disabled');
+          anchor.removeAttribute('aria-disabled');
+          anchor.removeAttribute('tabindex');
+          return;
+        }
         const path = anchor.getAttribute('data-wiki-path') || anchor.getAttribute('href') || '';
         if (!allowedPaths.has(path)) {
           anchor.setAttribute('data-disabled', 'true');
