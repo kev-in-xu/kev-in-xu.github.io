@@ -21,7 +21,8 @@ classes:
     <section class="wiki-race-toolbar" aria-label="Game controls">
       <button type="button" class="wiki-race-btn" data-action="start">Start</button>
       <button type="button" class="wiki-race-btn" data-action="back" disabled>Back</button>
-      <button type="button" class="wiki-race-btn wiki-race-btn-danger" data-action="abandon" disabled>Abandon</button>
+      <button type="button" class="wiki-race-btn wiki-race-btn-danger" data-action="abandon" disabled>Give Up</button>
+      <button type="button" class="wiki-race-btn" data-action="fullscreen">Fullscreen</button>
       <div class="wiki-race-stats" aria-live="polite">
         <span>Timer: <span data-field="timer">00:00.000</span></span>
         <span>Clicks: <span data-field="clicks">0</span></span>

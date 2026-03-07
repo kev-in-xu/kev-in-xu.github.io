@@ -1,5 +1,6 @@
 import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
+import { getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
 
 function parseTitleOrPath(req) {
   const title = req.query?.title ? String(req.query.title).trim() : '';
@@ -13,6 +14,7 @@ function parseTitleOrPath(req) {
 }
 
 export default async function handler(req, res) {
+  const startedAt = Date.now();
   if (handleCorsPreflight(req, res)) return;
   applyWikiApiCors(req, res);
 
@@ -26,6 +28,42 @@ export default async function handler(req, res) {
   }
 
   try {
+    const cacheLookupStartedAt = Date.now();
+    const cachedPayload = await getCachedWikiPageByTitle(parsed.value);
+    const cacheLookupMs = Date.now() - cacheLookupStartedAt;
+
+    if (cachedPayload) {
+      if (cachedPayload.flags?.isDisambiguation) {
+        return res.status(422).json({
+          error: 'Disambiguation pages are not allowed',
+          flags: cachedPayload.flags,
+          page: cachedPayload.page,
+          timingMs: {
+            cacheLookupMs,
+            endpointTotalMs: Date.now() - startedAt
+          }
+        });
+      }
+
+      res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+      res.setHeader('X-Wiki-Api-Total-Ms', String(Date.now() - startedAt));
+      return res.status(200).json({
+        ...cachedPayload,
+        cache: {
+          ...(cachedPayload.cache || {}),
+          source: 'cache',
+          hit: true
+        },
+        timingMs: {
+          ...(cachedPayload.timingMs || {}),
+          cacheLookupMs,
+          endpointTotalMs: Date.now() - startedAt
+        },
+        scaffold: false,
+        todo: 'Page served from Supabase cache.'
+      });
+    }
+
     const payload = await buildWikiPagePayloadByTitle(parsed.value);
 
     if (payload.flags.isDisambiguation) {
@@ -36,7 +74,14 @@ export default async function handler(req, res) {
       });
     }
 
+    try {
+      await setCachedWikiPage(parsed.value, payload);
+    } catch (_cacheWriteError) {
+      // Non-fatal: still return fresh page if cache write fails.
+    }
+
     res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    res.setHeader('X-Wiki-Api-Total-Ms', String(Date.now() - startedAt));
     return res.status(200).json({
       page: payload.page,
       canonicalPath: payload.canonicalPath,
@@ -45,10 +90,17 @@ export default async function handler(req, res) {
       linkIndex: payload.linkIndex,
       metrics: payload.metrics,
       flags: payload.flags,
+      timingMs: {
+        ...(payload.timingMs || {}),
+        endpointTotalMs: Date.now() - startedAt
+      },
       fetchedAtUtc: payload.fetchedAtUtc,
-      cache: payload.cache,
+      cache: {
+        ...(payload.cache || {}),
+        hit: false
+      },
       scaffold: false,
-      todo: 'Next: add Vercel Blob cache and stricter zone selectors as heuristics are tuned.'
+      todo: 'Page fetched from Wikipedia and written to Supabase page cache.'
     });
   } catch (err) {
     return res.status(err?.status || 500).json({

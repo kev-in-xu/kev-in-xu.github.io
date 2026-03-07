@@ -22,6 +22,33 @@
   box-shadow: var(--wr-shadow);
 }
 
+#wiki-race-app:fullscreen,
+#wiki-race-app:-webkit-full-screen {
+  background: var(--wr-bg);
+  padding: 0.25rem;
+}
+
+#wiki-race-app:fullscreen .wiki-race-shell,
+#wiki-race-app:-webkit-full-screen .wiki-race-shell {
+  height: 100%;
+  max-width: none;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#wiki-race-app:fullscreen .wiki-race-main,
+#wiki-race-app:-webkit-full-screen .wiki-race-main {
+  flex: 1;
+  min-height: 0;
+}
+
+#wiki-race-app:fullscreen .wiki-race-article,
+#wiki-race-app:-webkit-full-screen .wiki-race-article {
+  height: 100%;
+  max-height: none;
+}
+
 .wiki-race-header {
   margin-bottom: 0.35rem;
 }

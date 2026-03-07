@@ -3,6 +3,7 @@ let supabaseClient = null;
 
 const memoryCache = new Map();
 const DAILY_START_PREFIX = 'wiki-race:daily-start:';
+const PAGE_PREFIX = 'wiki-race:page:';
 
 async function loadBlob() {
   if (blobPutImpl) return true;
@@ -35,6 +36,18 @@ async function loadSupabase() {
 function keyToDailyDate(key) {
   if (!String(key).startsWith(DAILY_START_PREFIX)) return null;
   return String(key).slice(DAILY_START_PREFIX.length);
+}
+
+function normalizePageKey(titleLike) {
+  return String(titleLike || '')
+    .trim()
+    .replace(/^\/wiki\//i, '')
+    .replace(/ /g, '_')
+    .toLowerCase();
+}
+
+function pageMemoryKey(normalizedKey) {
+  return `${PAGE_PREFIX}${normalizedKey}`;
 }
 
 async function supabaseGetJson(key) {
@@ -111,4 +124,63 @@ export async function detectCacheBackends() {
     supabase: hasSupabase,
     blob: hasBlob
   };
+}
+
+async function supabaseGetPagePayload(normalizedKey) {
+  if (!normalizedKey) return null;
+  if (!(await loadSupabase())) return null;
+
+  const { data, error } = await supabaseClient
+    .from('wiki_race_page_cache')
+    .select('payload_json')
+    .eq('page_key', normalizedKey)
+    .maybeSingle();
+  if (error) throw error;
+  return data?.payload_json ?? null;
+}
+
+async function supabaseSetPagePayload(normalizedKey, payload) {
+  if (!normalizedKey || !payload) return false;
+  if (!(await loadSupabase())) return false;
+
+  const row = {
+    page_key: normalizedKey,
+    normalized_title: payload?.page?.normalizedTitle || null,
+    canonical_path: payload?.canonicalPath || payload?.page?.path || null,
+    page_title: payload?.page?.title || payload?.displayTitle || null,
+    fetched_at_utc: payload?.fetchedAtUtc || new Date().toISOString(),
+    payload_json: payload
+  };
+
+  const { error } = await supabaseClient
+    .from('wiki_race_page_cache')
+    .upsert(row, { onConflict: 'page_key' });
+  if (error) throw error;
+  return true;
+}
+
+export async function getCachedWikiPageByTitle(titleLike) {
+  const normalizedKey = normalizePageKey(titleLike);
+  if (!normalizedKey) return null;
+
+  const supaValue = await supabaseGetPagePayload(normalizedKey);
+  if (supaValue != null) return supaValue;
+  return memoryCache.get(pageMemoryKey(normalizedKey)) ?? null;
+}
+
+export async function setCachedWikiPage(titleLike, payload) {
+  const normalizedRequestedKey = normalizePageKey(titleLike);
+  const canonicalKey = normalizePageKey(payload?.page?.normalizedTitle || payload?.page?.title || '');
+
+  if (await loadSupabase()) {
+    if (normalizedRequestedKey) await supabaseSetPagePayload(normalizedRequestedKey, payload);
+    if (canonicalKey && canonicalKey !== normalizedRequestedKey) {
+      await supabaseSetPagePayload(canonicalKey, payload);
+    }
+    return true;
+  }
+
+  if (normalizedRequestedKey) memoryCache.set(pageMemoryKey(normalizedRequestedKey), payload);
+  if (canonicalKey) memoryCache.set(pageMemoryKey(canonicalKey), payload);
+  return true;
 }

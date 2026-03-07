@@ -4,6 +4,43 @@ import { createTimer } from './timer.js';
 import { createHistoryController } from './history.js';
 import { getDailyStart, getWikiPageByPath, getWikiPageByTitle } from './api-client.js';
 
+function isFullscreenActive() {
+  return Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+}
+
+async function requestElementFullscreen(el) {
+  if (!el) return false;
+  try {
+    if (el.requestFullscreen) {
+      await el.requestFullscreen();
+      return true;
+    }
+    if (el.webkitRequestFullscreen) {
+      el.webkitRequestFullscreen();
+      return true;
+    }
+  } catch (_err) {
+    return false;
+  }
+  return false;
+}
+
+async function exitAnyFullscreen() {
+  try {
+    if (document.exitFullscreen) {
+      await document.exitFullscreen();
+      return true;
+    }
+    if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+      return true;
+    }
+  } catch (_err) {
+    return false;
+  }
+  return false;
+}
+
 function normalizePathFromHref(href) {
   try {
     const url = new URL(href, window.location.origin);
@@ -57,6 +94,17 @@ async function bootstrap() {
   const store = createStore(createInitialGameState());
   const renderer = createRenderer(root);
   const historyController = createHistoryController();
+  const fullscreenBtn = root.querySelector('[data-action="fullscreen"]');
+
+  function syncFullscreenButtonLabel() {
+    if (!fullscreenBtn) return;
+    fullscreenBtn.textContent = isFullscreenActive() ? 'Exit Fullscreen' : 'Fullscreen';
+  }
+
+  syncFullscreenButtonLabel();
+  document.addEventListener('fullscreenchange', syncFullscreenButtonLabel);
+  document.addEventListener('webkitfullscreenchange', syncFullscreenButtonLabel);
+
   const timer = createTimer((elapsedMs) => {
     renderer.renderState(buildUiState(store.getState(), elapsedMs, historyController));
   });
@@ -186,12 +234,22 @@ async function bootstrap() {
   }
 
   renderer.onControl('start', () => {
+    void requestElementFullscreen(root);
     renderer.els.startBtn?.scrollIntoView({
       block: 'start',
       inline: 'nearest',
       behavior: 'smooth'
     });
     startRun();
+  });
+
+  renderer.onControl('fullscreen', async () => {
+    if (isFullscreenActive()) {
+      await exitAnyFullscreen();
+    } else {
+      await requestElementFullscreen(root);
+    }
+    syncFullscreenButtonLabel();
   });
 
   renderer.onControl('abandon', () => {
