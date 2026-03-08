@@ -28,6 +28,7 @@ export function createRenderer(rootEl) {
     return value;
   }
 
+  // Normalizes srcset by ensuring all URLs are absolute and properly encoded.
   function normalizeSrcset(srcset) {
     return String(srcset || '')
       .split(',')
@@ -41,6 +42,7 @@ export function createRenderer(rootEl) {
       .join(', ');
   }
 
+  // Promotes lazy image placeholders to real images when they come into view.
   function setupLazyImagePlaceholders() {
     cleanupLazyImageSync();
     cleanupLazyImageSync = () => {};
@@ -90,7 +92,7 @@ export function createRenderer(rootEl) {
       });
     }, {
       root: els.article,
-      rootMargin: '300px 0px',
+      rootMargin: '400px 0px', // Start loading images when they are within 300px of the viewport.
       threshold: 0.01
     });
 
@@ -170,6 +172,7 @@ export function createRenderer(rootEl) {
     return items;
   }
 
+  // Renders the table of contents based on the current article HTML, and sets up scroll syncing.
   function renderToc() {
     cleanupTocSync();
     cleanupTocSync = () => {};

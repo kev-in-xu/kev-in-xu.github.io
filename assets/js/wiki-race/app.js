@@ -63,7 +63,7 @@ function createWinConfetti(rootEl) {
         preserveAspectRatio: 'xMidYMid slice'
       }
     });
-    animation.setSpeed(0.32);
+    animation.setSpeed(0.6);
     animationReadyPromise = new Promise((resolve, reject) => {
       function onLoaded() {
         animation.removeEventListener('DOMLoaded', onLoaded);
