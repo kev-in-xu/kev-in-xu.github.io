@@ -1,3 +1,5 @@
+import { getBrowserWikiPageByPath, getBrowserWikiPageByTitle } from './mw-browser-client.js';
+
 function getApiBaseUrl() {
   const root = document.getElementById('wiki-race-app');
   const fromData = root?.dataset?.apiBase?.trim();
@@ -37,14 +39,32 @@ async function fetchJson(url) {
   return body;
 }
 
+function getMwSource() {
+  const search = typeof window !== 'undefined' ? window.location.search : '';
+  const fromQuery = new URLSearchParams(search).get('mwSource');
+  if (fromQuery === 'browser' || fromQuery === 'backend') return fromQuery;
+
+  const root = document.getElementById('wiki-race-app');
+  const fromData = root?.dataset?.mwSource?.trim();
+  if (fromData === 'browser' || fromData === 'backend') return fromData;
+
+  return 'browser';
+}
+
 export function getDailyStart() {
   return fetchJson(buildApiUrl('/api/wiki/daily-start'));
 }
 
 export function getWikiPageByTitle(title) {
+  if (getMwSource() === 'browser') {
+    return getBrowserWikiPageByTitle(title);
+  }
   return fetchJson(buildApiUrl(`/api/wiki/page?title=${encodeURIComponent(title)}`));
 }
 
 export function getWikiPageByPath(path) {
+  if (getMwSource() === 'browser') {
+    return getBrowserWikiPageByPath(path);
+  }
   return fetchJson(buildApiUrl(`/api/wiki/page?path=${encodeURIComponent(path)}`));
 }

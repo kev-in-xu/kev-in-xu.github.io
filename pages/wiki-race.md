@@ -16,12 +16,13 @@ classes:
 
 <script>
   (function () {
+    // QA override: append ?mwSource=browser (or ?mwSource=backend) to this page URL.
     var isLocalhost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
     if (isLocalhost) window.WIKI_RACE_API_BASE = 'http://localhost:3000';
   })();
 </script>
 
-<div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="https://kev-in-xu-github-io.vercel.app" data-confetti-src="/assets/animations/wiki-race-win-confetti.json?v=1">
+<div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="https://kev-in-xu-github-io.vercel.app" data-mw-source="browser" data-confetti-src="/assets/animations/wiki-race-win-confetti.json?v=1">
   <div class="wiki-race-shell">
     <header class="wiki-race-header">
       <p class="wiki-race-subtitle">
