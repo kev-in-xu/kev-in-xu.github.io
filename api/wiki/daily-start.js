@@ -1,11 +1,12 @@
-import { fetchMwJson, toWikiPageRef } from './_mw.js';
+import { toWikiPageRef } from './_mw.js';
 import { isValidStartPage } from './_filter.js';
-import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
+import { buildRandomWikiPagePayloads, buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { cacheGetJson, cacheSetJson, detectCacheBackends, getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 
 const TARGET_PAGE = toWikiPageRef({ title: 'Artificial general intelligence' });
 const MAX_ATTEMPTS = 25;
+const RANDOM_BATCH_SIZE = 5;
 const CACHE_PREFIX = 'wiki-race:daily-start:';
 
 /**
@@ -16,26 +17,6 @@ function utcDateKey(d = new Date()) {
   const month = String(d.getUTCMonth() + 1).padStart(2, '0');
   const day = String(d.getUTCDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
-}
-
-/**
- * Fetches one random main-namespace Wikipedia article title.
- * Output: article title string.
- * Logic: calls MediaWiki `generator=random`, then validates that a title exists.
- */
-async function fetchRandomArticleTitle() {
-  const data = await fetchMwJson({
-    action: 'query',
-    generator: 'random',
-    grnnamespace: 0,
-    grnlimit: 1
-  });
-  const pages = Object.values(data?.query?.pages || {});
-  const page = pages[0];
-  if (!page?.title) {
-    throw new Error('Random article lookup returned no page');
-  }
-  return page.title;
 }
 
 // converts wiki payload to api-client.js' expected response shape
@@ -115,11 +96,16 @@ export default async function handler(req, res) {
 
   for (attempts = 1; attempts <= MAX_ATTEMPTS; attempts += 1) {
     try {
-      const title = await fetchRandomArticleTitle();
-      const payload = await buildWikiPagePayloadByTitle(title);
-      if (!isValidStartPage(payload.flags, payload.page.title)) continue;
-      acceptedPayload = payload;
-      break;
+      const payloads = await buildRandomWikiPagePayloads({
+        limit: RANDOM_BATCH_SIZE,
+        namespace: 0
+      });
+      for (const payload of payloads) {
+        if (!isValidStartPage(payload.flags, payload.page.title)) continue;
+        acceptedPayload = payload;
+        break;
+      }
+      if (acceptedPayload) break;
     } catch (err) {
       lastError = err;
     }

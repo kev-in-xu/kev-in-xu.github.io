@@ -1,10 +1,11 @@
 const MW_API = 'https://en.wikipedia.org/w/api.php';
+const MW_API_USER_AGENT = process.env.MW_API_USER_AGENT
+  || 'WikiRaceBot/1.0 (https://kev-in-xu.github.io; kevinxu116@gmail.com)';
 
 /**
  * Builds a MediaWiki API URL from query parameters.
  * Input: `params` object of MediaWiki query values.
- * Output: Fully qualified URL string.
- * Logic: Merges defaults (`format`, `origin`) with provided params.
+ * Return: Fully qualified URL string.
  */
 export function createMwApiUrl(params) {
   const url = new URL(MW_API);
@@ -21,7 +22,7 @@ export function createMwApiUrl(params) {
 /**
  * Fetches and parses JSON from the MediaWiki API with timeout handling.
  * Input: `params` query object and optional `{ timeoutMs }`.
- * Output: Parsed JSON response object, or throws on non-OK responses.
+ * Return: Parsed JSON response object, or throws on non-OK responses.
  * Logic: Calls `createMwApiUrl`, performs fetch with AbortController, validates status.
  */
 export async function fetchMwJson(params, { timeoutMs = 10000 } = {}) {
@@ -30,7 +31,10 @@ export async function fetchMwJson(params, { timeoutMs = 10000 } = {}) {
   try {
     const response = await fetch(createMwApiUrl(params), {
       signal: controller.signal,
-      headers: { Accept: 'application/json' }
+      headers: {
+        Accept: 'application/json',
+        'Api-User-Agent': MW_API_USER_AGENT
+      }
     });
     if (!response.ok) {
       const err = new Error(`MediaWiki request failed (${response.status})`);

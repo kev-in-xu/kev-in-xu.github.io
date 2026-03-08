@@ -3,17 +3,6 @@ import { computePageFlags } from './_filter.js';
 import { sanitizeWikiArticleHtml } from './_sanitize.js';
 
 /**
- * Selects the first page record from a MediaWiki query response.
- * Input: MediaWiki `query` object.
- * Output: Page object or `null`.
- * Logic: Converts `query.pages` map to array and returns the first entry.
- */
-function pickPageFromQuery(query) {
-  const pages = Object.values(query?.pages || {});
-  return pages[0] || null;
-}
-
-/**
  * Converts MediaWiki display title HTML into plain text.
  * Input: `displayTitle` (possibly HTML) and `fallback` title.
  * Output: Clean title string.
@@ -27,29 +16,8 @@ function stripDisplayTitle(displayTitle, fallback) {
   return stripped || fallback;
 }
 
-/**
- * Builds a sanitized wiki page payload used by the game frontend and cache.
- * Input: Wikipedia `title`.
- * Output: Page payload with metadata, cleaned HTML, link index, metrics, and flags.
- * Logic: Fetches metadata and parsed HTML, sanitizes content, computes flags, then shapes response.
- */
-export async function buildWikiPagePayloadByTitle(title) {
-  const queryData = await fetchMwJson({
-    action: 'query',
-    prop: 'info|pageprops|categories',
-    inprop: 'url',
-    clshow: '!hidden',
-    cllimit: 'max',
-    titles: title
-  });
-
-  const pageMeta = pickPageFromQuery(queryData.query);
-  if (!pageMeta || pageMeta.missing) {
-    const err = new Error('Wikipedia page not found');
-    err.status = 404;
-    throw err;
-  }
-
+// Calls parse API to get HTML and display title
+async function buildWikiPagePayloadFromMeta(pageMeta) {
   const parseData = await fetchMwJson({
     action: 'parse',
     page: pageMeta.title,
@@ -73,7 +41,6 @@ export async function buildWikiPagePayloadByTitle(title) {
   });
 
   const pageRef = toWikiPageRef({ title: pageMeta.title, pageid: pageMeta.pageid });
-
   return {
     page: pageRef,
     canonicalPath: pageRef.path,
@@ -93,4 +60,73 @@ export async function buildWikiPagePayloadByTitle(title) {
       parseData
     }
   };
+}
+
+export async function buildRandomWikiPagePayloads({ limit = 5, namespace = 0 } = {}) {
+  const queryData = await fetchMwJson({
+    action: 'query',
+    generator: 'random',
+    grnnamespace: namespace,
+    grnlimit: limit,
+    prop: 'info|pageprops|categories',
+    inprop: 'url',
+    clshow: '!hidden',
+    cllimit: 'max'
+  });
+
+  const pageMetas = Object.values(queryData?.query?.pages || {}).filter((pageMeta) => pageMeta && !pageMeta.missing);
+  const payloads = [];
+  for (const pageMeta of pageMetas) {
+    payloads.push(await buildWikiPagePayloadFromMeta(pageMeta));
+  }
+  return payloads;
+}
+
+/**
+ * Builds a sanitized wiki page payload used by the game frontend and cache.
+ * Input: Wikipedia `title` string or `titles[]`.
+ * Output: Single payload for a single input title; array of payloads for array input.
+ * Logic: Fetches metadata and parsed HTML, sanitizes content, computes flags, then shapes response.
+ */
+export async function buildWikiPagePayloadByTitle(title) {
+  const isBatch = Array.isArray(title);
+  const normalizedTitles = Array.from(new Set((isBatch ? title : [title])
+    .map((t) => String(t || '').trim())
+    .filter(Boolean)));
+
+  if (!normalizedTitles.length) {
+    const err = new Error('Wikipedia page title(s) not provided');
+    err.status = 404;
+    throw err;
+  }
+
+  const queryData = await fetchMwJson({
+    action: 'query',
+    prop: 'info|pageprops|categories',
+    inprop: 'url',
+    clshow: '!hidden',
+    cllimit: 'max',
+    titles: normalizedTitles.join('|')
+  });
+
+  const pageMetas = Object.values(queryData?.query?.pages || {}).filter((pageMeta) => pageMeta && !pageMeta.missing);
+  if (!pageMetas.length && !isBatch) {
+    const err = new Error('Wikipedia page not found');
+    err.status = 404;
+    throw err;
+  }
+
+  const payloads = [];
+  for (const pageMeta of pageMetas) {
+    payloads.push(await buildWikiPagePayloadFromMeta(pageMeta));
+  }
+
+  if (isBatch) return payloads;
+  const payload = payloads[0] || null;
+  if (!payload) {
+    const err = new Error('Wikipedia page not found');
+    err.status = 404;
+    throw err;
+  }
+  return payload;
 }
