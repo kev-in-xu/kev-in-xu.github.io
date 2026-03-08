@@ -358,26 +358,32 @@ function normalizeLinks(root) {
 }
 
 function sanitizeWikiArticleHtml({ rawHtml }) {
+  // Temporary debug mode: keep MediaWiki parse HTML raw (no cleanup/rewrites).
+  const raw = String(rawHtml || '');
   const root = document.createElement('div');
-  root.innerHTML = String(rawHtml || '');
+  root.innerHTML = raw;
+  const linkIndex = [];
+  const seen = new Set();
 
-  let body = root.querySelector('.mw-parser-output');
-  if (!body) body = root;
+  Array.from(root.querySelectorAll('a[href]')).forEach((anchor) => {
+    const href = String(anchor.getAttribute('href') || '').trim();
+    const path = normalizeAndValidateWikiPath(href);
+    if (!path || seen.has(path)) return;
 
-  REMOVE_SELECTORS.forEach((selector) => {
-    body.querySelectorAll(selector).forEach((el) => el.remove());
+    const slug = decodeURIComponent(path.slice('/wiki/'.length));
+    linkIndex.push({
+      href: path,
+      path,
+      title: slug.replace(/_/g, ' '),
+      normalizedTitle: slug,
+      text: stripHtmlTags(anchor.textContent || '') || slug.replace(/_/g, ' ')
+    });
+    seen.add(path);
   });
-  STRIP_TAGS.forEach((tag) => {
-    body.querySelectorAll(tag).forEach((el) => el.remove());
-  });
-
-  removeReferenceSections(body);
-  cleanupAttributes(body);
-  const linkIndex = normalizeLinks(body);
 
   const html = [
     '<article class="wiki-race-article-body mw-parser-output">',
-    body.innerHTML || '<p>No article content available.</p>',
+    raw || '<p>No article content available.</p>',
     '</article>'
   ].join('');
 

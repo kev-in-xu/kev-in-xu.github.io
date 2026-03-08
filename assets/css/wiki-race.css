@@ -249,7 +249,8 @@
 }
 
 .wiki-race-article .wiki-race-article-body {
-  max-width: 100%;
+  max-width: none;
+  width: 100%;
   overflow-wrap: anywhere;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Noto Sans", Helvetica, Arial, sans-serif;
   font-size: 0.97rem;
@@ -321,11 +322,107 @@
   display: block !important;
 }
 
+/*
+ * Scoped infobox styles adapted from:
+ * https://meta.wikimedia.org/wiki/Module:Infobox/styles.css
+ * Retrieved: 2026-03-08
+ */
+.wiki-race-article .wiki-race-article-body .infobox {
+  background-color: #f8f9fa;
+  border: 1px solid #a2a9b1;
+  color: #000;
+  padding: 0.2em;
+  font-size: 88%;
+  line-height: 1.5em;
+  border-spacing: 3px;
+  box-sizing: border-box;
+  margin: 0.5em 0;
+  width: auto;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox-subbox {
+  padding: 0;
+  border: none;
+  margin: -3px;
+  width: auto;
+  min-width: 100%;
+  font-size: 100%;
+  clear: none;
+  float: none;
+  background-color: transparent;
+  color: inherit;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox-3cols-child {
+  margin: auto;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox-header,
+.wiki-race-article .wiki-race-article-body .infobox-label,
+.wiki-race-article .wiki-race-article-body .infobox-above,
+.wiki-race-article .wiki-race-article-body .infobox-full-data,
+.wiki-race-article .wiki-race-article-body .infobox-data,
+.wiki-race-article .wiki-race-article-body .infobox-below,
+.wiki-race-article .wiki-race-article-body .infobox-subheader,
+.wiki-race-article .wiki-race-article-body .infobox-image,
+.wiki-race-article .wiki-race-article-body .infobox-navbar {
+  vertical-align: top;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox-label,
+.wiki-race-article .wiki-race-article-body .infobox-data {
+  text-align: left;
+  font-size: 88%;
+}
+
+.wiki-race-article .wiki-race-article-body figcaption {
+  font-size: 88%;
+  line-height: 1.5em;
+  font-family: sans-serif;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox-above,
+.wiki-race-article .wiki-race-article-body .infobox-title {
+  font-size: 125%;
+  font-weight: bold;
+  text-align: center;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox-title {
+  padding: 0.2em;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox-header,
+.wiki-race-article .wiki-race-article-body .infobox-subheader,
+.wiki-race-article .wiki-race-article-body .infobox-image,
+.wiki-race-article .wiki-race-article-body .infobox-full-data,
+.wiki-race-article .wiki-race-article-body .infobox-below {
+  text-align: center;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox-navbar {
+  text-align: right;
+}
+
+.wiki-race-article .wiki-race-article-body .infobox .navbar {
+  font-size: 100%;
+}
+
+@media (min-width: 720px) {
+  .wiki-race-article .wiki-race-article-body .infobox {
+    margin: 0.5em 0 0.5em 1em;
+    float: right;
+    clear: right;
+    width: 22em;
+  }
+}
+
 .wiki-race-article .wiki-race-article-body img,
 .wiki-race-article .wiki-race-article-body video,
 .wiki-race-article .wiki-race-article-body svg {
   max-width: 100%;
   height: auto;
+  align-items: center;
 }
 
 @media (min-width: 980px) {
@@ -344,7 +441,6 @@
 
   .wiki-race-article.has-sidebar .wiki-race-article-body {
     position: relative;
-    padding-right: 19rem;
   }
 
   .wiki-race-article.has-sidebar .wiki-race-article-body .sidebar {

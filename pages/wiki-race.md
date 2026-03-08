@@ -9,6 +9,7 @@ classes:
 ---
 
 <link rel="stylesheet" href="/assets/css/wiki-race.css">
+<link rel="stylesheet" href="https://en.wikipedia.org/w/load.php?lang=en&modules=mediawiki.skinning.content&only=styles&skin=vector">
 <link rel="stylesheet" href="https://en.wikipedia.org/w/load.php?lang=en&modules=mediawiki.skinning.content.parsoid&only=styles&skin=vector">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js" crossorigin>

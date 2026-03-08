@@ -19,6 +19,84 @@ export function createRenderer(rootEl) {
   let lastStatusText = null;
   let lastStatusHtml = null;
   let cleanupTocSync = () => {};
+  let cleanupLazyImageSync = () => {};
+
+  function normalizeMediaUrl(url) {
+    const value = String(url || '').trim();
+    if (!value) return '';
+    if (value.startsWith('//')) return `https:${value}`;
+    return value;
+  }
+
+  function normalizeSrcset(srcset) {
+    return String(srcset || '')
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .map((part) => {
+        const [url, descriptor] = part.split(/\s+/, 2);
+        const normalized = normalizeMediaUrl(url);
+        return descriptor ? `${normalized} ${descriptor}` : normalized;
+      })
+      .join(', ');
+  }
+
+  function setupLazyImagePlaceholders() {
+    cleanupLazyImageSync();
+    cleanupLazyImageSync = () => {};
+
+    const articleBody = els.article.querySelector('.wiki-race-article-body');
+    if (!articleBody) return;
+
+    const placeholders = Array.from(
+      articleBody.querySelectorAll('span.lazy-image-placeholder[data-mw-src], span.lazy-image-placeholder[data-src]')
+    );
+    if (!placeholders.length) return;
+
+    const promote = (placeholder) => {
+      if (!placeholder || !placeholder.parentNode) return;
+
+      const src = normalizeMediaUrl(
+        placeholder.getAttribute('data-mw-src') || placeholder.getAttribute('data-src')
+      );
+      if (!src) return;
+
+      const img = document.createElement('img');
+      img.src = src;
+
+      const srcset = normalizeSrcset(
+        placeholder.getAttribute('data-mw-srcset') || placeholder.getAttribute('data-srcset')
+      );
+      if (srcset) img.srcset = srcset;
+
+      const className = placeholder.getAttribute('data-class');
+      if (className) img.className = className;
+
+      const widthAttr = placeholder.getAttribute('data-width');
+      const heightAttr = placeholder.getAttribute('data-height');
+      if (widthAttr) img.setAttribute('width', widthAttr);
+      if (heightAttr) img.setAttribute('height', heightAttr);
+
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      placeholder.replaceWith(img);
+    };
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        promote(entry.target);
+        obs.unobserve(entry.target);
+      });
+    }, {
+      root: els.article,
+      rootMargin: '300px 0px',
+      threshold: 0.01
+    });
+
+    placeholders.forEach((placeholder) => observer.observe(placeholder));
+    cleanupLazyImageSync = () => observer.disconnect();
+  }
 
   function ensureHeadingId(heading, fallbackText, seenIds) {
     const preferredId = heading.getAttribute('id') || heading.querySelector('.mw-headline')?.getAttribute('id') || '';
@@ -101,6 +179,7 @@ export function createRenderer(rootEl) {
     if (!articleBody) {
       els.tocPanel.classList.remove('is-ready');
       els.toc.querySelector('.vector-toc-contents').innerHTML = '<p class="wiki-race-toc-placeholder">Section links appear after you start.</p>';
+      cleanupLazyImageSync();
       return;
     }
 
@@ -246,6 +325,7 @@ export function createRenderer(rootEl) {
 
     if (shouldUpdateArticleHtml) {
       els.article.innerHTML = state.articleHtml;
+      setupLazyImagePlaceholders();
       els.article.querySelectorAll('.wiki-race-categories').forEach((node) => node.remove());
       const hasSidebar = Boolean(
         els.article.querySelector('.wiki-race-article-body .sidebar, .wiki-race-article-body [role="navigation"]')
