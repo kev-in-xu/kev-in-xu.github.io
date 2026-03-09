@@ -62,7 +62,8 @@
 }
 
 .wiki-race-subtitle {
-  margin: 0.4rem 0 0;
+  margin: 0 !important;
+  margin-bottom: 0;
   color: var(--wr-muted);
   font-size: 0.66rem;
   line-height: 1.25;
@@ -105,10 +106,23 @@
 
 .wiki-race-stats {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.75rem;
   margin-left: auto;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--wr-border);
+  border-radius: 10px;
+  background: #f5f6f7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.wiki-race-stats[data-state="running"] {
+  background: #e1eaf0;
+}
+
+.wiki-race-stats[data-state="complete"] {
+  background: #e7f6e8;
 }
 
 .wiki-race-status {
@@ -181,7 +195,7 @@
   align-items: flex-start;
   gap: 0.45rem;
   color: #202122;
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem 0.30rem;
   text-decoration: none;
 }
 
@@ -192,7 +206,7 @@
 .wiki-race-toc-panel .vector-toc-numb {
   color: #54595d;
   flex: 0 0 auto;
-  min-width: 2.15rem;
+  min-width: 1.3rem;
   text-align: right;
 }
 
@@ -264,6 +278,15 @@
   margin-top: 0;
 }
 
+.wiki-race-article .wiki-race-article-body .wiki-race-page-title {
+  margin: 0 0 0.6rem;
+  font-family: "Linux Libertine", "Georgia", "Times New Roman", serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #000;
+}
+.wiki-race-article .wiki-race-article-body h1,
 .wiki-race-article .wiki-race-article-body h2,
 .wiki-race-article .wiki-race-article-body h3,
 .wiki-race-article .wiki-race-article-body h4,
@@ -277,6 +300,7 @@
   color: #000;
 }
 
+.wiki-race-article .wiki-race-article-body h1,
 .wiki-race-article .wiki-race-article-body h2 {
   border-bottom: 1px solid #54595d;
 }

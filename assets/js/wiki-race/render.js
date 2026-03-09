@@ -1,12 +1,14 @@
 import { formatElapsedMs } from './timer.js';
 
 export function createRenderer(rootEl) {
+  const TOC_SCROLL_TOP_OFFSET_PX = 16;
   const els = {
     startBtn: rootEl.querySelector('[data-action="start"]'),
     backBtn: rootEl.querySelector('[data-action="back"]'),
     abandonBtn: rootEl.querySelector('[data-action="abandon"]'),
     timer: rootEl.querySelector('[data-field="timer"]'),
     clicks: rootEl.querySelector('[data-field="clicks"]'),
+    stats: rootEl.querySelector('.wiki-race-stats'),
     status: rootEl.querySelector('[data-region="status"]'),
     article: rootEl.querySelector('[data-region="article"]'),
     tocPanel: rootEl.querySelector('[data-region="toc-panel"]'),
@@ -200,6 +202,28 @@ export function createRenderer(rootEl) {
     const list = document.createElement('ul');
     list.className = 'vector-toc-list';
 
+    const topLi = document.createElement('li');
+    topLi.className = 'vector-toc-list-item vector-toc-level-2';
+    topLi.dataset.anchor = 'top';
+
+    const topAnchor = document.createElement('a');
+    topAnchor.className = 'vector-toc-link';
+    topAnchor.href = '#';
+
+    const topNumber = document.createElement('span');
+    topNumber.className = 'vector-toc-numb';
+    topNumber.textContent = '';
+
+    const topText = document.createElement('span');
+    topText.className = 'vector-toc-text';
+    topText.textContent = '(Top)';
+    topText.style.fontWeight = '700';
+
+    topAnchor.appendChild(topNumber);
+    topAnchor.appendChild(topText);
+    topLi.appendChild(topAnchor);
+    list.appendChild(topLi);
+
     const idToLink = new Map();
     headings.forEach((item) => {
       const li = document.createElement('li');
@@ -247,17 +271,53 @@ export function createRenderer(rootEl) {
 
     const onScroll = () => setActiveHeading();
     const onResize = () => setActiveHeading();
+    const onTocClick = (event) => {
+      const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+      const anchor = target?.closest?.('a.vector-toc-link[href^="#"]');
+      if (!anchor || !contents.contains(anchor)) return;
+
+      event.preventDefault();
+      const id = decodeURIComponent(String(anchor.getAttribute('href') || '').slice(1));
+      if (!id) {
+        els.article.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+        return;
+      }
+
+      const heading = articleBody.querySelector(`#${CSS.escape(id)}`);
+      if (!heading) return;
+
+      const articleRect = els.article.getBoundingClientRect();
+      const headingRect = heading.getBoundingClientRect();
+      const top = els.article.scrollTop + (headingRect.top - articleRect.top) - TOC_SCROLL_TOP_OFFSET_PX;
+      els.article.scrollTo({
+        top: Math.max(0, top),
+        behavior: 'smooth'
+      });
+    };
+
     els.article.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize);
+    contents.addEventListener('click', onTocClick);
     setActiveHeading();
 
     cleanupTocSync = () => {
       els.article.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
+      contents.removeEventListener('click', onTocClick);
     };
   }
 
   function renderState(state) {
+    if (els.stats) {
+      let statsState = 'idle';
+      if (state.status === 'running') statsState = 'running';
+      if (state.status === 'won') statsState = 'complete';
+      els.stats.setAttribute('data-state', statsState);
+    }
+
     els.timer.textContent = formatElapsedMs(state.elapsedMs || 0);
     els.clicks.textContent = String(state.clickCount ?? 0);
 
@@ -328,6 +388,16 @@ export function createRenderer(rootEl) {
 
     if (shouldUpdateArticleHtml) {
       els.article.innerHTML = state.articleHtml;
+      const articleBody = els.article.querySelector(".wiki-race-article-body");
+      if (articleBody) {
+        articleBody.querySelectorAll(".wiki-race-page-title").forEach((node) => node.remove());
+        if (state.currentPageTitle) {
+          const pageTitle = document.createElement("h1");
+          pageTitle.className = "wiki-race-page-title";
+          pageTitle.textContent = state.currentPageTitle;
+          articleBody.prepend(pageTitle);
+        }
+      }
       setupLazyImagePlaceholders();
       els.article.querySelectorAll('.wiki-race-categories').forEach((node) => node.remove());
       const hasSidebar = Boolean(

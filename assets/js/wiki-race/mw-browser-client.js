@@ -193,15 +193,7 @@ async function buildPayloadForTitle(title) {
     html: rawHtml
   });
 
-  if (flags.isDisambiguation) {
-    const err = new Error('Disambiguation pages are not allowed');
-    err.status = 422;
-    err.payload = {
-      error: 'Disambiguation pages are not allowed',
-      flags
-    };
-    throw err;
-  }
+  //TODO consider using flags to filter disambiguation, redirect, and other non-article pages
 
   const pageRef = toWikiPageRef({ title: pageMeta.title, pageid: pageMeta.pageid });
   return {
@@ -220,11 +212,11 @@ async function buildPayloadForTitle(title) {
   };
 }
 
-export async function getBrowserWikiPageByTitle(title) {
+export async function getWikiPageByTitle(title) {
   return buildPayloadForTitle(title);
 }
 
-export async function getBrowserWikiPageByPath(path) {
+export async function getWikiPageByPath(path) {
   const title = titleFromPath(path);
   if (!title) {
     const err = new Error('Provide ?title=... or ?path=/wiki/...');

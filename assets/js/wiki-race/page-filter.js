@@ -57,8 +57,10 @@ function stripHtmlTags(text) {
 
 const HIDDEN_SECTION_TITLES = new Set([
   'further reading',
-  'references',
   'external links',
+  'references',
+  'sources',
+  'bibliography',
   'contents'
 ]);
 

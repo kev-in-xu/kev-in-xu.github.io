@@ -2,7 +2,8 @@ import { createStore, createInitialGameState } from './state.js';
 import { createRenderer } from './render.js';
 import { createTimer } from './timer.js';
 import { createHistoryController } from './history.js';
-import { getDailyStart, getWikiPageByPath, getWikiPageByTitle } from './api-client.js';
+import { getDailyStart } from './api-client.js';
+import { getWikiPageByPath, getWikiPageByTitle } from './mw-browser-client.js';
 
 const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
 let lottieLoadPromise = null;
@@ -216,7 +217,7 @@ async function bootstrap() {
     renderer.renderState(buildUiState(store.getState(), elapsedMs, historyController));
   });
 
-  async function loadAndRenderPageByTitle(title, { moveType = 'click', countMove = false } = {}) {
+  async function loadAndRenderStartPageByTitle(title, { moveType = 'click', countMove = false } = {}) {
     const page = await getWikiPageByTitle(title);
     const state = store.getState();
 
@@ -263,7 +264,7 @@ async function bootstrap() {
         status: 'loading_start'
       }));
 
-      const page = await loadAndRenderPageByTitle(daily.startPage.title, {
+      const page = await loadAndRenderStartPageByTitle(daily.startPage.title, {
         moveType: 'start',
         countMove: false
       });
