@@ -123,7 +123,7 @@ async function requestElementFullscreen(el) {
       return true;
     }
     if (el.webkitRequestFullscreen) {
-      el.webkitRequestFullscreen();
+      await Promise.resolve(el.webkitRequestFullscreen());
       return true;
     }
   } catch (_err) {
@@ -139,7 +139,7 @@ async function exitAnyFullscreen() {
       return true;
     }
     if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
+      await Promise.resolve(document.webkitExitFullscreen());
       return true;
     }
   } catch (_err) {
@@ -197,6 +197,32 @@ function isTargetPageMatch(pagePayload, targetPage) {
 async function bootstrap() {
   const root = document.getElementById('wiki-race-app');
   if (!root) return;
+  const modeToggle = root.querySelector('[data-field="game-mode-random"]');
+  const modeSubtitle = root.querySelector('[data-region="mode-subtitle"]');
+  let currentTargetPage = null;
+
+  function getSelectedMode() {
+    return modeToggle?.checked ? 'random_vital' : 'agi';
+  }
+
+  function syncModeSubtitle() {
+    if (!modeSubtitle) return;
+    if (getSelectedMode() === 'random_vital') {
+      if (currentTargetPage?.url && currentTargetPage?.title) {
+        const targetTitle = String(currentTargetPage.title).trim();
+        modeSubtitle.innerHTML = `Reach the wikipedia page for <a href="${currentTargetPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a> using as few article links as possible. Start page uses the standard Wikipedia random generator.`;
+        return;
+      }
+      modeSubtitle.innerHTML = 'Reach a random article target using as few article links as possible. Start page uses the standard Wikipedia random generator.';
+      return;
+    }
+    modeSubtitle.innerHTML = 'Reach the wikipedia page for <a href="https://en.wikipedia.org/wiki/Artificial_general_intelligence" target="_blank" rel="noopener noreferrer">artificial general intelligence</a> using as few article links as possible. Daily challenge resets at 00:00 UTC.';
+  }
+  syncModeSubtitle();
+  modeToggle?.addEventListener('change', () => {
+    currentTargetPage = null;
+    syncModeSubtitle();
+  });
 
   const store = createStore(createInitialGameState());
   const renderer = createRenderer(root);
@@ -255,7 +281,9 @@ async function bootstrap() {
     renderer.renderState(buildUiState(store.getState(), 0, historyController));
 
     try {
-      const daily = await getDailyStart();
+      const daily = await getDailyStart({ target: getSelectedMode() });
+      currentTargetPage = daily.endPage || null;
+      syncModeSubtitle();
       store.updateState((prev) => ({
         ...prev,
         dateKey: daily.dateKey,
@@ -291,8 +319,6 @@ async function bootstrap() {
     const state = store.getState();
     if (state.status !== 'running' || !state.currentPage) return;
 
-    const targetPath = state.targetPage?.path || '/wiki/Artificial_general_intelligence';
-    const winningClick = path === targetPath;
     const snapshot = {
       page: state.currentPage,
       routeLength: state.route.length,
@@ -300,22 +326,17 @@ async function bootstrap() {
     };
     historyController.pushSnapshot(snapshot);
 
-    if (winningClick) {
-      store.updateState((prev) => ({ ...prev, clickCount: prev.clickCount + 1 }));
-      const elapsed = timer.stop();
-      renderer.renderState(buildUiState(store.getState(), elapsed, historyController));
-    }
-
     try {
       const page = await getWikiPageByPath(path);
-      const reachedTarget = winningClick || isTargetPageMatch(page, store.getState().targetPage);
+      const reachedTarget = isTargetPageMatch(page, store.getState().targetPage);
+      const clickDelta = source === 'click' && page?.redirect?.followed ? 0 : 1;
       let finalElapsedMs = null;
       if (reachedTarget && store.getState().status === 'running') {
         finalElapsedMs = timer.stop();
       }
 
       store.updateState((prev) => {
-        const clickCount = prev.clickCount + (winningClick ? 0 : 1);
+        const clickCount = prev.clickCount + clickDelta;
         const route = [...prev.route, {
           title: page.displayTitle,
           path: page.page.path,

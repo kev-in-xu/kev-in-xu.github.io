@@ -29,7 +29,9 @@ async function loadSupabase() {
  */
 function keyToDailyDate(key) {
   if (!String(key).startsWith(DAILY_START_PREFIX)) return null;
-  return String(key).slice(DAILY_START_PREFIX.length);
+  const suffix = String(key).slice(DAILY_START_PREFIX.length);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(suffix)) return null;
+  return suffix;
 }
 
 /**

@@ -26,12 +26,17 @@ classes:
 <div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="https://kev-in-xu-github-io.vercel.app" data-mw-source="browser" data-confetti-src="/assets/animations/wiki-race-win-confetti.json?v=1">
   <div class="wiki-race-shell">
     <header class="wiki-race-header">
-      <p class="wiki-race-subtitle">
+      <p class="wiki-race-subtitle" data-region="mode-subtitle">
         Reach the wikipedia page for <a href="https://en.wikipedia.org/wiki/Artificial_general_intelligence" target="_blank" rel="noopener noreferrer">artificial general intelligence</a> using as few article links as possible. Daily challenge resets at 00:00 UTC.
       </p>
     </header>
 
     <section class="wiki-race-toolbar" aria-label="Game controls">
+      <label class="wiki-race-mode-toggle" for="wiki-race-random-mode">
+        <input id="wiki-race-random-mode" class="wiki-race-mode-input" type="checkbox" data-field="game-mode-random" aria-label="Enable random mode">
+        <span class="wiki-race-mode-switch" aria-hidden="true"></span>
+        <span class="wiki-race-mode-text">Random Mode</span>
+      </label>
       <button type="button" class="wiki-race-btn" data-action="start">Start</button>
       <button type="button" class="wiki-race-btn" data-action="back" disabled>Back</button>
       <button type="button" class="wiki-race-btn wiki-race-btn-danger" data-action="abandon" disabled>Give Up</button>

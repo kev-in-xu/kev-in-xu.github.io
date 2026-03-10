@@ -136,6 +136,25 @@ function pageMetaFromQuery(query) {
   return pages.find((page) => page && !page.missing) || null;
 }
 
+function redirectMetaFromQuery(query, requestedTitle) {
+  const requested = String(requestedTitle || '').trim();
+  if (!requested) {
+    return { followed: false };
+  }
+
+  const redirects = Array.isArray(query?.redirects) ? query.redirects : [];
+  const matched = redirects.find((entry) => String(entry?.from || '') === requested);
+  if (!matched || !matched.to) {
+    return { followed: false };
+  }
+
+  return {
+    followed: true,
+    fromTitle: String(matched.from),
+    toTitle: String(matched.to)
+  };
+}
+
 function titleFromPath(path) {
   if (!path || !String(path).startsWith('/wiki/')) return null;
   return decodeURIComponent(String(path).slice('/wiki/'.length)).replace(/_/g, ' ');
@@ -151,12 +170,14 @@ async function buildPayloadForTitle(title) {
 
   const queryData = await fetchMwJsonCached({
     action: 'query',
+    redirects: 1,
     prop: 'info|pageprops|categories',
     inprop: 'url',
     clshow: '!hidden',
     cllimit: 'max',
     titles: resolvedTitle
   });
+  const redirect = redirectMetaFromQuery(queryData?.query, resolvedTitle);
 
   const pageMeta = pageMetaFromQuery(queryData.query);
   if (!pageMeta) {
@@ -208,7 +229,8 @@ async function buildPayloadForTitle(title) {
     cache: {
       source: 'fresh',
       revid: parseData?.parse?.revid
-    }
+    },
+    redirect
   };
 }
 

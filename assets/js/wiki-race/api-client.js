@@ -37,6 +37,7 @@ async function fetchJson(url) {
   return body;
 }
 
-export function getDailyStart() {
-  return fetchJson(buildApiUrl('/api/wiki/daily-start'));
+export function getDailyStart({ target = 'agi' } = {}) {
+  const mode = String(target || 'agi').trim() || 'agi';
+  return fetchJson(buildApiUrl(`/api/wiki/daily-start?target=${encodeURIComponent(mode)}`));
 }

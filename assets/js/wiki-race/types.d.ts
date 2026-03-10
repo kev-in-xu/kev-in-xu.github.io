@@ -45,4 +45,9 @@ export interface WikiPagePayload {
     key?: string;
     revid?: number;
   };
+  redirect: {
+    followed: boolean;
+    fromTitle?: string;
+    toTitle?: string;
+  };
 }
