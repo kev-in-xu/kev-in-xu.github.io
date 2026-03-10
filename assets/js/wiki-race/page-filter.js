@@ -103,6 +103,7 @@ function removeHiddenSections(root) {
 function removeReferenceAndTocNodes(root) {
   root.querySelectorAll('.reference, sup.reference, .references, .mw-editsection').forEach((node) => node.remove());
   root.querySelectorAll('#toc, .toc, .vector-toc, .mw-table-of-contents').forEach((node) => node.remove());
+  root.querySelectorAll('.ambox').forEach((node) => node.remove());
 }
 
 function normalizeAndValidateWikiPath(href) {

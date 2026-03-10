@@ -388,6 +388,10 @@ export function createRenderer(rootEl) {
 
     if (shouldUpdateArticleHtml) {
       els.article.innerHTML = state.articleHtml;
+      els.article.scrollTop = 0;
+      if (els.tocPanel) els.tocPanel.scrollTop = 0;
+      const tocContents = els.toc?.querySelector('.vector-toc-contents');
+      if (tocContents) tocContents.scrollTop = 0;
       const articleBody = els.article.querySelector(".wiki-race-article-body");
       if (articleBody) {
         articleBody.querySelectorAll(".wiki-race-page-title").forEach((node) => node.remove());
