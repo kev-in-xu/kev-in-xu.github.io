@@ -416,14 +416,13 @@ async function bootstrap() {
     try {
       const page = await getWikiPageByPath(path);
       const reachedTarget = isTargetPageMatch(page, store.getState().targetPage);
-      const clickDelta = source === 'click' && page?.redirect?.followed ? 0 : 1;
       let finalElapsedMs = null;
       if (reachedTarget && store.getState().status === 'running') {
         finalElapsedMs = timer.stop();
       }
 
       store.updateState((prev) => {
-        const clickCount = prev.clickCount + clickDelta;
+        const clickCount = prev.clickCount + 1;
         const route = [...prev.route, {
           title: page.displayTitle,
           path: page.page.path,
