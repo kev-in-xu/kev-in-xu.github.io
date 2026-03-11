@@ -41,3 +41,45 @@ export function getDailyStart({ target = 'agi' } = {}) {
   const mode = String(target || 'agi').trim() || 'agi';
   return fetchJson(buildApiUrl(`/api/wiki/daily-start?target=${encodeURIComponent(mode)}`));
 }
+
+// api caller for submitting game results to the backend, which will validate and persist the data.
+export async function postWinningRun(payload) {
+  try {
+    const response = await fetch(buildApiUrl('/api/wiki/game-result'), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      body: JSON.stringify(payload || {})
+    });
+
+    let body = null;
+    try {
+      body = await response.json();
+    } catch (_err) {
+      body = null;
+    }
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        status: response.status,
+        error: body?.error || `Request failed (${response.status})`,
+        payload: body
+      };
+    }
+
+    return {
+      ok: true,
+      payload: body
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      status: null,
+      error: err?.message || 'Network request failed'
+    };
+  }
+}

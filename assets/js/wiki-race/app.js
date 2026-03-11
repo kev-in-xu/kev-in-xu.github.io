@@ -2,10 +2,11 @@ import { createStore, createInitialGameState } from './state.js';
 import { createRenderer } from './render.js';
 import { createTimer } from './timer.js';
 import { createHistoryController } from './history.js';
-import { getDailyStart } from './api-client.js';
+import { getDailyStart, postWinningRun } from './api-client.js';
 import { getWikiPageByPath, getWikiPageByTitle } from './mw-browser-client.js';
 
 const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
+const SESSION_ID_STORAGE_KEY = 'wiki-race-session-id-v1';
 let lottieLoadPromise = null;
 
 function isFullscreenActive() {
@@ -194,15 +195,93 @@ function isTargetPageMatch(pagePayload, targetPage) {
   return Boolean(targetNorm && currentNorm && targetNorm === currentNorm);
 }
 
+// utility function to generate a UUIDv4 string for client-generated run/session IDs, 
+// with fallback for older browsers without crypto support.
+function createClientRunId() {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+    return window.crypto.randomUUID();
+  }
+
+  const bytes = new Uint8Array(16);
+  if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+    window.crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < bytes.length; i += 1) {
+      bytes[i] = Math.floor(Math.random() * 256);
+    }
+  }
+
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+}
+
+function getOrCreateSessionId() {
+  const fallback = createClientRunId();
+  try {
+    const existing = localStorage.getItem(SESSION_ID_STORAGE_KEY);
+    if (existing) return existing;
+    localStorage.setItem(SESSION_ID_STORAGE_KEY, fallback);
+    return fallback;
+  } catch (_err) {
+    return fallback;
+  }
+}
+
 async function bootstrap() {
   const root = document.getElementById('wiki-race-app');
   if (!root) return;
   const modeToggle = root.querySelector('[data-field="game-mode-random"]');
   const modeSubtitle = root.querySelector('[data-region="mode-subtitle"]');
   let currentTargetPage = null;
+  let activeRunMeta = null;
 
   function getSelectedMode() {
     return modeToggle?.checked ? 'random_vital' : 'agi';
+  }
+
+  // activeRunMeta holds client-generated metadata for the current run, 
+  // which will be included in the payload when submitting results to the backend.
+  function initializeRunMeta() {
+    activeRunMeta = {
+      runId: createClientRunId(),
+      sessionId: getOrCreateSessionId(),
+      startedAtUtc: new Date().toISOString(),
+      mode: getSelectedMode(),
+      dateKey: null,
+      seedSource: null
+    };
+  }
+
+  // after game win, build a payload of run data to submit to the backend for validation and persistence.
+  function buildWinningRunPayload(durationMs) {
+    const gameState = store.getState();
+    if (!activeRunMeta || !gameState.startPage || !gameState.targetPage || !gameState.route.length) {
+      return null;
+    }
+
+    return {
+      runId: activeRunMeta.runId,
+      sessionId: activeRunMeta.sessionId,
+      mode: activeRunMeta.mode,
+      dateKey: activeRunMeta.dateKey,
+      seedSource: activeRunMeta.seedSource,
+      startedAtUtc: activeRunMeta.startedAtUtc,
+      completedAtUtc: new Date().toISOString(),
+      durationMs: Math.max(0, Math.floor(Number(durationMs) || 0)),
+      clickCount: Math.max(0, Math.floor(Number(gameState.clickCount) || 0)),
+      startPage: gameState.startPage,
+      targetPage: gameState.targetPage,
+      route: gameState.route.map((step) => ({
+        title: step.title,
+        path: step.path,
+        url: step.url,
+        moveType: step.moveType,
+        clickCountAfterStep: step.clickCountAfterStep,
+        redirectFollowed: Boolean(step.redirectFollowed)
+      }))
+    };
   }
 
   function syncModeSubtitle() {
@@ -210,10 +289,10 @@ async function bootstrap() {
     if (getSelectedMode() === 'random_vital') {
       if (currentTargetPage?.url && currentTargetPage?.title) {
         const targetTitle = String(currentTargetPage.title).trim();
-        modeSubtitle.innerHTML = `Reach the wikipedia page for <a href="${currentTargetPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a> using as few article links as possible. Start page uses the standard Wikipedia random generator.`;
+        modeSubtitle.innerHTML = `Reach the wikipedia page for <a href="${currentTargetPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a> using as few clicks as possible. Start from a random Wikipedia article.`;
         return;
       }
-      modeSubtitle.innerHTML = 'Reach a random article target using as few article links as possible. Start page uses the standard Wikipedia random generator.';
+      modeSubtitle.innerHTML = 'Reach the wikipedia page for ______ using as few clicks as possible. Start from a random Wikipedia article.';
       return;
     }
     modeSubtitle.innerHTML = 'Reach the wikipedia page for <a href="https://en.wikipedia.org/wiki/Artificial_general_intelligence" target="_blank" rel="noopener noreferrer">artificial general intelligence</a> using as few article links as possible. Daily challenge resets at 00:00 UTC.';
@@ -253,8 +332,10 @@ async function bootstrap() {
       nextRoute.push({
         title: page.displayTitle,
         path: page.page.path,
+        url: page.page.url,
         moveType,
-        clickCountAfterStep: nextClicks
+        clickCountAfterStep: nextClicks,
+        redirectFollowed: Boolean(page?.redirect?.followed)
       });
 
       return {
@@ -271,6 +352,7 @@ async function bootstrap() {
   }
 
   async function startRun() {
+    initializeRunMeta();
     winConfetti.reset();
     historyController.reset();
     timer.reset();
@@ -282,6 +364,11 @@ async function bootstrap() {
 
     try {
       const daily = await getDailyStart({ target: getSelectedMode() });
+      if (activeRunMeta) {
+        activeRunMeta.mode = getSelectedMode();
+        activeRunMeta.dateKey = daily?.dateKey || null;
+        activeRunMeta.seedSource = daily?.seedSource || null;
+      }
       currentTargetPage = daily.endPage || null;
       syncModeSubtitle();
       store.updateState((prev) => ({
@@ -340,8 +427,10 @@ async function bootstrap() {
         const route = [...prev.route, {
           title: page.displayTitle,
           path: page.page.path,
+          url: page.page.url,
           moveType: source,
-          clickCountAfterStep: clickCount
+          clickCountAfterStep: clickCount,
+          redirectFollowed: Boolean(page?.redirect?.followed)
         }];
         return {
           ...prev,
@@ -354,6 +443,10 @@ async function bootstrap() {
       });
       renderer.renderState(buildUiState(store.getState(), finalElapsedMs ?? timer.getElapsedMs(), historyController));
       if (reachedTarget) {
+        const payload = buildWinningRunPayload(finalElapsedMs);
+        if (payload) {
+          void postWinningRun(payload);
+        }
         void winConfetti.play();
       }
     } catch (err) {
@@ -443,8 +536,10 @@ async function bootstrap() {
       const route = [...prev.route, {
         title: snapshot.page.displayTitle,
         path: snapshot.page.page.path,
+        url: snapshot.page.page.url,
         moveType: 'browser_back',
-        clickCountAfterStep: clickCount
+        clickCountAfterStep: clickCount,
+        redirectFollowed: Boolean(snapshot.page?.redirect?.followed)
       }];
       return {
         ...prev,

@@ -1,55 +1,10 @@
-const DISALLOWED_NAMESPACES = [
-  'Category:',
-  'File:',
-  'Help:',
-  'Portal:',
-  'Special:',
-  'Talk:',
-  'Template:',
-  'Wikipedia:'
-];
+import {
+  computePageFlags,
+  isDisallowedNamespaceTitle,
+  normalizeAndValidateWikiPath
+} from '../../../lib/wiki-rules.js';
 
-function isListLikeTitle(title) {
-  const value = String(title || '').trim().toLowerCase();
-  return value.startsWith('list of ') || value.startsWith('lists of ');
-}
-
-export function isDisallowedNamespaceTitle(title) {
-  return DISALLOWED_NAMESPACES.some((prefix) => String(title || '').startsWith(prefix));
-}
-
-export function computePageFlags({
-  title,
-  categories = [],
-  pageprops = {},
-  validOutboundLinkCount = 0,
-  html = ''
-}) {
-  const categoryTitles = categories.map((c) => String(c.title || '').toLowerCase());
-  const htmlLower = String(html || '').toLowerCase();
-
-  const isDisambiguation =
-    Boolean(pageprops.disambiguation) ||
-    categoryTitles.some((c) => c.includes('disambiguation')) ||
-    htmlLower.includes('may refer to');
-
-  const isListLike =
-    isListLikeTitle(title) ||
-    categoryTitles.some((c) => c.includes('lists'));
-
-  const isStubLike =
-    categoryTitles.some((c) => c.includes('stubs')) ||
-    htmlLower.includes('stub');
-
-  const isDeadEnd = validOutboundLinkCount < 1;
-
-  return {
-    isDisambiguation,
-    isListLike,
-    isStubLike,
-    isDeadEnd
-  };
-}
+export { computePageFlags, isDisallowedNamespaceTitle };
 
 function stripHtmlTags(text) {
   return String(text || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
@@ -106,41 +61,6 @@ function removeReferenceAndTocNodes(root) {
   root.querySelectorAll('.ambox').forEach((node) => node.remove());
 }
 
-function normalizeAndValidateWikiPath(href) {
-  if (!href) return null; // href missing or empty
-  try {
-    const raw = String(href).trim();
-    if (!raw) return null;
-    if (raw.startsWith('#')) return raw; // same-page section anchor
-
-    let url;
-    // Support MediaWiki relative links like "./Title"; reject query variants.
-    if (raw.startsWith('./')) {
-      if (raw.includes('?')) return null;
-      url = new URL(`/wiki/${raw.slice(2)}`, 'https://en.wikipedia.org');
-    } else {
-      url = new URL(raw, 'https://en.wikipedia.org'); // if link is relative, add en.wiki as root
-    }
-
-    // Keep only canonical English Wikipedia article links.
-    if (url.hostname !== 'en.wikipedia.org') return null;
-    if (!url.pathname.startsWith('/wiki/')) return null;
-    if (url.search) return null; // Reject query variants to keep paths stable.
-    // /todo: preserve hash fragments end-to-end for cross-page section nav if needed.
-
-    // Extract decoded article slug and reject empty slugs.
-    const slug = decodeURIComponent(url.pathname.slice('/wiki/'.length));
-    if (!slug) return null;
-    // Filter namespace pages except Category:, which we allow.
-    if (slug.includes(':') && !slug.startsWith('Category:')) return null;
-
-    // Return normalized /wiki/... path with encoded slug.
-    return `/wiki/${encodeURIComponent(slug).replace(/%2F/g, '/')}`;
-  } catch (_err) {
-    return null; // invalid URLs -> non-links
-  }
-}
-
 export function sanitizeWikiArticleHtml({ rawHtml }) {
   const root = document.createElement('div');
   root.innerHTML = String(rawHtml || '');
@@ -151,7 +71,7 @@ export function sanitizeWikiArticleHtml({ rawHtml }) {
 
   Array.from(root.querySelectorAll('a[href]')).forEach((anchor) => {
     const href = String(anchor.getAttribute('href') || '').trim();
-    const path = normalizeAndValidateWikiPath(href);
+    const path = href.startsWith('#') ? href : normalizeAndValidateWikiPath(href);
     if (!path || seen.has(path)) return;
     if (path.startsWith('#')) return; // section jumps are browser-native, not gameplay moves
 
