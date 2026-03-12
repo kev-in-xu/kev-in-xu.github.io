@@ -42,13 +42,10 @@ classes:
       <button type="button" class="wiki-race-btn wiki-race-btn-danger" data-action="abandon" disabled>Give Up</button>
       <button type="button" class="wiki-race-btn" data-action="fullscreen">Fullscreen</button>
       <div class="wiki-race-stats" aria-live="polite">
-        <span>Timer: <span data-field="timer">00:00.000</span></span>
-        <span>Clicks: <span data-field="clicks">0</span></span>
+        <span class="wiki-race-stat">Timer: <span data-field="timer">00:00.000</span></span>
+        <span class="wiki-race-stat">Clicks: <span data-field="clicks">0</span></span>
+        <span class="wiki-race-stat wiki-race-stat-seed">Seed: <span class="wiki-race-seed-value" data-field="seed">agi</span></span>
       </div>
-    </section>
-
-    <section class="wiki-race-status" data-region="status" aria-live="polite">
-      Click <strong>Start</strong> to reveal today&apos;s article.
     </section>
 
     <section class="wiki-race-route-panel" aria-label="Route history">

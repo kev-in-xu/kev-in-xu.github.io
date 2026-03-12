@@ -2,14 +2,15 @@ import { formatElapsedMs } from './timer.js';
 
 export function createRenderer(rootEl) {
   const TOC_SCROLL_TOP_OFFSET_PX = 16;
+  const LOADING_PLACEHOLDER_HTML = '<p class="wiki-race-placeholder">Loading article</p>';
   const els = {
     startBtn: rootEl.querySelector('[data-action="start"]'),
     backBtn: rootEl.querySelector('[data-action="back"]'),
     abandonBtn: rootEl.querySelector('[data-action="abandon"]'),
     timer: rootEl.querySelector('[data-field="timer"]'),
     clicks: rootEl.querySelector('[data-field="clicks"]'),
+    seed: rootEl.querySelector('[data-field="seed"]'),
     stats: rootEl.querySelector('.wiki-race-stats'),
-    status: rootEl.querySelector('[data-region="status"]'),
     article: rootEl.querySelector('[data-region="article"]'),
     tocPanel: rootEl.querySelector('[data-region="toc-panel"]'),
     toc: rootEl.querySelector('[data-region="toc"]'),
@@ -18,8 +19,6 @@ export function createRenderer(rootEl) {
   let lastArticleHtml = null;
   let lastAllowedLinksKey = '';
   let lastRouteText = null;
-  let lastStatusText = null;
-  let lastStatusHtml = null;
   let cleanupTocSync = () => {};
   let cleanupLazyImageSync = () => {};
 
@@ -320,65 +319,28 @@ export function createRenderer(rootEl) {
 
     els.timer.textContent = formatElapsedMs(state.elapsedMs || 0);
     els.clicks.textContent = String(state.clickCount ?? 0);
+    if (els.seed) {
+      const seedLabel = String(state.runSeedLabel || '--');
+      els.seed.textContent = seedLabel;
+      els.seed.setAttribute('title', seedLabel);
+    }
 
-    const isIdle = state.status === 'idle';
     const isRunning = state.status === 'running';
-    const isTerminal = state.status === 'won' || state.status === 'abandoned' || state.status === 'error';
+    const isLoadingStart = state.status === 'loading_start';
+    const isFinished = state.status === 'won' || state.status === 'abandoned';
 
     els.startBtn.disabled = state.status === 'loading_start' || isRunning;
     els.backBtn.disabled = !isRunning || !state.canGoBack;
     els.abandonBtn.disabled = !isRunning;
+    els.article.classList.toggle('is-finished', isFinished);
 
-    if (state.status === 'loading_start') {
-      const next = 'Loading today\'s start page...';
-      if (lastStatusText !== next || lastStatusHtml !== null) {
-        els.status.textContent = next;
-        lastStatusText = next;
-        lastStatusHtml = null;
-      }
-    } else if (state.status === 'won') {
-      const next = `Finished in ${state.clickCount} clicks, ${formatElapsedMs(state.elapsedMs || 0)}.`;
-      if (lastStatusText !== next || lastStatusHtml !== null) {
-        els.status.textContent = next;
-        lastStatusText = next;
-        lastStatusHtml = null;
-      }
-    } else if (state.status === 'abandoned') {
-      const next = 'Run abandoned.';
-      if (lastStatusText !== next || lastStatusHtml !== null) {
-        els.status.textContent = next;
-        lastStatusText = next;
-        lastStatusHtml = null;
-      }
-    } else if (state.status === 'error') {
-      const next = state.errorMessage || 'An error occurred. Start again.';
-      if (lastStatusText !== next || lastStatusHtml !== null) {
-        els.status.textContent = next;
-        lastStatusText = next;
-        lastStatusHtml = null;
-      }
-    } else if (isIdle) {
-      const nextHtml = 'Click <strong>Start</strong> to reveal today&apos;s article.';
-      if (lastStatusHtml !== nextHtml) {
-        els.status.innerHTML = nextHtml;
-        lastStatusHtml = nextHtml;
-        lastStatusText = null;
-      }
-    } else if (isRunning) {
-      const next = state.currentPageTitle
-        ? `Current page: ${state.currentPageTitle}`
-        : 'Run started.';
-      if (lastStatusText !== next || lastStatusHtml !== null) {
-        els.status.textContent = next;
-        lastStatusText = next;
-        lastStatusHtml = null;
-      }
-    } else if (isTerminal) {
-      const next = state.status;
-      if (lastStatusText !== next || lastStatusHtml !== null) {
-        els.status.textContent = next;
-        lastStatusText = next;
-        lastStatusHtml = null;
+    if (isLoadingStart && !state.articleHtml) {
+      if (els.article.innerHTML !== LOADING_PLACEHOLDER_HTML) {
+        els.article.innerHTML = LOADING_PLACEHOLDER_HTML;
+        els.article.classList.remove('has-sidebar');
+        lastArticleHtml = null;
+        lastAllowedLinksKey = '';
+        renderToc();
       }
     }
 

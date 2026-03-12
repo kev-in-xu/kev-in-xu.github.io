@@ -4,12 +4,10 @@ import { createTimer } from './timer.js';
 import { createHistoryController } from './history.js';
 import { getDailyStart, postWinningRun } from './api-client.js';
 import { getWikiPageByPath, getWikiPageByTitle } from './mw-browser-client.js';
+import { createTargetPreviewController } from './target-preview.js';
 
 const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
 const SESSION_ID_STORAGE_KEY = 'wiki-race-session-id-v1';
-const TARGET_PREVIEW_MAX_SECTIONS = 3;
-const TARGET_PREVIEW_MAX_SNIPPET_CHARS = 220;
-const TARGET_PREVIEW_HIDE_DELAY_MS = 140;
 let lottieLoadPromise = null;
 
 function isFullscreenActive() {
@@ -171,8 +169,8 @@ function buildUiState(gameState, elapsedMs, historyController) {
   const allowedLinkPaths = gameState.currentPage?.linkIndex?.map((link) => link.path) || [];
   return {
     status: gameState.status,
-    errorMessage: gameState.errorMessage,
     clickCount: gameState.clickCount,
+    runSeedLabel: gameState.runSeedLabel || 'agi',
     elapsedMs,
     canGoBack: historyController.canGoBack(),
     currentPageTitle: gameState.currentPage?.displayTitle || null,
@@ -232,89 +230,6 @@ function getOrCreateSessionId() {
   }
 }
 
-function normalizePreviewText(value) {
-  return String(value || '')
-    .replace(/\[edit\]/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function truncatePreviewText(value, maxChars = TARGET_PREVIEW_MAX_SNIPPET_CHARS) {
-  const text = normalizePreviewText(value);
-  if (!text) return '';
-  if (text.length <= maxChars) return text;
-  return `${text.slice(0, Math.max(0, maxChars - 3)).trimEnd()}...`;
-}
-
-function buildTargetSectionPreview(articleHtml, {
-  maxSections = TARGET_PREVIEW_MAX_SECTIONS,
-  maxChars = TARGET_PREVIEW_MAX_SNIPPET_CHARS
-} = {}) {
-  const rawHtml = String(articleHtml || '').trim();
-  if (!rawHtml) return [];
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(rawHtml, 'text/html');
-  const articleBody = doc.querySelector('.wiki-race-article-body') || doc.body;
-  if (!articleBody) return [];
-
-  const sections = [];
-  const seenSnippets = new Set();
-  const headings = Array.from(articleBody.querySelectorAll('h2'));
-
-  for (const heading of headings) {
-    if (sections.length >= maxSections) break;
-
-    const headingText = normalizePreviewText(
-      heading.querySelector('.mw-headline')?.textContent || heading.textContent || ''
-    );
-    if (!headingText) continue;
-
-    let snippetText = '';
-    let cursor = heading.nextElementSibling;
-    while (cursor) {
-      const tagName = (cursor.tagName || '').toLowerCase();
-      if (tagName === 'h2') break;
-
-      const paragraph = tagName === 'p' ? cursor : cursor.querySelector?.('p');
-      const nextText = normalizePreviewText(paragraph?.textContent || '');
-      if (nextText.length >= 48) {
-        snippetText = nextText;
-        break;
-      }
-
-      cursor = cursor.nextElementSibling;
-    }
-
-    const snippet = truncatePreviewText(snippetText, maxChars);
-    if (!snippet || seenSnippets.has(snippet)) continue;
-
-    seenSnippets.add(snippet);
-    sections.push({ heading: headingText, snippet });
-  }
-
-  if (sections.length < maxSections) {
-    const fallbackParagraphs = Array.from(articleBody.querySelectorAll('p'))
-      .map((paragraph) => normalizePreviewText(paragraph.textContent || ''))
-      .filter((text) => text.length >= 48);
-
-    for (const paragraph of fallbackParagraphs) {
-      if (sections.length >= maxSections) break;
-
-      const snippet = truncatePreviewText(paragraph, maxChars);
-      if (!snippet || seenSnippets.has(snippet)) continue;
-
-      seenSnippets.add(snippet);
-      sections.push({
-        heading: sections.length === 0 ? 'Overview' : `Overview ${sections.length + 1}`,
-        snippet
-      });
-    }
-  }
-
-  return sections.slice(0, maxSections);
-}
-
 async function bootstrap() {
   const root = document.getElementById('wiki-race-app');
   if (!root) return;
@@ -327,212 +242,17 @@ async function bootstrap() {
   const fullscreenBtn = root.querySelector('[data-action="fullscreen"]');
   let currentTargetPage = null;
   let activeRunMeta = null;
-  let targetPreviewRequestToken = 0;
-  let targetPreviewLinkEl = null;
-  let targetPreviewHideTimer = null;
-  const targetPreviewState = {
-    status: 'idle',
-    title: '',
-    sections: [],
-    errorMessage: '',
-    isOpen: false
-  };
-
-  const targetPreviewEl = document.createElement('section');
-  targetPreviewEl.className = 'wiki-race-target-preview';
-  targetPreviewEl.id = 'wiki-race-target-preview';
-  targetPreviewEl.hidden = true;
-  targetPreviewEl.setAttribute('aria-live', 'polite');
-  modeSubtitle?.parentElement?.appendChild(targetPreviewEl);
 
   function getSelectedMode() {
     return modeToggle?.checked ? 'random_vital' : 'agi';
   }
 
-  function clearTargetPreviewHideTimer() {
-    if (targetPreviewHideTimer !== null) {
-      clearTimeout(targetPreviewHideTimer);
-      targetPreviewHideTimer = null;
-    }
-  }
-
-  function isTargetPreviewAvailableNow() {
-    return store.getState().status !== 'idle';
-  }
-
-  function renderTargetPreview() {
-    const canRenderOpen = Boolean(
-      targetPreviewState.isOpen
-      && isTargetPreviewAvailableNow()
-      && targetPreviewLinkEl
-      && targetPreviewState.title
-    );
-    targetPreviewEl.hidden = !canRenderOpen;
-    targetPreviewEl.classList.toggle('is-open', canRenderOpen);
-    targetPreviewEl.dataset.state = targetPreviewState.status;
-
-    if (!canRenderOpen) {
-      targetPreviewEl.replaceChildren();
-      return;
-    }
-
-    const fragment = document.createDocumentFragment();
-    const title = document.createElement('p');
-    title.className = 'wiki-race-target-preview__title';
-    title.textContent = `Destination preview: ${targetPreviewState.title}`;
-    fragment.appendChild(title);
-
-    if (targetPreviewState.status === 'loading') {
-      const loading = document.createElement('p');
-      loading.className = 'wiki-race-target-preview__status';
-      loading.textContent = 'Loading preview...';
-      fragment.appendChild(loading);
-    } else if (targetPreviewState.status === 'error') {
-      const error = document.createElement('p');
-      error.className = 'wiki-race-target-preview__status';
-      error.textContent = targetPreviewState.errorMessage || 'Target preview unavailable.';
-      fragment.appendChild(error);
-    } else if (targetPreviewState.status === 'ready' && targetPreviewState.sections.length) {
-      const list = document.createElement('ol');
-      list.className = 'wiki-race-target-preview__list';
-      targetPreviewState.sections.forEach((section) => {
-        const item = document.createElement('li');
-        item.className = 'wiki-race-target-preview__item';
-
-        const heading = document.createElement('h3');
-        heading.className = 'wiki-race-target-preview__heading';
-        heading.textContent = section.heading;
-
-        const snippet = document.createElement('p');
-        snippet.className = 'wiki-race-target-preview__snippet';
-        snippet.textContent = section.snippet;
-
-        item.appendChild(heading);
-        item.appendChild(snippet);
-        list.appendChild(item);
-      });
-      fragment.appendChild(list);
-    } else {
-      const empty = document.createElement('p');
-      empty.className = 'wiki-race-target-preview__status';
-      empty.textContent = 'No preview sections available.';
-      fragment.appendChild(empty);
-    }
-
-    targetPreviewEl.replaceChildren(fragment);
-  }
-
-  function hideTargetPreviewNow() {
-    clearTargetPreviewHideTimer();
-    if (!targetPreviewState.isOpen) return;
-    targetPreviewState.isOpen = false;
-    renderTargetPreview();
-  }
-
-  function scheduleTargetPreviewHide() {
-    clearTargetPreviewHideTimer();
-    targetPreviewHideTimer = window.setTimeout(() => {
-      targetPreviewHideTimer = null;
-      hideTargetPreviewNow();
-    }, TARGET_PREVIEW_HIDE_DELAY_MS);
-  }
-
-  function showTargetPreviewNow() {
-    if (!isTargetPreviewAvailableNow() || !targetPreviewState.title) return;
-    clearTargetPreviewHideTimer();
-    targetPreviewState.isOpen = true;
-    renderTargetPreview();
-  }
-
-  function resetTargetPreviewState() {
-    clearTargetPreviewHideTimer();
-    targetPreviewState.status = 'idle';
-    targetPreviewState.title = '';
-    targetPreviewState.sections = [];
-    targetPreviewState.errorMessage = '';
-    targetPreviewState.isOpen = false;
-    renderTargetPreview();
-  }
-
-  function setTargetPreviewLoading(title) {
-    targetPreviewState.status = 'loading';
-    targetPreviewState.title = normalizePreviewText(title) || 'Unknown destination';
-    targetPreviewState.sections = [];
-    targetPreviewState.errorMessage = '';
-    renderTargetPreview();
-  }
-
-  function setTargetPreviewReady(title, sections) {
-    targetPreviewState.status = 'ready';
-    targetPreviewState.title = normalizePreviewText(title) || 'Unknown destination';
-    targetPreviewState.sections = Array.isArray(sections) ? sections : [];
-    targetPreviewState.errorMessage = '';
-    renderTargetPreview();
-  }
-
-  function setTargetPreviewError(title, message) {
-    targetPreviewState.status = 'error';
-    targetPreviewState.title = normalizePreviewText(title) || 'Unknown destination';
-    targetPreviewState.sections = [];
-    targetPreviewState.errorMessage = message || 'Target preview unavailable.';
-    renderTargetPreview();
-  }
-
-  function bindTargetPreviewLinkEvents() {
-    if (targetPreviewLinkEl) {
-      targetPreviewLinkEl.removeEventListener('mouseenter', showTargetPreviewNow);
-      targetPreviewLinkEl.removeEventListener('mouseleave', scheduleTargetPreviewHide);
-      targetPreviewLinkEl.removeEventListener('focus', showTargetPreviewNow);
-      targetPreviewLinkEl.removeEventListener('blur', scheduleTargetPreviewHide);
-      targetPreviewLinkEl.removeAttribute('aria-describedby');
-      targetPreviewLinkEl.classList.remove('wiki-race-destination-link');
-    }
-
-    targetPreviewLinkEl = modeSubtitle?.querySelector('a[data-role="target-page-link"]') || null;
-    if (!targetPreviewLinkEl) {
-      hideTargetPreviewNow();
-      return;
-    }
-
-    targetPreviewLinkEl.classList.add('wiki-race-destination-link');
-    targetPreviewLinkEl.setAttribute('aria-describedby', targetPreviewEl.id);
-    targetPreviewLinkEl.addEventListener('mouseenter', showTargetPreviewNow);
-    targetPreviewLinkEl.addEventListener('mouseleave', scheduleTargetPreviewHide);
-    targetPreviewLinkEl.addEventListener('focus', showTargetPreviewNow);
-    targetPreviewLinkEl.addEventListener('blur', scheduleTargetPreviewHide);
-  }
-
-  targetPreviewEl.addEventListener('mouseenter', showTargetPreviewNow);
-  targetPreviewEl.addEventListener('mouseleave', scheduleTargetPreviewHide);
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') hideTargetPreviewNow();
+  // create instance of controller that shows target page previews (via target-preview.js)
+  const targetPreview = createTargetPreviewController({
+    modeSubtitle,
+    isPreviewAvailable: () => store.getState().status !== 'idle',
+    fetchPageByTitle: getWikiPageByTitle
   });
-
-  async function prefetchTargetPreview(targetPage, requestToken) {
-    const pageTitle = targetPage?.title || '';
-    if (!pageTitle) {
-      setTargetPreviewError('', 'Target preview unavailable for this run.');
-      return;
-    }
-
-    setTargetPreviewLoading(pageTitle);
-
-    try {
-      const payload = await getWikiPageByTitle(pageTitle);
-      if (requestToken !== targetPreviewRequestToken) return;
-
-      const sections = buildTargetSectionPreview(payload?.html || '');
-      if (!sections.length) {
-        setTargetPreviewError(payload?.displayTitle || pageTitle, 'No destination sections available.');
-        return;
-      }
-
-      setTargetPreviewReady(payload?.displayTitle || pageTitle, sections);
-    } catch (_err) {
-      if (requestToken !== targetPreviewRequestToken) return;
-      setTargetPreviewError(pageTitle, 'Failed to load destination preview.');
-    }
-  }
 
   // activeRunMeta holds client-generated metadata for the current run, 
   // which will be included in the payload when submitting results to the backend.
@@ -585,21 +305,27 @@ async function bootstrap() {
       if (currentTargetPage?.url && currentTargetPage?.title) {
         const targetTitle = String(currentTargetPage.title).trim();
         modeSubtitle.innerHTML = `Reach the wikipedia page for <a data-role="target-page-link" href="${currentTargetPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a> using as few clicks as possible. Start from a random Wikipedia article.`;
-        bindTargetPreviewLinkEvents();
+        targetPreview.bindLinkEvents();
         return;
       }
       modeSubtitle.innerHTML = 'Reach the wikipedia page for ______ using as few clicks as possible. Start from a random Wikipedia article.';
-      bindTargetPreviewLinkEvents();
+      targetPreview.bindLinkEvents();
       return;
     }
     modeSubtitle.innerHTML = 'Reach the wikipedia page for <a data-role="target-page-link" href="https://en.wikipedia.org/wiki/Artificial_general_intelligence" target="_blank" rel="noopener noreferrer">artificial general intelligence</a> using as few article links as possible. Daily challenge resets at 00:00 UTC.';
-    bindTargetPreviewLinkEvents();
+    targetPreview.bindLinkEvents();
   }
   syncModeSubtitle();
   modeToggle?.addEventListener('change', () => {
-    targetPreviewRequestToken += 1;
+    targetPreview.invalidate();
     currentTargetPage = null;
-    resetTargetPreviewState();
+    const nextMode = getSelectedMode();
+    store.updateState((prev) => ({
+      ...prev,
+      runSeedLabel: nextMode === 'agi' ? 'agi' : '--'
+    }));
+    renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
+    targetPreview.render();
     syncModeSubtitle();
   });
 
@@ -614,7 +340,7 @@ async function bootstrap() {
 
   const timer = createTimer((elapsedMs) => {
     renderer.renderState(buildUiState(store.getState(), elapsedMs, historyController));
-    renderTargetPreview();
+    targetPreview.render();
   });
 
   async function loadAndRenderStartPageByTitle(title, { moveType = 'click', countMove = false } = {}) {
@@ -647,25 +373,25 @@ async function bootstrap() {
   }
 
   async function startRun() {
-    targetPreviewRequestToken += 1;
-    const runPreviewToken = targetPreviewRequestToken;
-    resetTargetPreviewState();
+    const runPreviewToken = targetPreview.beginRun();
+    const selectedMode = getSelectedMode();
     initializeRunMeta();
     winConfetti.reset();
     historyController.reset();
     timer.reset();
     store.setState({
       ...createInitialGameState(),
-      status: 'loading_start'
+      status: 'loading_start',
+      runSeedLabel: selectedMode === 'agi' ? 'agi' : '--'
     });
     renderer.renderState(buildUiState(store.getState(), 0, historyController));
-    renderTargetPreview();
+    targetPreview.render();
 
     try {
-      const daily = await getDailyStart({ target: getSelectedMode() });
-      if (runPreviewToken !== targetPreviewRequestToken) return null;
+      const daily = await getDailyStart({ target: selectedMode });
+      if (!targetPreview.isActiveToken(runPreviewToken)) return null;
       if (activeRunMeta) {
-        activeRunMeta.mode = getSelectedMode();
+        activeRunMeta.mode = selectedMode;
         activeRunMeta.dateKey = daily?.dateKey || null;
         activeRunMeta.seedSource = daily?.seedSource || null;
         activeRunMeta.seedHash = daily?.seedHash || null;
@@ -677,9 +403,10 @@ async function bootstrap() {
         dateKey: daily.dateKey,
         targetPage: daily.endPage,
         startPage: daily.startPage,
+        runSeedLabel: selectedMode === 'agi' ? 'agi' : (daily?.seedHash || '--'),
         status: 'loading_start'
       }));
-      void prefetchTargetPreview(daily.endPage, runPreviewToken);
+      void targetPreview.prefetch(daily.endPage, runPreviewToken);
 
       const page = await loadAndRenderStartPageByTitle(daily.startPage.title, {
         moveType: 'start',
@@ -693,17 +420,17 @@ async function bootstrap() {
         status: 'running'
       }));
       renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-      renderTargetPreview();
+      targetPreview.render();
       return page;
     } catch (err) {
-      if (runPreviewToken !== targetPreviewRequestToken) return null;
+      if (!targetPreview.isActiveToken(runPreviewToken)) return null;
       store.updateState((prev) => ({
         ...prev,
         status: 'error',
         errorMessage: err?.message || 'Failed to start the daily challenge.'
       }));
       renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-      renderTargetPreview();
+      targetPreview.render();
     }
   }
 
@@ -746,7 +473,7 @@ async function bootstrap() {
         };
       });
       renderer.renderState(buildUiState(store.getState(), finalElapsedMs ?? timer.getElapsedMs(), historyController));
-      renderTargetPreview();
+      targetPreview.render();
       if (reachedTarget) {
         const payload = buildWinningRunPayload(finalElapsedMs);
         if (payload) {
@@ -761,7 +488,7 @@ async function bootstrap() {
         errorMessage: err?.message || 'Page load failed. Start again.'
       }));
       renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-      renderTargetPreview();
+      targetPreview.render();
     }
   }
 
@@ -790,7 +517,7 @@ async function bootstrap() {
     timer.stop();
     store.updateState((prev) => ({ ...prev, status: 'abandoned' }));
     renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-    renderTargetPreview();
+    targetPreview.render();
   });
 
   renderer.onControl('back', () => {
@@ -824,7 +551,7 @@ async function bootstrap() {
         errorMessage: 'That link is not allowed in this game.'
       }));
       renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-      renderTargetPreview();
+      targetPreview.render();
       return;
     }
 
@@ -859,11 +586,11 @@ async function bootstrap() {
 
     renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
     renderer.els.article.scrollTop = snapshot.scrollTop || 0;
-    renderTargetPreview();
+    targetPreview.render();
   });
 
   renderer.renderState(buildUiState(store.getState(), 0, historyController));
-  renderTargetPreview();
+  targetPreview.render();
 
   const warmConfetti = () => {
     void winConfetti.prime();

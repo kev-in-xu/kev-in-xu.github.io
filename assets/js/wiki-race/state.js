@@ -39,6 +39,7 @@ export function createInitialGameState() {
     startPage: null,
     currentPage: null,
     clickCount: 0,
+    runSeedLabel: 'agi',
     timerStartedAtPerfMs: null,
     timerStoppedAtPerfMs: null,
     route: [],
