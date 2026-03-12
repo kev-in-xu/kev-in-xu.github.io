@@ -239,7 +239,6 @@ async function bootstrap() {
   const renderer = createRenderer(root);
   const historyController = createHistoryController();
   const winConfetti = createWinConfetti(root);
-  const fullscreenBtn = root.querySelector('[data-action="fullscreen"]');
   let currentTargetPage = null;
   let activeRunMeta = null;
 
@@ -330,8 +329,7 @@ async function bootstrap() {
   });
 
   function syncFullscreenButtonLabel() {
-    if (!fullscreenBtn) return;
-    fullscreenBtn.textContent = isFullscreenActive() ? 'Exit Fullscreen' : 'Fullscreen';
+    renderer.setFullscreenToggleState(isFullscreenActive());
   }
 
   syncFullscreenButtonLabel();
