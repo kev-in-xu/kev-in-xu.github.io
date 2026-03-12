@@ -1,27 +1,8 @@
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
-
-let supabaseClient = null;
+import { getSupabaseServiceClient } from './_supabase.js';
 
 const VALID_MODES = new Set(['agi', 'random_vital']);
 const VALID_SEED_SOURCES = new Set(['supabase', 'memory', 'generated']);
-
-// create supabase client instance
-async function loadSupabase() {
-  if (supabaseClient) return true;
-  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return false;
-
-  try {
-    const mod = await import('@supabase/supabase-js');
-    supabaseClient = mod.createClient(url, key, {
-      auth: { persistSession: false, autoRefreshToken: false }
-    });
-    return true;
-  } catch (_err) {
-    return false;
-  }
-}
 
 function readJsonBody(req) { // reads and parses JSON body from api-client
   if (req.body && typeof req.body === 'object') return req.body;
@@ -148,7 +129,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  if (!(await loadSupabase())) {
+  const supabaseClient = await getSupabaseServiceClient();
+  if (!supabaseClient) {
     return res.status(503).json({ error: 'Game result storage is not configured' });
   }
 

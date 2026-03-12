@@ -52,6 +52,7 @@
 }
 
 .wiki-race-header {
+  position: relative;
   margin-bottom: 0.35rem;
 }
 
@@ -72,6 +73,85 @@
 .wiki-race-subtitle a {
   color: var(--wr-accent-2);
   text-decoration-thickness: 1px;
+}
+
+.wiki-race-destination-link {
+  text-underline-offset: 2px;
+}
+
+.wiki-race-target-preview {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: min(26rem, 60vh);
+  overflow: auto;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #cabfa9;
+  border-radius: 10px;
+  background: #fffefb;
+  box-shadow: 0 12px 26px rgba(31, 26, 20, 0.17);
+  z-index: 50;
+}
+
+.wiki-race-target-preview[hidden] {
+  display: none;
+}
+
+.wiki-race-target-preview__title {
+  margin: 0 0 0.55rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  font-weight: 700;
+  color: #1f1a14;
+}
+
+.wiki-race-target-preview__status {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #605546;
+}
+
+.wiki-race-target-preview[data-state="error"] {
+  border-color: #d7aba1;
+  background: #fff8f7;
+}
+
+.wiki-race-target-preview[data-state="loading"] {
+  border-color: #b8c8d6;
+  background: #f8fbff;
+}
+
+.wiki-race-target-preview__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.wiki-race-target-preview__item {
+  margin: 0;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid #ede6d8;
+  border-radius: 8px;
+  background: #fffcf5;
+}
+
+.wiki-race-target-preview__heading {
+  margin: 0 0 0.2rem;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  font-family: "Linux Libertine", "Georgia", "Times New Roman", serif;
+  color: #17110d;
+}
+
+.wiki-race-target-preview__snippet {
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.45;
+  color: #4d4438;
 }
 
 .wiki-race-toolbar {
@@ -551,7 +631,7 @@
     width: 17rem;
     max-width: 45%;
     margin: 0;
-    float: none;
+    float: right;
     clear: none;
     z-index: 1;
   }
@@ -647,6 +727,13 @@
 }
 
 @media (max-width: 960px) {
+  .wiki-race-target-preview {
+    left: 0;
+    right: 0;
+    width: auto;
+    max-height: min(22rem, 50vh);
+  }
+
   .wiki-race-stats {
     width: 100%;
     margin-left: 0;

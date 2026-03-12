@@ -2,6 +2,7 @@ import { fetchRandomVitalPageRef, toWikiPageRef } from './_mw.js';
 import { isValidStartPage } from './_filter.js';
 import { buildRandomWikiPagePayloads, buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { cacheGetJson, cacheSetJson, detectCacheBackends, getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
+import { createAndPersistRandomRunSeed } from './_seed-store.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 
 const AGI_TARGET_PAGE = toWikiPageRef({ title: 'Artificial general intelligence' });
@@ -29,13 +30,14 @@ function parseTargetMode(req) {
 }
 
 // converts wiki payload to api-client.js' expected response shape
-function toClientDailyResponse(payload, seedSource) {
+function toClientDailyResponse(payload, seedSource, { seedHash = null } = {}) {
   const endPage = payload.endPage;
   return {
     dateKey: payload.dateKey,
     startPage: payload.startPage,
     endPage,
-    seedSource
+    seedSource,
+    seedHash
   };
 }
 
@@ -59,7 +61,9 @@ async function ensurePagePayloadForDaily(pageRef, fallbackTitle) {
  * HTTP handler for `/api/wiki/daily-start`.
  * Input: GET request with optional `?date=YYYY-MM-DD`.
  * Output: JSON containing date key, start page, and end page.
- * Logic: serves cached daily seed when available; otherwise samples random pages until one passes start-page rules, then caches result.
+ * Logic:
+ * - AGI mode serves cached daily seed keyed by UTC date.
+ * - random_vital mode generates fresh start/end pages per request and persists a unique run seed hash.
  */
 export default async function handler(req, res) {
   if (handleCorsPreflight(req, res)) return;
@@ -71,40 +75,43 @@ export default async function handler(req, res) {
 
   const dateKey = req.query?.date ? String(req.query.date) : utcDateKey();
   const targetMode = parseTargetMode(req);
-  const cacheKey = targetMode === 'agi'
-    ? `${CACHE_PREFIX}${dateKey}`
-    : `${CACHE_PREFIX}${dateKey}:target:random_vital`;
-  const { primary } = await detectCacheBackends();
+  const useDailyCache = targetMode === 'agi';
+  const cacheKey = useDailyCache ? `${CACHE_PREFIX}${dateKey}` : null;
 
-  try {
-    const cached = await cacheGetJson(cacheKey);
-    if (cached?.startPage?.path && cached?.endPage?.path && cached?.dateKey === dateKey) {
-      try {
-        const startPayload = cached.startPayload || await ensurePagePayloadForDaily(cached.startPage, cached.startPage?.title);
-        const endPayload = cached.endPayload || await ensurePagePayloadForDaily(
-          cached.endPage,
-          targetMode === 'agi' ? AGI_TARGET_PAGE.title : cached.endPage?.title
-        );
-        if (startPayload) await setCachedWikiPage(cached.startPage.normalizedTitle || cached.startPage.title, startPayload);
-        if (endPayload) await setCachedWikiPage(cached.endPage.normalizedTitle || cached.endPage.title, endPayload);
+  // looks up daily cache for AGI mode, but random_vital mode always generates fresh pages and seeds.
+  if (useDailyCache && cacheKey) { 
+    const { primary } = await detectCacheBackends();
+    try {
+      const cached = await cacheGetJson(cacheKey);
+      if (cached?.startPage?.path && cached?.endPage?.path && cached?.dateKey === dateKey) {
+        try {
+          const startPayload = cached.startPayload || await ensurePagePayloadForDaily(cached.startPage, cached.startPage?.title);
+          const endPayload = cached.endPayload || await ensurePagePayloadForDaily(
+            cached.endPage,
+            AGI_TARGET_PAGE.title
+          );
+          if (startPayload) await setCachedWikiPage(cached.startPage.normalizedTitle || cached.startPage.title, startPayload);
+          if (endPayload) await setCachedWikiPage(cached.endPage.normalizedTitle || cached.endPage.title, endPayload);
 
-        if (!cached.startPayload || !cached.endPayload) {
-          await cacheSetJson(cacheKey, {
-            ...cached,
-            startPayload: startPayload || cached.startPayload || null,
-            endPayload: endPayload || cached.endPayload || null
-          });
+          if (!cached.startPayload || !cached.endPayload) {
+            await cacheSetJson(cacheKey, {
+              ...cached,
+              startPayload: startPayload || cached.startPayload || null,
+              endPayload: endPayload || cached.endPayload || null
+            });
+          }
+        } catch (_err) {
+          // Non-fatal: daily response still succeeds if page-cache warmup fails.
         }
-      } catch (_err) {
-        // Non-fatal: daily response still succeeds if page-cache warmup fails.
+        res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+        return res.status(200).json(toClientDailyResponse(cached, primary));
       }
-      res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
-      return res.status(200).json(toClientDailyResponse(cached, primary));
+    } catch (_err) {
+      // Fall through to generation if cache unavailable.
     }
-  } catch (_err) {
-    // Fall through to generation if cache unavailable.
   }
 
+  // generate new start/end pair and persist a unique seed for random_vital mode
   let acceptedPayload = null;
   let attempts = 0;
   let lastError = null;
@@ -202,11 +209,36 @@ export default async function handler(req, res) {
   try {
     await setCachedWikiPage(startPage.normalizedTitle || startPage.title, acceptedPayload);
     await setCachedWikiPage(endPage.normalizedTitle || endPage.title, endPayload);
-    await cacheSetJson(cacheKey, responsePayload);
+    if (useDailyCache && cacheKey) {
+      await cacheSetJson(cacheKey, responsePayload);
+    }
   } catch (_err) {
     // Non-fatal: daily start still returns even if cache writes fail.
   }
 
-  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=60');
-  return res.status(200).json(toClientDailyResponse(responsePayload, 'generated'));
+  let responseSeedSource = 'generated';
+  let responseSeedHash = null;
+  if (targetMode === 'random_vital') {
+    try {
+      const seedResult = await createAndPersistRandomRunSeed({
+        startPage,
+        endPage,
+        dateKey
+      });
+      responseSeedSource = seedResult.seedSource || 'generated';
+      responseSeedHash = seedResult.seedHash || null;
+    } catch (_err) {
+      // Non-fatal: random runs can proceed even if seed storage fails.
+      responseSeedSource = 'generated';
+      responseSeedHash = null;
+    }
+  }
+
+  const cacheControl = useDailyCache
+    ? 'public, s-maxage=60, stale-while-revalidate=60'
+    : 'no-store';
+  res.setHeader('Cache-Control', cacheControl);
+  return res.status(200).json(
+    toClientDailyResponse(responsePayload, responseSeedSource, { seedHash: responseSeedHash })
+  );
 }

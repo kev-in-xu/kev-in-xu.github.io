@@ -1,28 +1,8 @@
-let supabaseClient = null;
+import { getSupabaseServiceClient } from './_supabase.js';
 
 const memoryCache = new Map();
 const DAILY_START_PREFIX = 'wiki-race:daily-start:';
 const PAGE_PREFIX = 'wiki-race:page:';
-
-/**
- * Creates and caches a Supabase service client.
- */
-async function loadSupabase() {
-  if (supabaseClient) return true;
-  const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) return false;
-
-  try {
-    const mod = await import('@supabase/supabase-js');
-    supabaseClient = mod.createClient(url, key, {
-      auth: { persistSession: false, autoRefreshToken: false }
-    });
-    return true;
-  } catch (_err) {
-    return false;
-  }
-}
 
 /**
  * Extracts the YYYY-MM-DD date segment from a daily-start full cache key.
@@ -76,7 +56,8 @@ function toPageRefFromRow(prefix, row) {
 async function supabaseGetJson(key) {
   const dateKey = keyToDailyDate(key);
   if (!dateKey) return null;
-  if (!(await loadSupabase())) return null;
+  const supabaseClient = await getSupabaseServiceClient();
+  if (!supabaseClient) return null;
 
   const { data, error } = await supabaseClient
     .from('wiki_race_daily_start')
@@ -109,7 +90,8 @@ async function supabaseGetJson(key) {
 async function supabaseSetJson(key, value) {
   const dateKey = keyToDailyDate(key);
   if (!dateKey) return false;
-  if (!(await loadSupabase())) return false;
+  const supabaseClient = await getSupabaseServiceClient();
+  if (!supabaseClient) return false;
 
   const startPage = value?.startPage || {};
   const endPage = value?.endPage || {};
@@ -155,7 +137,7 @@ export async function cacheGetJson(key) {
  */
 export async function cacheSetJson(key, value, options = {}) {
   void options;
-  if (await loadSupabase()) {
+  if (await getSupabaseServiceClient()) {
     return supabaseSetJson(key, value);
   }
   memoryCache.set(key, value);
@@ -168,7 +150,7 @@ export async function cacheSetJson(key, value, options = {}) {
  */
 export async function detectCacheBackends() {
   return {
-    primary: (await loadSupabase()) ? 'supabase' : 'memory'
+    primary: (await getSupabaseServiceClient()) ? 'supabase' : 'memory'
   };
 }
 
@@ -178,7 +160,8 @@ export async function detectCacheBackends() {
  */
 async function supabaseGetPagePayload(normalizedKey) {
   if (!normalizedKey) return null;
-  if (!(await loadSupabase())) return null;
+  const supabaseClient = await getSupabaseServiceClient();
+  if (!supabaseClient) return null;
 
   const { data, error } = await supabaseClient
     .from('wiki_race_page_cache')
@@ -197,7 +180,8 @@ async function supabaseGetPagePayload(normalizedKey) {
  */
 async function supabaseSetPagePayload(normalizedKey, payload) {
   if (!normalizedKey || !payload) return false;
-  if (!(await loadSupabase())) return false;
+  const supabaseClient = await getSupabaseServiceClient();
+  if (!supabaseClient) return false;
 
   const row = {
     page_key: normalizedKey,
@@ -239,7 +223,7 @@ export async function setCachedWikiPage(titleLike, payload) {
   const normalizedRequestedKey = normalizePageKey(titleLike);
   const canonicalKey = normalizePageKey(payload?.page?.normalizedTitle || payload?.page?.title || '');
 
-  if (await loadSupabase()) {
+  if (await getSupabaseServiceClient()) {
     if (normalizedRequestedKey) await supabaseSetPagePayload(normalizedRequestedKey, payload);
     if (canonicalKey && canonicalKey !== normalizedRequestedKey) {
       await supabaseSetPagePayload(canonicalKey, payload);

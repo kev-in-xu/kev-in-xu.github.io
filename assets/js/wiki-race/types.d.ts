@@ -21,6 +21,7 @@ export interface DailyStartResponse {
   startPage: WikiPageRef;
   endPage: WikiPageRef;
   seedSource: 'supabase' | 'memory' | 'generated';
+  seedHash?: string | null;
 }
 
 export interface WikiPagePayload {
