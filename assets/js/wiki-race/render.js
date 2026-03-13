@@ -19,9 +19,12 @@ export function createRenderer(rootEl) {
     backBtn: rootEl.querySelector('[data-action="back"]'),
     abandonBtn: rootEl.querySelector('[data-action="abandon"]'),
     fullscreenBtn: rootEl.querySelector('[data-action="fullscreen"]'),
+    modeSelect: rootEl.querySelector('[data-field="game-mode"]'),
+    seededInputWrap: rootEl.querySelector('[data-region="seeded-input"]'),
+    seededInput: rootEl.querySelector('[data-field="seeded-key"]'),
+    toolbarError: rootEl.querySelector('[data-region="toolbar-error"]'),
     timer: rootEl.querySelector('[data-field="timer"]'),
     clicks: rootEl.querySelector('[data-field="clicks"]'),
-    seed: rootEl.querySelector('[data-field="seed"]'),
     stats: rootEl.querySelector('.wiki-race-stats'),
     article: rootEl.querySelector('[data-region="article"]'),
     tocPanel: rootEl.querySelector('[data-region="toc-panel"]'),
@@ -340,19 +343,41 @@ export function createRenderer(rootEl) {
 
     els.timer.textContent = formatElapsedMs(state.elapsedMs || 0);
     els.clicks.textContent = String(state.clickCount ?? 0);
-    if (els.seed) {
-      const seedLabel = String(state.runSeedLabel || '--');
-      els.seed.textContent = seedLabel;
-      els.seed.setAttribute('title', seedLabel);
-    }
 
     const isRunning = state.status === 'running';
     const isLoadingStart = state.status === 'loading_start';
     const isFinished = state.status === 'won' || state.status === 'abandoned';
+    const selectedMode = String(state.selectedMode || 'agi').trim() || 'agi';
+    const showSeedField = selectedMode !== 'agi' && Boolean(state.showSeedField);
+    const isSeedFieldEditable = Boolean(state.isSeedFieldEditable);
+    const canCopySeedField = Boolean(state.canCopySeedField);
+    const toolbarErrorMessage = String(state.toolbarErrorMessage || '').trim();
 
-    els.startBtn.disabled = state.status === 'loading_start' || isRunning;
+    els.startBtn.disabled = state.canStart === false || state.status === 'loading_start' || isRunning;
     els.backBtn.disabled = !isRunning || !state.canGoBack;
     els.abandonBtn.disabled = !isRunning;
+    if (els.modeSelect) {
+      // Keep mode selection fixed while a run is active.
+      els.modeSelect.disabled = Boolean(state.disableModeSelection) || isRunning || isLoadingStart;
+    }
+    if (els.seededInput) {
+      els.seededInput.value = String(state.seedFieldValue || '');
+      els.seededInput.readOnly = !isSeedFieldEditable;
+      els.seededInput.disabled = isSeedFieldEditable && (isRunning || isLoadingStart);
+      els.seededInput.setAttribute('aria-invalid', showSeedField && isSeedFieldEditable && toolbarErrorMessage ? 'true' : 'false');
+      els.seededInput.setAttribute('title', canCopySeedField ? 'Click to copy seed' : '');
+      els.seededInput.dataset.copyable = canCopySeedField ? 'true' : 'false';
+    }
+    if (els.seededInputWrap) {
+      els.seededInputWrap.hidden = !showSeedField;
+      els.seededInputWrap.style.display = showSeedField ? '' : 'none';
+      els.seededInputWrap.dataset.copyable = canCopySeedField ? 'true' : 'false';
+      els.seededInputWrap.setAttribute('title', canCopySeedField ? 'Click to copy seed' : '');
+    }
+    if (els.toolbarError) {
+      els.toolbarError.hidden = !toolbarErrorMessage;
+      els.toolbarError.textContent = toolbarErrorMessage;
+    }
     els.article.classList.toggle('is-finished', isFinished);
 
     if (isLoadingStart && !state.articleHtml) {

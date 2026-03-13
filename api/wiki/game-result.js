@@ -1,8 +1,9 @@
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 import { getSupabaseServiceClient } from './_supabase.js';
 
-const VALID_MODES = new Set(['agi', 'random_vital']);
+const VALID_MODES = new Set(['agi', 'random_vital', 'seeded']);
 const VALID_SEED_SOURCES = new Set(['supabase', 'memory', 'generated']);
+const SEED_HASH_PATTERN = /^[a-f0-9]{24}$/i;
 
 function readJsonBody(req) { // reads and parses JSON body from api-client
   if (req.body && typeof req.body === 'object') return req.body;
@@ -57,6 +58,12 @@ function normalizeSeedSource(value) {
   const seedSource = String(value || '').trim().toLowerCase();
   if (!seedSource) return null;
   return VALID_SEED_SOURCES.has(seedSource) ? seedSource : null;
+}
+
+function normalizeSeedHash(value) {
+  const seedHash = String(value || '').trim().toLowerCase();
+  if (!seedHash) return null;
+  return SEED_HASH_PATTERN.test(seedHash) ? seedHash : null;
 }
 
 function normalizePageRef(value) {
@@ -144,6 +151,8 @@ export default async function handler(req, res) {
   const dateKey = dateKeyRaw ? parseDateKey(dateKeyRaw) : null;
   const seedSourceRaw = toNonEmptyString(body.seedSource);
   const seedSource = seedSourceRaw ? normalizeSeedSource(seedSourceRaw) : null;
+  const seedHashRaw = toNonEmptyString(body.seedHash);
+  const seedHash = seedHashRaw ? normalizeSeedHash(seedHashRaw) : null;
   const startedAtUtc = parseUtcTimestamp(body.startedAtUtc);
   const completedAtUtc = parseUtcTimestamp(body.completedAtUtc);
   const durationMs = parseNonNegativeInt(body.durationMs);
@@ -155,6 +164,7 @@ export default async function handler(req, res) {
   if (!mode) return badRequest(res, 'Invalid mode');
   if (dateKeyRaw && !dateKey) return badRequest(res, 'Invalid dateKey');
   if (seedSourceRaw && !seedSource) return badRequest(res, 'Invalid seedSource');
+  if (seedHashRaw && !seedHash) return badRequest(res, 'Invalid seedHash');
   if (!startedAtUtc) return badRequest(res, 'Invalid startedAtUtc');
   if (!completedAtUtc) return badRequest(res, 'Invalid completedAtUtc');
   if (durationMs == null) return badRequest(res, 'Invalid durationMs');
@@ -185,6 +195,7 @@ export default async function handler(req, res) {
     mode,
     date_key: dateKey,
     seed_source: seedSource,
+    seed_hash: seedHash,
     started_at_utc: startedAtUtc,
     completed_at_utc: completedAtUtc,
     duration_ms: durationMs,

@@ -37,9 +37,14 @@ async function fetchJson(url) {
   return body;
 }
 
-export function getDailyStart({ target = 'agi' } = {}) {
+export function getDailyStart({ target = 'agi', seed = null } = {}) {
   const mode = String(target || 'agi').trim() || 'agi';
-  return fetchJson(buildApiUrl(`/api/wiki/daily-start?target=${encodeURIComponent(mode)}`));
+  const params = new URLSearchParams();
+  params.set('target', mode);
+  if (seed != null && String(seed).trim()) {
+    params.set('seed', String(seed).trim());
+  }
+  return fetchJson(buildApiUrl(`/api/wiki/daily-start?${params.toString()}`));
 }
 
 // api caller for submitting game results to the backend, which will validate and persist the data.

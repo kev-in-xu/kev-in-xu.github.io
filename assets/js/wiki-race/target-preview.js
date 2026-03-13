@@ -5,6 +5,7 @@ const TARGET_PREVIEW_HIDE_DELAY_MS = 140;
 function normalizePreviewText(value) {
   return String(value || '')
     .replace(/\[edit\]/gi, '')
+    .replace(/\.mw-parser-output\s+\.[^{]+\{[^}]+\}(?:\s*\.mw-parser-output\s+\.[^{]+\{[^}]+\})*/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -27,6 +28,10 @@ function buildTargetSectionPreview(articleHtml, {
   const doc = parser.parseFromString(rawHtml, 'text/html');
   const articleBody = doc.querySelector('.wiki-race-article-body') || doc.body;
   if (!articleBody) return [];
+
+  articleBody.querySelectorAll('.IPA, .IPA-label, .IPA-label-small, style').forEach((node) => {
+    node.remove();
+  });
 
   const snippets = [];
   const seenSnippets = new Set();

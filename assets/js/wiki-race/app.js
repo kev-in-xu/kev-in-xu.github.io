@@ -8,6 +8,7 @@ import { createTargetPreviewController } from './target-preview.js';
 
 const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
 const SESSION_ID_STORAGE_KEY = 'wiki-race-session-id-v1';
+const SEEDED_KEY_PATTERN = /^[a-f0-9]{24}$/i;
 let lottieLoadPromise = null;
 
 function isFullscreenActive() {
@@ -165,18 +166,35 @@ function normalizePathFromHref(href) {
   }
 }
 
-function buildUiState(gameState, elapsedMs, historyController) {
+function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}) {
   const allowedLinkPaths = gameState.currentPage?.linkIndex?.map((link) => link.path) || [];
+  const selectedMode = String(toolbarState.selectedMode || 'agi').trim() || 'agi';
+  const seedInputValue = String(toolbarState.seedInputValue || '');
+  const runSeedLabel = String(gameState.runSeedLabel || '--');
+  const isSeededMode = selectedMode === 'seeded';
+  const isRandomMode = selectedMode === 'random_vital';
+  const canShowSeedField = isSeededMode
+    ? !['loading_start', 'running'].includes(gameState.status)
+    : (isRandomMode && runSeedLabel !== '--' && runSeedLabel !== 'agi');
   return {
+    selectedMode,
     status: gameState.status,
     clickCount: gameState.clickCount,
-    runSeedLabel: gameState.runSeedLabel || 'agi',
+    runSeedLabel,
     elapsedMs,
     canGoBack: historyController.canGoBack(),
     currentPageTitle: gameState.currentPage?.displayTitle || null,
     articleHtml: gameState.currentPage?.html || null,
     routeTitles: gameState.route.map((step) => step.title),
-    allowedLinkPaths
+    allowedLinkPaths,
+    seedFieldValue: isSeededMode ? seedInputValue : (canShowSeedField ? runSeedLabel : ''),
+    showSeedField: canShowSeedField,
+    isSeedFieldEditable: isSeededMode,
+    canCopySeedField: isRandomMode && canShowSeedField,
+    toolbarErrorMessage: gameState.errorMessage || null,
+    canStart: !toolbarState.isStartRequestPending
+      && !(selectedMode === 'seeded' && !toolbarState.isSeedInputValid),
+    disableModeSelection: Boolean(toolbarState.isStartRequestPending)
   };
 }
 
@@ -194,6 +212,38 @@ function isTargetPageMatch(pagePayload, targetPage) {
   const targetNorm = targetPage.normalizedTitle;
   const currentNorm = pagePayload.page.normalizedTitle;
   return Boolean(targetNorm && currentNorm && targetNorm === currentNorm);
+}
+
+async function copyTextToClipboard(text) {
+  const value = String(text || '').trim();
+  if (!value) return false;
+
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      await navigator.clipboard.writeText(value);
+      return true;
+    }
+  } catch (_err) {
+    // Fall through to the legacy copy path.
+  }
+
+  const fallbackInput = document.createElement('input');
+  fallbackInput.type = 'text';
+  fallbackInput.value = value;
+  fallbackInput.setAttribute('readonly', 'readonly');
+  fallbackInput.style.position = 'absolute';
+  fallbackInput.style.left = '-9999px';
+  document.body.appendChild(fallbackInput);
+  fallbackInput.select();
+  fallbackInput.setSelectionRange(0, value.length);
+
+  try {
+    return document.execCommand('copy');
+  } catch (_err) {
+    return false;
+  } finally {
+    fallbackInput.remove();
+  }
 }
 
 // utility function to generate a UUIDv4 string for client-generated run/session IDs, 
@@ -233,17 +283,61 @@ function getOrCreateSessionId() {
 async function bootstrap() {
   const root = document.getElementById('wiki-race-app');
   if (!root) return;
-  const modeToggle = root.querySelector('[data-field="game-mode-random"]');
   const modeSubtitle = root.querySelector('[data-region="mode-subtitle"]');
   const store = createStore(createInitialGameState());
   const renderer = createRenderer(root);
   const historyController = createHistoryController();
   const winConfetti = createWinConfetti(root);
+  const modeSelect = renderer.els.modeSelect;
+  const seededInputWrap = renderer.els.seededInputWrap;
+  const seededInput = renderer.els.seededInput;
   let currentTargetPage = null;
   let activeRunMeta = null;
+  let startRequestPending = false;
+  let startRequestToken = 0;
+  let selectedMode = normalizeSelectedMode(modeSelect?.value || 'agi');
+  let seedInputValue = '';
+  let timer = null;
+
+  function normalizeSelectedMode(value) {
+    const mode = String(value || '').trim().toLowerCase();
+    if (mode === 'random_vital' || mode === 'seeded') return mode;
+    return 'agi';
+  }
+
+  function sanitizeSeedKey(value) {
+    return String(value || '')
+      .toLowerCase()
+      .replace(/[^a-f0-9]/g, '')
+      .slice(0, 24);
+  }
+
+  function isValidSeedKey(value) {
+    return SEEDED_KEY_PATTERN.test(String(value || ''));
+  }
 
   function getSelectedMode() {
-    return modeToggle?.checked ? 'random_vital' : 'agi';
+    return selectedMode;
+  }
+
+  function getToolbarState() {
+    return {
+      selectedMode,
+      seedInputValue,
+      isSeedInputValid: isValidSeedKey(seedInputValue),
+      isStartRequestPending: startRequestPending
+    };
+  }
+
+  function renderUi(elapsedMs = timer ? timer.getElapsedMs() : 0) {
+    renderer.renderState(buildUiState(store.getState(), elapsedMs, historyController, getToolbarState()));
+    targetPreview.render();
+  }
+
+  function clearToolbarError() {
+    const currentState = store.getState();
+    if (!currentState.errorMessage) return;
+    store.updateState((prev) => ({ ...prev, errorMessage: null }));
   }
 
   // create instance of controller that shows target page previews (via target-preview.js)
@@ -255,12 +349,12 @@ async function bootstrap() {
 
   // activeRunMeta holds client-generated metadata for the current run, 
   // which will be included in the payload when submitting results to the backend.
-  function initializeRunMeta() {
+  function initializeRunMeta(mode) {
     activeRunMeta = {
       runId: createClientRunId(),
       sessionId: getOrCreateSessionId(),
       startedAtUtc: new Date().toISOString(),
-      mode: getSelectedMode(),
+      mode,
       dateKey: null,
       seedSource: null,
       seedHash: null
@@ -311,21 +405,53 @@ async function bootstrap() {
       targetPreview.bindLinkEvents();
       return;
     }
+    if (getSelectedMode() === 'seeded') {
+      if (currentTargetPage?.url && currentTargetPage?.title) {
+        const targetTitle = String(currentTargetPage.title).trim();
+        modeSubtitle.innerHTML = `Replay the seeded wikipedia race to <a data-role="target-page-link" href="${currentTargetPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a>. Enter a stored 24-character seed key to load the run.`;
+        targetPreview.bindLinkEvents();
+        return;
+      }
+      modeSubtitle.innerHTML = 'Enter a stored 24-character seed key to replay a saved wikipedia race.';
+      targetPreview.bindLinkEvents();
+      return;
+    }
     modeSubtitle.innerHTML = 'Reach the wikipedia page for <a data-role="target-page-link" href="https://en.wikipedia.org/wiki/Artificial_general_intelligence" target="_blank" rel="noopener noreferrer">artificial general intelligence</a> using as few article links as possible. Daily challenge resets at 00:00 UTC.';
     targetPreview.bindLinkEvents();
   }
   syncModeSubtitle();
-  modeToggle?.addEventListener('change', () => {
+  modeSelect?.addEventListener('change', () => {
+    selectedMode = normalizeSelectedMode(modeSelect.value);
     targetPreview.invalidate();
     currentTargetPage = null;
+    clearToolbarError();
     const nextMode = getSelectedMode();
     store.updateState((prev) => ({
       ...prev,
       runSeedLabel: nextMode === 'agi' ? 'agi' : '--'
     }));
-    renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-    targetPreview.render();
+    renderUi();
     syncModeSubtitle();
+  });
+  seededInput?.addEventListener('input', () => {
+    const nextSeed = sanitizeSeedKey(seededInput.value);
+    if (nextSeed !== seededInput.value) {
+      seededInput.value = nextSeed;
+    }
+    seedInputValue = nextSeed;
+    clearToolbarError();
+    renderUi();
+  });
+  seededInputWrap?.addEventListener('click', async () => {
+    if (getSelectedMode() !== 'random_vital') return;
+    const seedToCopy = String(store.getState().runSeedLabel || '').trim();
+    if (!seedToCopy || seedToCopy === '--' || seedToCopy === 'agi') return;
+
+    seededInput.select();
+    seededInput.setSelectionRange(0, seedToCopy.length);
+    const copied = await copyTextToClipboard(seedToCopy);
+    seededInput.setAttribute('title', copied ? 'Copied' : 'Copy failed');
+    seededInputWrap.setAttribute('title', copied ? 'Copied' : 'Copy failed');
   });
 
   function syncFullscreenButtonLabel() {
@@ -336,14 +462,12 @@ async function bootstrap() {
   document.addEventListener('fullscreenchange', syncFullscreenButtonLabel);
   document.addEventListener('webkitfullscreenchange', syncFullscreenButtonLabel);
 
-  const timer = createTimer((elapsedMs) => {
-    renderer.renderState(buildUiState(store.getState(), elapsedMs, historyController));
-    targetPreview.render();
+  timer = createTimer((elapsedMs) => {
+    renderUi(elapsedMs);
   });
 
   async function loadAndRenderStartPageByTitle(title, { moveType = 'click', countMove = false } = {}) {
     const page = await getWikiPageByTitle(title);
-    const state = store.getState();
 
     store.updateState((prev) => {
       const nextClicks = countMove ? prev.clickCount + 1 : prev.clickCount;
@@ -371,28 +495,50 @@ async function bootstrap() {
   }
 
   async function startRun() {
-    const runPreviewToken = targetPreview.beginRun();
     const selectedMode = getSelectedMode();
-    initializeRunMeta();
+    const submittedSeed = selectedMode === 'seeded' ? sanitizeSeedKey(seedInputValue) : null;
+    if (selectedMode === 'seeded' && !isValidSeedKey(submittedSeed)) {
+      store.updateState((prev) => ({
+        ...prev,
+        errorMessage: 'The seed is invalid.'
+      }));
+      renderUi();
+      return null;
+    }
+
+    startRequestToken += 1;
+    const requestToken = startRequestToken;
+    const runPreviewToken = targetPreview.beginRun();
+    startRequestPending = true;
+    clearToolbarError();
     winConfetti.reset();
     historyController.reset();
     timer.reset();
+    currentTargetPage = null;
     store.setState({
       ...createInitialGameState(),
       status: 'loading_start',
-      runSeedLabel: selectedMode === 'agi' ? 'agi' : '--'
+      runSeedLabel: selectedMode === 'agi' ? 'agi' : (selectedMode === 'seeded' ? submittedSeed : '--')
     });
-    renderer.renderState(buildUiState(store.getState(), 0, historyController));
-    targetPreview.render();
+    renderUi(0);
+    syncModeSubtitle();
+    void requestElementFullscreen(root);
 
     try {
-      const daily = await getDailyStart({ target: selectedMode });
-      if (!targetPreview.isActiveToken(runPreviewToken)) return null;
+      const daily = await getDailyStart({
+        target: selectedMode,
+        seed: selectedMode === 'seeded' ? submittedSeed : null
+      });
+      if (requestToken !== startRequestToken) return null;
+
+      initializeRunMeta(selectedMode);
       if (activeRunMeta) {
         activeRunMeta.mode = selectedMode;
         activeRunMeta.dateKey = daily?.dateKey || null;
         activeRunMeta.seedSource = daily?.seedSource || null;
-        activeRunMeta.seedHash = daily?.seedHash || null;
+        activeRunMeta.seedHash = selectedMode === 'seeded'
+          ? submittedSeed
+          : (daily?.seedHash || null);
       }
       currentTargetPage = daily.endPage || null;
       syncModeSubtitle();
@@ -401,9 +547,12 @@ async function bootstrap() {
         dateKey: daily.dateKey,
         targetPage: daily.endPage,
         startPage: daily.startPage,
-        runSeedLabel: selectedMode === 'agi' ? 'agi' : (daily?.seedHash || '--'),
+        runSeedLabel: selectedMode === 'agi'
+          ? 'agi'
+          : (selectedMode === 'seeded' ? submittedSeed : (daily?.seedHash || '--')),
         status: 'loading_start'
       }));
+      renderUi(0);
       void targetPreview.prefetch(daily.endPage, runPreviewToken);
 
       const page = await loadAndRenderStartPageByTitle(daily.startPage.title, {
@@ -417,18 +566,30 @@ async function bootstrap() {
         ...prev,
         status: 'running'
       }));
-      renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-      targetPreview.render();
+      renderUi(timer.getElapsedMs());
       return page;
     } catch (err) {
-      if (!targetPreview.isActiveToken(runPreviewToken)) return null;
+      if (requestToken !== startRequestToken) return null;
+      const isInvalidSeedError = selectedMode === 'seeded' && (err?.status === 400 || err?.status === 404);
+      const currentStatus = store.getState().status;
       store.updateState((prev) => ({
         ...prev,
-        status: 'error',
-        errorMessage: err?.message || 'Failed to start the daily challenge.'
+        status: isInvalidSeedError ? prev.status : (currentStatus === 'idle' || currentStatus === 'won' || currentStatus === 'abandoned' ? prev.status : 'error'),
+        errorMessage: isInvalidSeedError
+          ? 'The seed is invalid.'
+          : (err?.message || 'Failed to start the daily challenge.')
       }));
-      renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-      targetPreview.render();
+      renderUi();
+      if (!isInvalidSeedError) {
+        targetPreview.invalidate();
+      }
+      syncModeSubtitle();
+      return null;
+    } finally {
+      if (requestToken === startRequestToken) {
+        startRequestPending = false;
+        renderUi();
+      }
     }
   }
 
@@ -470,8 +631,7 @@ async function bootstrap() {
           errorMessage: null
         };
       });
-      renderer.renderState(buildUiState(store.getState(), finalElapsedMs ?? timer.getElapsedMs(), historyController));
-      targetPreview.render();
+      renderUi(finalElapsedMs ?? timer.getElapsedMs());
       if (reachedTarget) {
         const payload = buildWinningRunPayload(finalElapsedMs);
         if (payload) {
@@ -485,19 +645,17 @@ async function bootstrap() {
         status: 'error',
         errorMessage: err?.message || 'Page load failed. Start again.'
       }));
-      renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-      targetPreview.render();
+      renderUi();
     }
   }
 
   renderer.onControl('start', () => {
-    void requestElementFullscreen(root);
     renderer.els.startBtn?.scrollIntoView({
       block: 'start',
       inline: 'nearest',
       behavior: 'smooth'
     });
-    startRun();
+    void startRun();
   });
 
   renderer.onControl('fullscreen', async () => {
@@ -514,8 +672,7 @@ async function bootstrap() {
     if (state.status !== 'running') return;
     timer.stop();
     store.updateState((prev) => ({ ...prev, status: 'abandoned' }));
-    renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-    targetPreview.render();
+    renderUi();
   });
 
   renderer.onControl('back', () => {
@@ -548,8 +705,7 @@ async function bootstrap() {
         ...prev,
         errorMessage: 'That link is not allowed in this game.'
       }));
-      renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
-      targetPreview.render();
+      renderUi();
       return;
     }
 
@@ -582,13 +738,11 @@ async function bootstrap() {
       };
     });
 
-    renderer.renderState(buildUiState(store.getState(), timer.getElapsedMs(), historyController));
+    renderUi();
     renderer.els.article.scrollTop = snapshot.scrollTop || 0;
-    targetPreview.render();
   });
 
-  renderer.renderState(buildUiState(store.getState(), 0, historyController));
-  targetPreview.render();
+  renderUi(0);
 
   const warmConfetti = () => {
     void winConfetti.prime();

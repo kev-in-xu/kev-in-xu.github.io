@@ -3,6 +3,7 @@ import { isValidStartPage } from './_filter.js';
 import { buildRandomWikiPagePayloads, buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { cacheGetJson, cacheSetJson, detectCacheBackends, getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
 import { createAndPersistRandomRunSeed } from './_seed-store.js';
+import { getSupabaseServiceClient } from './_supabase.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 
 const AGI_TARGET_PAGE = toWikiPageRef({ title: 'Artificial general intelligence' });
@@ -10,6 +11,7 @@ const MAX_ATTEMPTS = 25;
 const RANDOM_BATCH_SIZE = 5;
 const CACHE_PREFIX = 'wiki-race:daily-start:';
 const RANDOM_TARGET_MAX_ATTEMPTS = 20;
+const SEEDED_KEY_PATTERN = /^[a-f0-9]{24}$/i;
 
 /**
  * Produces a UTC date key in YYYY-MM-DD format for current time or given date.
@@ -23,10 +25,32 @@ function utcDateKey(d = new Date()) {
 
 function parseTargetMode(req) {
   const raw = String(req.query?.target || 'agi').trim().toLowerCase();
+  if (raw === 'seeded' || raw === 'seed' || raw === 'replay') {
+    return 'seeded';
+  }
   if (raw === 'random_vital' || raw === 'random-vital' || raw === 'vital_random') {
     return 'random_vital';
   }
   return 'agi';
+}
+
+function normalizeSeedHash(value) {
+  const seedHash = String(value || '').trim().toLowerCase();
+  return SEEDED_KEY_PATTERN.test(seedHash) ? seedHash : null;
+}
+
+function isDateKey(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || '').trim());
+}
+
+function titleFromWikiPath(pathLike) {
+  const path = String(pathLike || '').trim();
+  if (!path.startsWith('/wiki/')) return null;
+  try {
+    return decodeURIComponent(path.slice('/wiki/'.length)).replace(/_/g, ' ');
+  } catch (_err) {
+    return null;
+  }
 }
 
 // converts wiki payload to api-client.js' expected response shape
@@ -57,6 +81,12 @@ async function ensurePagePayloadForDaily(pageRef, fallbackTitle) {
   return buildWikiPagePayloadByTitle(titleToFetch);
 }
 
+async function ensurePagePayloadFromSeedRow({ title, path } = {}) {
+  const fallbackTitle = String(title || '').trim() || titleFromWikiPath(path);
+  if (!fallbackTitle) return null;
+  return ensurePagePayloadForDaily(null, fallbackTitle);
+}
+
 /**
  * HTTP handler for `/api/wiki/daily-start`.
  * Input: GET request with optional `?date=YYYY-MM-DD`.
@@ -77,6 +107,74 @@ export default async function handler(req, res) {
   const targetMode = parseTargetMode(req);
   const useDailyCache = targetMode === 'agi';
   const cacheKey = useDailyCache ? `${CACHE_PREFIX}${dateKey}` : null;
+
+  if (targetMode === 'seeded') {
+    const seedHash = normalizeSeedHash(req.query?.seed);
+    if (!seedHash) {
+      return res.status(400).json({ error: 'Invalid seed key' });
+    }
+
+    const supabaseClient = await getSupabaseServiceClient();
+    if (!supabaseClient) {
+      return res.status(503).json({ error: 'Seed lookup is not configured' });
+    }
+
+    const { data: seedRow, error: seedLookupError } = await supabaseClient
+      .from('wiki_race_random_seeds')
+      .select('seed_hash, start_title, end_title, start_path, end_path, created_at_utc, metadata_json')
+      .eq('seed_hash', seedHash)
+      .maybeSingle();
+
+    if (seedLookupError) {
+      return res.status(502).json({
+        error: 'Failed to load seeded run',
+        detail: seedLookupError.message
+      });
+    }
+
+    if (!seedRow) {
+      return res.status(404).json({ error: 'Invalid seed key' });
+    }
+
+    let startPayload = null;
+    let endPayload = null;
+    try {
+      startPayload = await ensurePagePayloadFromSeedRow({
+        title: seedRow.start_title,
+        path: seedRow.start_path
+      });
+      endPayload = await ensurePagePayloadFromSeedRow({
+        title: seedRow.end_title,
+        path: seedRow.end_path
+      });
+    } catch (_err) {
+      startPayload = null;
+      endPayload = null;
+    }
+
+    if (!startPayload?.page?.path || !endPayload?.page?.path) {
+      return res.status(404).json({ error: 'Invalid seed key' });
+    }
+
+    try {
+      await setCachedWikiPage(startPayload.page.normalizedTitle || startPayload.page.title, startPayload);
+      await setCachedWikiPage(endPayload.page.normalizedTitle || endPayload.page.title, endPayload);
+    } catch (_err) {
+      // Non-fatal: seeded response still succeeds if page cache warmup fails.
+    }
+
+    const storedDateKey = seedRow?.metadata_json?.dateKey;
+    const responsePayload = {
+      dateKey: isDateKey(storedDateKey) ? storedDateKey : dateKey,
+      startPage: startPayload.page,
+      endPage: endPayload.page
+    };
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json(
+      toClientDailyResponse(responsePayload, 'supabase', { seedHash })
+    );
+  }
 
   // looks up daily cache for AGI mode, but random_vital mode always generates fresh pages and seeds.
   if (useDailyCache && cacheKey) { 

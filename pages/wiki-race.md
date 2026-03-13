@@ -32,19 +32,37 @@ classes:
     </header>
 
     <section class="wiki-race-toolbar" aria-label="Game controls">
-      <label class="wiki-race-mode-toggle" for="wiki-race-random-mode">
-        <input id="wiki-race-random-mode" class="wiki-race-mode-input" type="checkbox" data-field="game-mode-random" aria-label="Enable random mode">
-        <span class="wiki-race-mode-switch" aria-hidden="true"></span>
-        <span class="wiki-race-mode-text">Random Mode</span>
+      <label class="wiki-race-mode-select" for="wiki-race-mode">
+        <span class="wiki-race-mode-text">Game Mode:</span>
+        <select id="wiki-race-mode" class="wiki-race-mode-control" data-field="game-mode" aria-label="Select game mode">
+          <option value="agi">AGI</option>
+          <option value="random_vital">Random</option>
+          <option value="seeded">Seeded</option>
+        </select>
+      </label>
+      <label class="wiki-race-seed-input" data-region="seeded-input" for="wiki-race-seed-key" hidden>
+        <span class="wiki-race-mode-text">Seed:</span>
+        <input
+          id="wiki-race-seed-key"
+          class="wiki-race-seed-control"
+          type="text"
+          inputmode="text"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          maxlength="24"
+          placeholder="Enter run seed to play"
+          data-field="seeded-key"
+          aria-label="Enter a 24-character seed key">
       </label>
       <button type="button" class="wiki-race-btn" data-action="start">Start</button>
       <button type="button" class="wiki-race-btn" data-action="back" disabled>Back</button>
       <button type="button" class="wiki-race-btn wiki-race-btn-danger" data-action="abandon" disabled>Give Up</button>
       <button type="button" class="wiki-race-btn" data-action="fullscreen">Fullscreen</button>
+      <p class="wiki-race-toolbar-error" data-region="toolbar-error" hidden aria-live="polite"></p>
       <div class="wiki-race-stats" aria-live="polite">
         <span class="wiki-race-stat">Timer: <span data-field="timer">00:00.000</span></span>
         <span class="wiki-race-stat">Clicks: <span data-field="clicks">0</span></span>
-        <span class="wiki-race-stat wiki-race-stat-seed">Seed: <span class="wiki-race-seed-value" data-field="seed">agi</span></span>
       </div>
     </section>
 
