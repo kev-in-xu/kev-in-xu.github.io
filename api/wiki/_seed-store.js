@@ -1,4 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
+import { isWikiRaceSeedStoreEnabled } from './_flags.js';
 import { getSupabaseServiceClient } from './_supabase.js';
 
 const MAX_SEED_INSERT_ATTEMPTS = 8;
@@ -32,11 +33,11 @@ function generateSeedCandidate(pairToken) {
   return { seedHash, nonce };
 }
 
-function generateFallbackSeedHash() {
-  return createHash('sha256')
-    .update(randomBytes(24))
-    .digest('hex')
-    .slice(0, 24);
+function createSeedStoreError(message, { status = 502, detail = null } = {}) {
+  const error = new Error(message);
+  error.status = status;
+  error.detail = detail;
+  return error;
 }
 
 async function tryInsertSupabase(row) {
@@ -59,18 +60,30 @@ async function tryInsertSupabase(row) {
 }
 
 export async function createAndPersistRandomRunSeed({ startPage, endPage, dateKey = null } = {}) {
+  if (!isWikiRaceSeedStoreEnabled()) {
+    throw createSeedStoreError('Random race seed persistence is disabled', {
+      status: 503
+    });
+  }
+
   const startPath = normalizePath(startPage?.path);
   const endPath = normalizePath(endPage?.path);
   if (!startPath || !endPath) {
-    return { seedHash: generateFallbackSeedHash(), seedSource: 'generated' };
+    throw createSeedStoreError('Failed to persist random race seed', {
+      status: 500,
+      detail: 'missing start or end path'
+    });
   }
 
   const pairToken = toPairToken(startPath, endPath);
   const supabaseClient = await getSupabaseServiceClient();
   if (!supabaseClient) {
-    return { seedHash: generateFallbackSeedHash(), seedSource: 'generated' };
+    throw createSeedStoreError('Random race seed persistence is not configured', {
+      status: 503
+    });
   }
 
+  let lastError = null;
   for (let attempt = 1; attempt <= MAX_SEED_INSERT_ATTEMPTS; attempt += 1) {
     const { seedHash, nonce } = generateSeedCandidate(pairToken);
     const createdAtUtc = new Date().toISOString();
@@ -105,10 +118,15 @@ export async function createAndPersistRandomRunSeed({ startPage, endPage, dateKe
           return { seedHash: existingSeedHash, seedSource: 'supabase' };
         }
       }
+      lastError = existingError || null;
       continue;
     }
+    lastError = supabaseResult.error || null;
     break;
   }
 
-  return { seedHash: generateFallbackSeedHash(), seedSource: 'generated' };
+  throw createSeedStoreError('Failed to persist random race seed', {
+    status: 502,
+    detail: lastError?.message || null
+  });
 }

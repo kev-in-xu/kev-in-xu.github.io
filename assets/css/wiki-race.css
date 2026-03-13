@@ -446,7 +446,7 @@
 .wiki-race-article .wiki-race-article-body {
   max-width: none;
   width: 100%;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, "Noto Sans", Helvetica, Arial, sans-serif;
   font-size: 0.80rem !important;
   line-height: 1.5;
@@ -521,8 +521,8 @@
 
 .wiki-race-article .wiki-race-article-body th,
 .wiki-race-article .wiki-race-article-body td {
-  border: 1px solid #a2a9b1;
-  padding: 0.15rem 0.45rem;
+  border: 0;
+  padding: 0.15rem 0.15rem;
 }
 
 .wiki-race-article .wiki-race-article-body blockquote {
@@ -624,7 +624,7 @@
     margin: 0.5em 0 0.5em 1em;
     float: right;
     clear: right;
-    width: 22em;
+    width: 24em;
   }
 }
 

@@ -635,7 +635,18 @@ async function bootstrap() {
       if (reachedTarget) {
         const payload = buildWinningRunPayload(finalElapsedMs);
         if (payload) {
-          void postWinningRun(payload);
+          void postWinningRun(payload).then((result) => {
+            if (!result?.ok) {
+              console.warn('Failed to submit wiki race win result', {
+                mode: payload.mode,
+                runId: payload.runId,
+                seedHash: payload.seedHash || null,
+                error: result?.error || 'Unknown error',
+                status: result?.status ?? null,
+                payload: result?.payload || null
+              });
+            }
+          });
         }
         void winConfetti.play();
       }

@@ -2,6 +2,7 @@ import { fetchRandomVitalPageRef, toWikiPageRef } from './_mw.js';
 import { isValidStartPage } from './_filter.js';
 import { buildRandomWikiPagePayloads, buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { cacheGetJson, cacheSetJson, detectCacheBackends, getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
+import { isWikiRaceSeedStoreEnabled } from './_flags.js';
 import { createAndPersistRandomRunSeed } from './_seed-store.js';
 import { getSupabaseServiceClient } from './_supabase.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
@@ -107,6 +108,11 @@ export default async function handler(req, res) {
   const targetMode = parseTargetMode(req);
   const useDailyCache = targetMode === 'agi';
   const cacheKey = useDailyCache ? `${CACHE_PREFIX}${dateKey}` : null;
+  const isSeedStoreEnabled = isWikiRaceSeedStoreEnabled();
+
+  if (!isSeedStoreEnabled && (targetMode === 'random_vital' || targetMode === 'seeded')) {
+    return res.status(503).json({ error: 'Seed storage is disabled' });
+  }
 
   if (targetMode === 'seeded') {
     const seedHash = normalizeSeedHash(req.query?.seed);
@@ -325,10 +331,11 @@ export default async function handler(req, res) {
       });
       responseSeedSource = seedResult.seedSource || 'generated';
       responseSeedHash = seedResult.seedHash || null;
-    } catch (_err) {
-      // Non-fatal: random runs can proceed even if seed storage fails.
-      responseSeedSource = 'generated';
-      responseSeedHash = null;
+    } catch (err) {
+      return res.status(err?.status || 502).json({
+        error: err?.message || 'Failed to persist random race seed',
+        detail: err?.detail || null
+      });
     }
   }
 
