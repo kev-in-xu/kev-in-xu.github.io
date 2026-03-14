@@ -1,17 +1,13 @@
-import { fetchRandomVitalPageRef, toWikiPageRef } from './_mw.js';
-import { isValidStartPage } from './_filter.js';
-import { buildRandomWikiPagePayloads, buildWikiPagePayloadByTitle } from './_page-pipeline.js';
+import { titleFromWikiPath, toWikiPageRef } from './_mw.js';
+import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { cacheGetJson, cacheSetJson, detectCacheBackends, getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
+import { generateRandomRacePair } from './_race-seed.js';
 import { isWikiRaceSeedStoreEnabled } from './_flags.js';
-import { createAndPersistRandomRunSeed } from './_seed-store.js';
 import { getSupabaseServiceClient } from './_supabase.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 
 const AGI_TARGET_PAGE = toWikiPageRef({ title: 'Artificial general intelligence' });
-const MAX_ATTEMPTS = 25;
-const RANDOM_BATCH_SIZE = 5;
 const CACHE_PREFIX = 'wiki-race:daily-start:';
-const RANDOM_TARGET_MAX_ATTEMPTS = 20;
 const SEEDED_KEY_PATTERN = /^[a-f0-9]{24}$/i;
 
 /**
@@ -42,16 +38,6 @@ function normalizeSeedHash(value) {
 
 function isDateKey(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(String(value || '').trim());
-}
-
-function titleFromWikiPath(pathLike) {
-  const path = String(pathLike || '').trim();
-  if (!path.startsWith('/wiki/')) return null;
-  try {
-    return decodeURIComponent(path.slice('/wiki/'.length)).replace(/_/g, ' ');
-  } catch (_err) {
-    return null;
-  }
 }
 
 // converts wiki payload to api-client.js' expected response shape
@@ -215,104 +201,30 @@ export default async function handler(req, res) {
     }
   }
 
-  // generate new start/end pair and persist a unique seed for random_vital mode
-  let acceptedPayload = null;
-  let attempts = 0;
-  let lastError = null;
-
-  for (attempts = 1; attempts <= MAX_ATTEMPTS; attempts += 1) {
-    try {
-      const payloads = await buildRandomWikiPagePayloads({
-        limit: RANDOM_BATCH_SIZE,
-        namespace: 0
-      });
-      for (const payload of payloads) {
-        if (!isValidStartPage(payload.flags, payload.page.title)) continue;
-        acceptedPayload = payload;
-        break;
-      }
-      if (acceptedPayload) break;
-    } catch (err) {
-      lastError = err;
-    }
-  }
-
-  if (!acceptedPayload) {
-    return res.status(502).json({
-      error: 'Failed to generate daily start page',
-      detail: lastError ? String(lastError) : 'No valid page found within attempt limit'
+  let generatedRace = null;
+  try {
+    generatedRace = await generateRandomRacePair({
+      targetMode,
+      dateKey
+    });
+  } catch (err) {
+    return res.status(err?.status || 502).json({
+      error: err?.message || 'Failed to generate race',
+      detail: err?.detail || null
     });
   }
 
-  let endPayload = null;
-  if (targetMode === 'random_vital') {
-    for (let i = 0; i < RANDOM_TARGET_MAX_ATTEMPTS; i += 1) {
-      let randomTargetRef = null;
-      try {
-        randomTargetRef = await fetchRandomVitalPageRef();
-      } catch (_err) {
-        randomTargetRef = null;
-      }
-      if (!randomTargetRef?.title) continue;
-
-      try {
-        endPayload = await getCachedWikiPageByTitle(randomTargetRef.title);
-      } catch (_err) {
-        endPayload = null;
-      }
-      if (!endPayload) {
-        try {
-          endPayload = await buildWikiPagePayloadByTitle(randomTargetRef.title);
-        } catch (_err) {
-          endPayload = null;
-        }
-      }
-      if (!endPayload?.page?.path) continue;
-      if (endPayload.page.path === acceptedPayload.page.path) {
-        endPayload = null;
-        continue;
-      }
-      if (endPayload.flags?.isDisambiguation) {
-        endPayload = null;
-        continue;
-      }
-      break;
-    }
-  } else {
-    try {
-      endPayload = await getCachedWikiPageByTitle(AGI_TARGET_PAGE.title);
-    } catch (_err) {
-      endPayload = null;
-    }
-    if (!endPayload) {
-      endPayload = await buildWikiPagePayloadByTitle(AGI_TARGET_PAGE.title);
-    }
-  }
-
-  if (!endPayload?.page?.path) {
-    return res.status(502).json({
-      error: 'Failed to generate target page',
-      detail: targetMode === 'random_vital'
-        ? 'random vital target fetch failed'
-        : 'Failed to resolve AGI target page'
-    });
-  }
-
-  const startPage = acceptedPayload.page;
-  const endPage = endPayload.page;
   const responsePayload = {
     dateKey,
-    startPage,
-    endPage,
+    startPage: generatedRace.startPage,
+    endPage: generatedRace.endPage,
     generatedAtUtc: new Date().toISOString(),
-    generationAttempts: attempts,
-    startPayload: acceptedPayload,
-    endPayload
+    generationAttempts: generatedRace.generationAttempts,
+    startPayload: generatedRace.startPayload,
+    endPayload: generatedRace.endPayload
   };
 
   try {
-    await setCachedWikiPage(startPage.normalizedTitle || startPage.title, acceptedPayload);
-    await setCachedWikiPage(endPage.normalizedTitle || endPage.title, endPayload);
     if (useDailyCache && cacheKey) {
       await cacheSetJson(cacheKey, responsePayload);
     }
@@ -320,30 +232,11 @@ export default async function handler(req, res) {
     // Non-fatal: daily start still returns even if cache writes fail.
   }
 
-  let responseSeedSource = 'generated';
-  let responseSeedHash = null;
-  if (targetMode === 'random_vital') {
-    try {
-      const seedResult = await createAndPersistRandomRunSeed({
-        startPage,
-        endPage,
-        dateKey
-      });
-      responseSeedSource = seedResult.seedSource || 'generated';
-      responseSeedHash = seedResult.seedHash || null;
-    } catch (err) {
-      return res.status(err?.status || 502).json({
-        error: err?.message || 'Failed to persist random race seed',
-        detail: err?.detail || null
-      });
-    }
-  }
-
   const cacheControl = useDailyCache
     ? 'public, s-maxage=60, stale-while-revalidate=60'
     : 'no-store';
   res.setHeader('Cache-Control', cacheControl);
   return res.status(200).json(
-    toClientDailyResponse(responsePayload, responseSeedSource, { seedHash: responseSeedHash })
+    toClientDailyResponse(responsePayload, generatedRace.seedSource, { seedHash: generatedRace.seedHash })
   );
 }

@@ -1,5 +1,5 @@
-import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
-import { isWikiRaceMultiplayerEnabled } from './_flags.js';
+import { applyWikiApiCors, handleCorsPreflight } from '../_cors.js';
+import { isWikiRaceMultiplayerEnabled } from '../_flags.js';
 import {
   buildLobbyExpiryIso,
   createEntityId,
@@ -9,8 +9,8 @@ import {
   normalizeNickname,
   normalizeSessionId,
   readJsonBody
-} from './_multiplayer.js';
-import { getSupabaseServiceClient } from './_supabase.js';
+} from '../multiplayer/_shared.js';
+import { getSupabaseServiceClient } from '../_supabase.js';
 
 const MAX_CREATE_ATTEMPTS = 12;
 
@@ -18,6 +18,9 @@ function badRequest(res, message, detail) {
   return res.status(400).json({ error: message, detail });
 }
 
+// Inserts a new lobby row into the lobby db.
+// Inserts host player row into lobby_players db.
+// Returns the lobby snapshot if both inserts succeed.
 async function createLobbyWithHost({ supabaseClient, sessionId, nickname }) {
   for (let attempt = 1; attempt <= MAX_CREATE_ATTEMPTS; attempt += 1) {
     const createdAtUtc = new Date().toISOString();

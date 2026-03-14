@@ -66,6 +66,33 @@ export function toWikiPageRef({ title, pageid }) {
   };
 }
 
+export function titleFromWikiPath(pathLike) {
+  const path = String(pathLike || '').trim();
+  if (!path.startsWith('/wiki/')) return null;
+  try {
+    return decodeURIComponent(path.slice('/wiki/'.length)).replace(/_/g, ' ');
+  } catch (_err) {
+    return null;
+  }
+}
+
+export function toWikiPageRefFromTitleOrPath({ title, path, pageid } = {}) {
+  const normalizedPath = String(path || '').trim();
+  if (normalizedPath.startsWith('/wiki/')) {
+    const resolvedTitle = String(title || '').trim() || titleFromWikiPath(normalizedPath);
+    const normalizedTitle = normalizedPath.slice('/wiki/'.length);
+    return {
+      title: String(resolvedTitle || normalizedTitle.replace(/_/g, ' ')),
+      normalizedTitle,
+      path: normalizedPath,
+      url: `https://en.wikipedia.org${normalizedPath}`,
+      pageId: pageid
+    };
+  }
+
+  return toWikiPageRef({ title, pageid });
+}
+
 function titleFromWikiUrl(urlValue) {
   try {
     const parsed = new URL(urlValue);

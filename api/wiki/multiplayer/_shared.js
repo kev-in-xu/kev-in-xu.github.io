@@ -6,6 +6,7 @@ export const NICKNAME_PATTERN = /^[A-Za-z]{3,10}$/;
 export const MAX_PLAYERS_PER_LOBBY = 6;
 export const LOBBY_TTL_HOURS = 24;
 export const ROUND_MAX_DURATION_SECONDS = 600;
+export const ACTIVE_LOBBY_STATUSES = ['open', 'running', 'ended', 'abandoned'];
 const LOBBY_CODE_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 export function readJsonBody(req) {
@@ -84,6 +85,38 @@ export function isLobbyExpired(lobbyRow, now = new Date()) {
   return expiresAt <= now.getTime();
 }
 
+export async function getLobbyByCode(supabaseClient, lobbyCode) {
+  const { data, error } = await supabaseClient
+    .from('wiki_race_lobbies')
+    .select('id, lobby_code, status, host_session_id, created_at_utc, expires_at_utc')
+    .eq('lobby_code', lobbyCode)
+    .in('status', ACTIVE_LOBBY_STATUSES)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data || null;
+}
+
+export async function getLobbyPlayers(supabaseClient, lobbyId) {
+  const { data, error } = await supabaseClient
+    .from('wiki_race_lobby_players')
+    .select('id, lobby_id, session_id, nickname, joined_at_utc, left_at_utc, is_host')
+    .eq('lobby_id', lobbyId)
+    .order('joined_at_utc', { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+}
+
+export async function markLobbyExpired(supabaseClient, lobbyId) {
+  await supabaseClient
+    .from('wiki_race_lobbies')
+    .update({ status: 'expired' })
+    .eq('id', lobbyId)
+    .eq('status', 'open');
+}
+
+// Payload to be sent back to browser clients representing the current state of a lobby and its players.
 export function formatLobbySnapshot(lobbyRow, playerRows = []) {
   const activePlayers = playerRows
     .filter((row) => !row?.left_at_utc)
