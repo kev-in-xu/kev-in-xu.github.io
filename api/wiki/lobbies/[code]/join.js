@@ -1,5 +1,6 @@
 import { applyWikiApiCors, handleCorsPreflight } from '../../_cors.js';
 import { isWikiRaceMultiplayerEnabled } from '../../_flags.js';
+import { publishLobbyEvent } from '../../multiplayer/_realtime.js';
 import {
   MAX_PLAYERS_PER_LOBBY,
   createEntityId,
@@ -104,6 +105,15 @@ export default async function handler(req, res) {
     }
 
     const nextPlayers = [...existingPlayers, playerRow];
+    await publishLobbyEvent({
+      lobbyCode,
+      event: 'player_joined',
+      payload: {
+        sessionId,
+        nickname,
+        hostSessionId: lobbyRow.host_session_id
+      }
+    }).catch(() => {});
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json(formatLobbySnapshot(lobbyRow, nextPlayers));
   } catch (err) {

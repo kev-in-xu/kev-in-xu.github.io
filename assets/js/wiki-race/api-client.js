@@ -1,30 +1,30 @@
-function getApiBaseUrl() {
-  const root = document.getElementById('wiki-race-app');
-  const fromData = root?.dataset?.apiBase?.trim();
-  const fromWindow = typeof window !== 'undefined' && typeof window.WIKI_RACE_API_BASE === 'string'
-    ? window.WIKI_RACE_API_BASE.trim()
-    : '';
-  return fromWindow || fromData || '';
-}
+import { getWikiRaceClientConfig } from './config.js';
 
 function buildApiUrl(pathWithQuery) {
-  const base = getApiBaseUrl();
+  const base = getWikiRaceClientConfig().apiBase;
   if (!base) return pathWithQuery;
   return `${base.replace(/\/+$/, '')}${pathWithQuery}`;
 }
 
-async function fetchJson(url) {
+async function parseJsonResponse(response) {
+  try {
+    return await response.json();
+  } catch (_err) {
+    return null;
+  }
+}
+
+async function fetchJson(url, fetchOptions = {}) {
   const response = await fetch(url, {
-    headers: { Accept: 'application/json' },
-    mode: 'cors'
+    mode: 'cors',
+    ...fetchOptions,
+    headers: {
+      Accept: 'application/json',
+      ...(fetchOptions.headers || {})
+    }
   });
 
-  let body;
-  try {
-    body = await response.json();
-  } catch (_err) {
-    body = null;
-  }
+  const body = await parseJsonResponse(response);
 
   if (!response.ok) {
     const message = body?.error || `Request failed (${response.status})`;
@@ -35,6 +35,18 @@ async function fetchJson(url) {
   }
 
   return body;
+}
+
+async function postJson(path, payload) {
+  return fetchJson(buildApiUrl(path), {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    mode: 'cors',
+    body: JSON.stringify(payload || {})
+  });
 }
 
 export function getDailyStart({ target = 'agi', seed = null } = {}) {
@@ -50,37 +62,78 @@ export function getDailyStart({ target = 'agi', seed = null } = {}) {
 // api caller for submitting game results to the backend, which will validate and persist the data.
 export async function postWinningRun(payload) {
   try {
-    const response = await fetch(buildApiUrl('/api/wiki/game-result'), {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      mode: 'cors',
-      body: JSON.stringify(payload || {})
-    });
-
-    let body = null;
-    try {
-      body = await response.json();
-    } catch (_err) {
-      body = null;
-    }
-
-    if (!response.ok) {
-      return {
-        ok: false,
-        status: response.status,
-        error: body?.error || `Request failed (${response.status})`,
-        payload: body
-      };
-    }
-
+    const body = await postJson('/api/wiki/game-result', payload);
     return {
       ok: true,
       payload: body
     };
   } catch (err) {
+    return {
+      ok: false,
+      status: err?.status ?? null,
+      error: err?.message || 'Network request failed',
+      payload: err?.payload || null
+    };
+  }
+}
+
+export function createMultiplayerLobby(payload) {
+  return postJson('/api/wiki/lobbies', payload);
+}
+
+export function joinMultiplayerLobby(lobbyCode, payload) {
+  return postJson(`/api/wiki/lobbies/${encodeURIComponent(String(lobbyCode || '').trim())}/join`, payload);
+}
+
+export function kickMultiplayerPlayer(lobbyCode, payload) {
+  return postJson(`/api/wiki/lobbies/${encodeURIComponent(String(lobbyCode || '').trim())}/kick`, payload);
+}
+
+export function leaveMultiplayerLobby(lobbyCode, payload) {
+  return postJson(`/api/wiki/lobbies/${encodeURIComponent(String(lobbyCode || '').trim())}/leave`, payload);
+}
+
+export function startMultiplayerLobby(lobbyCode, payload) {
+  return postJson(`/api/wiki/lobbies/${encodeURIComponent(String(lobbyCode || '').trim())}/start`, payload);
+}
+
+export function getMultiplayerSnapshot(lobbyCode) {
+  return fetchJson(buildApiUrl(`/api/wiki/lobbies/${encodeURIComponent(String(lobbyCode || '').trim())}/snapshot`));
+}
+
+export async function submitMultiplayerRoundResult(roundId, payload) {
+  try {
+    const body = await postJson(`/api/wiki/rounds/${encodeURIComponent(String(roundId || '').trim())}/finish`, payload);
+    return {
+      ok: true,
+      payload: body
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      status: err?.status ?? null,
+      error: err?.message || 'Network request failed',
+      payload: err?.payload || null
+    };
+  }
+}
+
+export async function safePostJson(path, payload) {
+  try {
+    const body = await postJson(path, payload);
+    return {
+      ok: true,
+      payload: body
+    };
+  } catch (err) {
+    if (typeof err?.status === 'number') {
+      return {
+        ok: false,
+        status: err.status,
+        error: err?.message || `Request failed (${err.status})`,
+        payload: err?.payload || null
+      };
+    }
     return {
       ok: false,
       status: null,

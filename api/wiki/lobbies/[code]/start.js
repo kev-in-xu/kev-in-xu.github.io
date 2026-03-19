@@ -1,5 +1,6 @@
 import { applyWikiApiCors, handleCorsPreflight } from '../../_cors.js';
 import { isWikiRaceMultiplayerEnabled } from '../../_flags.js';
+import { publishLobbyEvent } from '../../multiplayer/_realtime.js';
 import { generateRandomRacePair } from '../../_race-seed.js';
 import {
   ROUND_MAX_DURATION_SECONDS,
@@ -145,6 +146,15 @@ export default async function handler(req, res) {
       throw roundInsertError;
     }
 
+    await publishLobbyEvent({
+      lobbyCode,
+      event: 'race_started',
+      payload: {
+        roundId: roundRow.id,
+        seedHash: roundRow.seed_hash,
+        hostSessionId: sessionId
+      }
+    }).catch(() => {});
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json(
       formatStartResponse(updatedLobbyRow, existingPlayers, roundRow, race)

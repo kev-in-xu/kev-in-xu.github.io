@@ -1,5 +1,5 @@
 import { toWikiPageRefFromTitleOrPath } from '../_mw.js';
-import { formatLobbySnapshot } from './_shared.js';
+import { createEntityId, formatLobbySnapshot } from './_shared.js';
 
 function compareLeaderboardRows(a, b) {
   const aCompleted = a.status === 'completed';
@@ -86,6 +86,7 @@ async function getSeedRow(supabaseClient, seedHash) {
   return data || null;
 }
 
+// Gets all per-user result for a given round
 export async function getRoundResults(supabaseClient, roundId) {
   if (!roundId) return [];
   const { data, error } = await supabaseClient
@@ -96,6 +97,110 @@ export async function getRoundResults(supabaseClient, roundId) {
 
   if (error) throw error;
   return data || [];
+}
+
+// Gets current player list by parsing player and round rows and matching by start time
+export function getRoundParticipants(playerRows = [], roundRow) {
+  if (!roundRow?.started_at_utc) return [];
+  const startedAtMs = Date.parse(roundRow.started_at_utc);
+  if (!Number.isFinite(startedAtMs)) return [];
+
+  return playerRows.filter((row) => {
+    const joinedAtMs = Date.parse(row.joined_at_utc || '');
+    const leftAtMs = row.left_at_utc ? Date.parse(row.left_at_utc) : null;
+    // if joined after round started, or left before round started, then not a participant in this round
+    if (!Number.isFinite(joinedAtMs) || joinedAtMs > startedAtMs) return false;
+    if (leftAtMs != null && Number.isFinite(leftAtMs) && leftAtMs <= startedAtMs) return false;
+    return true;
+  });
+}
+
+
+export async function finalizeRoundIfComplete(supabaseClient, lobbyRow, playerRows, roundRow, { resultRows = null } = {}) {
+  if (!roundRow || roundRow.ended_at_utc) { // if round already ended, just return results without modifying anything
+    return { resultRows: resultRows || [] };
+  }
+
+  // nextresultrows is either passed in (e.g. after a new submission) or fetched fresh from db (e.g. after a timeout)
+  const nextResultRows = resultRows || await getRoundResults(supabaseClient, roundRow.id);
+  const participants = getRoundParticipants(playerRows, roundRow); // list of participants in a round
+  const participantSessionIds = new Set(participants.map((row) => row.session_id));
+  const submittedSessionIds = new Set( // session ids that have submitted a result, regardless of completion or timeout status
+    nextResultRows
+      .map((row) => row.session_id)
+      .filter((sessionId) => participantSessionIds.has(sessionId))
+  );
+
+  // if there are still participants who haven't submitted results, just return current results
+  if (participants.length === 0 || submittedSessionIds.size < participants.length) {
+    return { resultRows: nextResultRows };
+  }
+
+  // otherwise update round and lobby status
+  const endedAtUtc = new Date().toISOString();
+  const { error: roundUpdateError } = await supabaseClient
+    .from('wiki_race_rounds')
+    .update({ ended_at_utc: endedAtUtc }) // update round status to ended
+    .eq('id', roundRow.id)
+    .is('ended_at_utc', null);
+  if (roundUpdateError) throw roundUpdateError;
+  roundRow.ended_at_utc = endedAtUtc;
+
+  if (lobbyRow.status === 'running') {
+    const { error: lobbyUpdateError } = await supabaseClient
+      .from('wiki_race_lobbies')
+      .update({ status: 'ended' }) // update lobby status to completed
+      .eq('id', lobbyRow.id)
+      .eq('status', 'running');
+    if (lobbyUpdateError) throw lobbyUpdateError;
+    lobbyRow.status = 'ended';
+  }
+
+  return { resultRows: nextResultRows };
+}
+
+
+export async function ensureRoundTimeoutResolved(supabaseClient, lobbyRow, playerRows, roundRow) {
+  if (!roundRow?.started_at_utc || roundRow.ended_at_utc) {
+    return { resultRows: roundRow ? await getRoundResults(supabaseClient, roundRow.id) : [] };
+  }
+
+  const startedAtMs = Date.parse(roundRow.started_at_utc);
+  const timeoutAtMs = startedAtMs + (Number(roundRow.max_duration_seconds || 0) * 1000);
+  if (!Number.isFinite(timeoutAtMs) || Date.now() < timeoutAtMs) {
+    return { resultRows: await getRoundResults(supabaseClient, roundRow.id) };
+  }
+
+  let resultRows = await getRoundResults(supabaseClient, roundRow.id);
+  const submittedSessionIds = new Set(resultRows.map((row) => row.session_id));
+  const missingParticipants = getRoundParticipants(playerRows, roundRow)
+    .filter((row) => !submittedSessionIds.has(row.session_id));
+
+  if (missingParticipants.length > 0) {
+    const submittedAtUtc = new Date().toISOString();
+    const timeoutRows = missingParticipants.map((row) => ({
+      id: createEntityId(),
+      round_id: roundRow.id,
+      session_id: row.session_id,
+      nickname: row.nickname,
+      status: 'timeout',
+      duration_ms: null,
+      click_count: 0,
+      submitted_at_utc: submittedAtUtc,
+      source: 'server_timeout'
+    }));
+
+    const { error: upsertError } = await supabaseClient
+      .from('wiki_race_round_results')
+      .upsert(timeoutRows, {
+        onConflict: 'round_id,session_id'
+      });
+    if (upsertError) throw upsertError;
+
+    resultRows = await getRoundResults(supabaseClient, roundRow.id);
+  }
+
+  return finalizeRoundIfComplete(supabaseClient, lobbyRow, playerRows, roundRow, { resultRows });
 }
 
 export function formatRoundSnapshot(roundRow, seedRow) {
@@ -124,12 +229,10 @@ export function formatRoundSnapshot(roundRow, seedRow) {
 export async function buildLobbySnapshotResponse(supabaseClient, lobbyRow, playerRows) {
   const players = Array.isArray(playerRows) ? playerRows : [];
   const roundRow = await getLatestLobbyRound(supabaseClient, lobbyRow.id);
+  const { resultRows } = await ensureRoundTimeoutResolved(supabaseClient, lobbyRow, players, roundRow);
   const seedRow = roundRow?.seed_hash
     ? await getSeedRow(supabaseClient, roundRow.seed_hash)
     : null;
-  const resultRows = roundRow
-    ? await getRoundResults(supabaseClient, roundRow.id)
-    : [];
 
   return {
     ...formatLobbySnapshot(lobbyRow, players),

@@ -75,11 +75,13 @@ export async function buildRandomWikiPagePayloads({ limit = 5, namespace = 0 } =
   });
 
   const pageMetas = Object.values(queryData?.query?.pages || {}).filter((pageMeta) => pageMeta && !pageMeta.missing);
-  const payloads = [];
-  for (const pageMeta of pageMetas) {
-    payloads.push(await buildWikiPagePayloadFromMeta(pageMeta));
-  }
-  return payloads;
+  const settledPayloads = await Promise.allSettled(
+    pageMetas.map((pageMeta) => buildWikiPagePayloadFromMeta(pageMeta))
+  );
+
+  return settledPayloads
+    .filter((result) => result.status === 'fulfilled' && result.value)
+    .map((result) => result.value);
 }
 
 /**

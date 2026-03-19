@@ -31,7 +31,7 @@ export function createStore(initialState) {
   };
 }
 
-export function createInitialGameState() {
+export function createInitialRunState() {
   return {
     status: 'idle',
     dateKey: null,
@@ -46,10 +46,61 @@ export function createInitialGameState() {
     history: {
       stack: [],
       cursor: -1
+    }
+  };
+}
+
+export function createInitialSoloState() {
+  return {
+    selectedMode: 'agi',
+    activeRunId: null,
+    seedHash: null
+  };
+}
+
+export function createInitialMultiplayerState() {
+  return {
+    lobby: null,
+    players: [],
+    round: null,
+    results: [],
+    leaderboard: [],
+    isHost: false,
+    realtime: {
+      channelStatus: 'idle',
+      lastEventAtUtc: null,
+      lastSnapshotAtUtc: null,
+      isPolling: false
+    }
+  };
+}
+
+export function createInitialGameState() {
+  return {
+    mode: 'solo',
+    phase: 'idle',
+    session: {
+      sessionId: null,
+      nickname: null
     },
+    run: createInitialRunState(),
+    solo: createInitialSoloState(),
+    multiplayer: createInitialMultiplayerState(),
     errorMessage: null,
     ui: {
       isArticleLoading: false
     }
   };
+}
+
+export function getRunState(gameState) {
+  return gameState?.run || createInitialRunState();
+}
+
+export function getSoloState(gameState) {
+  return gameState?.solo || createInitialSoloState();
+}
+
+export function getMultiplayerState(gameState) {
+  return gameState?.multiplayer || createInitialMultiplayerState();
 }

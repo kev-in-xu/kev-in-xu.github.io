@@ -80,6 +80,32 @@
   text-decoration-thickness: 1px;
 }
 
+.wiki-race-mode-tabs {
+  display: inline-flex;
+  gap: 0.3rem;
+  margin-bottom: 0.55rem;
+  padding: 0.18rem;
+  border: 1px solid var(--wr-border);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.9);
+}
+
+.wiki-race-tab {
+  border: none;
+  background: transparent;
+  color: var(--wr-muted);
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.76rem;
+  line-height: 1.1;
+  cursor: pointer;
+}
+
+.wiki-race-tab.is-active {
+  background: var(--wr-accent);
+  color: #fff;
+}
+
 .wiki-race-destination-link {
   text-underline-offset: 2px;
 }
@@ -165,6 +191,286 @@
   gap: 0.5rem 0.45rem;
   align-items: center;
   margin: 0.4rem 0;
+}
+
+.wiki-race-toolbar-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.45rem;
+  align-items: center;
+}
+
+.wiki-race-toolbar-group-shared {
+  flex: 1 1 auto;
+}
+
+.wiki-race-multiplayer-panel {
+  margin: 0.4rem 0 0.4rem;
+  padding: 0.3rem;
+  border: 1px solid var(--wr-border);
+  border-radius: 12px;
+  background: rgba(255, 253, 248, 0.8);
+}
+
+.wiki-race-multiplayer-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.wiki-race-inline-field {
+  display: flex;
+  margin: 0;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.wiki-race-inline-field .wiki-race-mode-text {
+  white-space: nowrap;
+}
+
+.wiki-race-text-control {
+  border: 1px solid var(--wr-border);
+  background: #fff;
+  color: var(--wr-text);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  padding: 0.45rem 0.55rem;
+  width: auto;
+  flex: 0 0 auto;
+}
+
+#wiki-race-nickname {
+  margin: 0;
+  width: 7.8rem;
+}
+
+#wiki-race-lobby-code {
+  margin: 0;
+  width: 4.4rem;
+}
+
+.wiki-race-multiplayer-fields > .wiki-race-btn {
+  align-self: center;
+}
+
+.wiki-race-code-control,
+.wiki-race-share-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wiki-race-lobby-shell {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.wiki-race-lobby-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wiki-race-share-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+.wiki-race-lobby-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: flex-start;
+}
+
+.wiki-race-share-label,
+.wiki-race-status-label,
+.wiki-race-panel-count {
+  font-size: 0.68rem;
+  color: var(--wr-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.wiki-race-share-code-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wiki-race-share-code {
+  display: inline-block;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0.45rem 0.55rem;
+  border-radius: 10px;
+  border: 1px solid #c7bca8;
+  background: #fff;
+}
+
+.wiki-race-connection-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 6.5rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--wr-border);
+  background: #fff;
+  font-size: 0.74rem;
+  color: var(--wr-muted);
+}
+
+.wiki-race-connection-badge[data-state="subscribed"] {
+  color: #0f766e;
+  border-color: rgba(15, 118, 110, 0.25);
+  background: rgba(236, 253, 245, 0.9);
+}
+
+.wiki-race-connection-badge[data-state="stale"],
+.wiki-race-connection-badge[data-state="disconnected"] {
+  color: #9a3412;
+  border-color: rgba(154, 52, 18, 0.2);
+  background: rgba(255, 247, 237, 0.9);
+}
+
+.wiki-race-connection-badge[data-state="error"] {
+  color: var(--wr-danger);
+  border-color: rgba(180, 35, 24, 0.22);
+  background: rgba(254, 242, 242, 0.9);
+}
+
+.wiki-race-lobby-grid {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.wiki-race-roster-panel {
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--wr-border);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.wiki-race-panel-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.wiki-race-panel-heading h2 {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.wiki-race-roster-table-wrap {
+  overflow-x: auto;
+}
+
+.wiki-race-roster-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.wiki-race-roster-table th,
+.wiki-race-roster-table td {
+  padding: 0.52rem 0.5rem;
+  border-bottom: 1px solid #eadfcb;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.wiki-race-roster-table th {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--wr-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.wiki-race-roster-cell-player {
+  min-width: 10rem;
+}
+
+.wiki-race-roster-cell-action {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.wiki-race-roster-name {
+  display: inline-block;
+  min-width: 0;
+  margin-right: 0.35rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wiki-race-roster-name.is-completed {
+  color: #166534;
+}
+
+.wiki-race-roster-name.is-abandoned,
+.wiki-race-roster-name.is-timeout {
+  color: var(--wr-danger);
+}
+
+.wiki-race-roster-badge {
+  font-size: 0.66rem;
+  color: var(--wr-accent);
+  background: rgba(21, 94, 99, 0.1);
+  padding: 0.18rem 0.42rem;
+  border-radius: 999px;
+}
+
+.wiki-race-kick-btn {
+  padding-inline: 0.5rem;
+}
+
+.wiki-race-roster-result {
+  color: var(--wr-muted);
+}
+
+.wiki-race-roster-result.is-completed {
+  color: #166534;
+}
+
+.wiki-race-roster-result.is-abandoned,
+.wiki-race-roster-result.is-timeout {
+  color: var(--wr-danger);
+}
+
+.wiki-race-roster-empty {
+  font-size: 0.74rem;
+  color: var(--wr-muted);
+}
+
+.wiki-race-status-item {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.wiki-race-status-item strong {
+  font-size: 0.86rem;
+}
+
+.wiki-race-status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .wiki-race-mode-select,
@@ -756,6 +1062,20 @@
 }
 
 @media (max-width: 960px) {
+  .wiki-race-multiplayer-fields,
+  .wiki-race-share-code-wrap,
+  .wiki-race-lobby-meta {
+    align-items: stretch;
+  }
+
+  .wiki-race-lobby-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .wiki-race-status-actions {
+    justify-content: flex-start;
+  }
+
   .wiki-race-target-preview {
     left: 0;
     right: 0;

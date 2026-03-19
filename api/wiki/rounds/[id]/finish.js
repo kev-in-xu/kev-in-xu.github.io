@@ -1,6 +1,12 @@
 import { applyWikiApiCors, handleCorsPreflight } from '../../_cors.js';
 import { isWikiRaceMultiplayerEnabled } from '../../_flags.js';
-import { buildLobbySnapshotResponse, getRoundById, getRoundResults } from '../../multiplayer/_snapshot.js';
+import { publishLobbyEvent } from '../../multiplayer/_realtime.js';
+import {
+  buildLobbySnapshotResponse,
+  ensureRoundTimeoutResolved,
+  finalizeRoundIfComplete,
+  getRoundById
+} from '../../multiplayer/_snapshot.js';
 import {
   createEntityId,
   getLobbyPlayers,
@@ -102,12 +108,9 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'Session is not an active player in this lobby' });
     }
 
+    await ensureRoundTimeoutResolved(supabaseClient, lobbyRow, playerRows, roundRow);
     if (roundRow.ended_at_utc) {
       const existingSnapshot = await buildLobbySnapshotResponse(supabaseClient, lobbyRow, playerRows);
-      const existingResult = existingSnapshot.results.find((row) => row.sessionId === sessionId);
-      if (!existingResult) {
-        return res.status(409).json({ error: 'Round already ended' });
-      }
       res.setHeader('Cache-Control', 'no-store');
       return res.status(200).json(existingSnapshot);
     }
@@ -143,24 +146,35 @@ export default async function handler(req, res) {
 
     if (upsertError) throw upsertError;
 
-    const resultRows = await getRoundResults(supabaseClient, roundId);
-    if (resultRows.length >= activePlayers.length) {
-      const endedAtUtc = new Date().toISOString();
-      const { error: roundUpdateError } = await supabaseClient
-        .from('wiki_race_rounds')
-        .update({ ended_at_utc: endedAtUtc })
-        .eq('id', roundId)
-        .is('ended_at_utc', null);
-      if (roundUpdateError) throw roundUpdateError;
+    await finalizeRoundIfComplete(supabaseClient, lobbyRow, playerRows, roundRow);
+    const didEndRound = Boolean(roundRow.ended_at_utc);
 
-      const { error: lobbyUpdateError } = await supabaseClient
-        .from('wiki_race_lobbies')
-        .update({ status: 'ended' })
-        .eq('id', lobbyRow.id)
-        .eq('status', 'running');
-      if (lobbyUpdateError) throw lobbyUpdateError;
-
-      lobbyRow.status = 'ended';
+    await publishLobbyEvent({
+      lobbyCode: lobbyRow.lobby_code,
+      event: status === 'completed' ? 'player_finished' : 'player_abandoned',
+      payload: {
+        roundId,
+        sessionId,
+        status,
+        durationMs: status === 'completed' ? durationMs : null,
+        clickCount
+      }
+    }).catch(() => {});
+    await publishLobbyEvent({
+      lobbyCode: lobbyRow.lobby_code,
+      event: 'leaderboard_updated',
+      payload: {
+        roundId
+      }
+    }).catch(() => {});
+    if (didEndRound) {
+      await publishLobbyEvent({
+        lobbyCode: lobbyRow.lobby_code,
+        event: 'race_ended',
+        payload: {
+          roundId
+        }
+      }).catch(() => {});
     }
 
     const snapshot = await buildLobbySnapshotResponse(supabaseClient, lobbyRow, playerRows);

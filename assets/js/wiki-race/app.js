@@ -1,13 +1,32 @@
-import { createStore, createInitialGameState } from './state.js';
+import {
+  createStore,
+  createInitialGameState,
+  getRunState,
+  getSoloState,
+  getMultiplayerState
+} from './state.js';
 import { createRenderer } from './render.js';
-import { createTimer } from './timer.js';
+import { createTimer, formatElapsedMs } from './timer.js';
 import { createHistoryController } from './history.js';
-import { getDailyStart, postWinningRun } from './api-client.js';
+import {
+  createMultiplayerLobby,
+  getDailyStart,
+  getMultiplayerSnapshot,
+  joinMultiplayerLobby,
+  kickMultiplayerPlayer,
+  leaveMultiplayerLobby,
+  postWinningRun,
+  startMultiplayerLobby,
+  submitMultiplayerRoundResult
+} from './api-client.js';
 import { getWikiPageByPath, getWikiPageByTitle } from './mw-browser-client.js';
 import { createTargetPreviewController } from './target-preview.js';
+import { createLobbyRealtimeClient, createLobbySnapshotPoller } from './realtime-client.js';
+import { applyMultiplayerSnapshot } from './multiplayer-state.js';
 
 const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
 const SESSION_ID_STORAGE_KEY = 'wiki-race-session-id-v1';
+const MULTIPLAYER_NICKNAME_STORAGE_KEY = 'wiki-race-multiplayer-nickname-v1';
 const SEEDED_KEY_PATTERN = /^[a-f0-9]{24}$/i;
 let lottieLoadPromise = null;
 
@@ -166,26 +185,62 @@ function normalizePathFromHref(href) {
   }
 }
 
-function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}) {
-  const allowedLinkPaths = gameState.currentPage?.linkIndex?.map((link) => link.path) || [];
+function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}, uiMeta = {}) {
+  const runState = getRunState(gameState);
+  const multiplayerState = getMultiplayerState(gameState);
+  const allowedLinkPaths = runState.currentPage?.linkIndex?.map((link) => link.path) || [];
   const selectedMode = String(toolbarState.selectedMode || 'agi').trim() || 'agi';
   const seedInputValue = String(toolbarState.seedInputValue || '');
-  const runSeedLabel = String(gameState.runSeedLabel || '--');
+  const runSeedLabel = String(runState.runSeedLabel || '--');
   const isSeededMode = selectedMode === 'seeded';
   const isRandomMode = selectedMode === 'random_vital';
+  const playMode = String(uiMeta.playMode || 'solo');
+  const resultsBySessionId = new Map((multiplayerState.results || []).map((row) => [row.sessionId, row]));
+  const connectionStatus = String(multiplayerState.realtime?.channelStatus || 'idle');
+  const connectionLabels = {
+    idle: 'Offline',
+    subscribing: 'Connecting',
+    subscribed: 'Live',
+    stale: 'Stale',
+    disconnected: 'Polling',
+    closed: 'Closed',
+    disabled: 'Disabled',
+    error: 'Error'
+  };
+  const lobbyCode = multiplayerState.lobby?.code || null;
+  const countdownValue = uiMeta.multiplayerCountdownValue;
+  const hasJoinedMultiplayerLobby = Boolean(lobbyCode);
+  const multiplayerRoundStarted = Boolean(multiplayerState.round);
+  const multiplayerPlayers = (multiplayerState.players || []).map((player) => ({
+    ...player,
+    isSelf: player.sessionId === gameState.session?.sessionId,
+    resultStatus: resultsBySessionId.get(player.sessionId)?.status || null,
+    resultLabel: (() => {
+      const result = resultsBySessionId.get(player.sessionId);
+      if (!result) return multiplayerState.round ? 'Waiting' : '-';
+      if (result.status === 'completed') {
+        return `${formatElapsedMs(result.durationMs || 0)} • ${result.clickCount} clicks`;
+      }
+      if (result.status === 'abandoned') return 'Gave up';
+      if (result.status === 'timeout') return 'Timed out';
+      return result.status;
+    })()
+  }));
   const canShowSeedField = isSeededMode
-    ? !['loading_start', 'running'].includes(gameState.status)
+    ? !['loading_start', 'running'].includes(runState.status)
     : (isRandomMode && runSeedLabel !== '--' && runSeedLabel !== 'agi');
   return {
+    playMode,
     selectedMode,
-    status: gameState.status,
-    clickCount: gameState.clickCount,
+    status: runState.status,
+    phase: gameState.phase,
+    clickCount: runState.clickCount,
     runSeedLabel,
     elapsedMs,
     canGoBack: historyController.canGoBack(),
-    currentPageTitle: gameState.currentPage?.displayTitle || null,
-    articleHtml: gameState.currentPage?.html || null,
-    routeTitles: gameState.route.map((step) => step.title),
+    currentPageTitle: runState.currentPage?.displayTitle || null,
+    articleHtml: runState.currentPage?.html || null,
+    routeTitles: runState.route.map((step) => step.title),
     allowedLinkPaths,
     seedFieldValue: isSeededMode ? seedInputValue : (canShowSeedField ? runSeedLabel : ''),
     showSeedField: canShowSeedField,
@@ -194,7 +249,29 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
     toolbarErrorMessage: gameState.errorMessage || null,
     canStart: !toolbarState.isStartRequestPending
       && !(selectedMode === 'seeded' && !toolbarState.isSeedInputValid),
-    disableModeSelection: Boolean(toolbarState.isStartRequestPending)
+    disableModeSelection: Boolean(toolbarState.isStartRequestPending),
+    multiplayerNicknameValue: String(uiMeta.multiplayerNicknameValue || ''),
+    multiplayerLobbyCodeValue: String(uiMeta.multiplayerLobbyCodeValue || ''),
+    multiplayerErrorMessage: String(uiMeta.multiplayerErrorMessage || ''),
+    hasJoinedMultiplayerLobby,
+    multiplayerShareCode: lobbyCode,
+    multiplayerConnectionStatus: connectionStatus,
+    multiplayerConnectionStatusLabel: connectionLabels[connectionStatus] || 'Offline',
+    multiplayerPlayerCountLabel: `${multiplayerPlayers.length} / ${multiplayerState.lobby?.maxPlayers || 6}`,
+    multiplayerPlayers,
+    canKickPlayers: Boolean(multiplayerState.isHost),
+    canStartMultiplayerCountdown: Boolean(multiplayerState.isHost),
+    multiplayerRoundStarted,
+    multiplayerRoundStateLabel: multiplayerState.round
+      ? (multiplayerState.round.endedAtUtc ? 'Finished' : 'Running')
+      : 'Lobby',
+    multiplayerCountdownLabel: Number.isFinite(countdownValue) && countdownValue > 0
+      ? String(countdownValue)
+      : (multiplayerState.round ? 'Live' : '--'),
+    multiplayerLiveStatusLabel: multiplayerState.round
+      ? `${multiplayerState.results.length}/${multiplayerPlayers.length} finished`
+      : 'Waiting',
+    multiplayerLeaderboard: multiplayerState.leaderboard || []
   };
 }
 
@@ -298,6 +375,70 @@ async function bootstrap() {
   let selectedMode = normalizeSelectedMode(modeSelect?.value || 'agi');
   let seedInputValue = '';
   let timer = null;
+  const sessionId = getOrCreateSessionId();
+  let playMode = 'solo';
+  let multiplayerNicknameValue = '';
+  let multiplayerLobbyCodeValue = '';
+  let multiplayerErrorMessage = '';
+  let multiplayerRealtimeClient = null;
+  let multiplayerSnapshotPoller = null;
+  let multiplayerCountdownValue = null;
+  let multiplayerCountdownTimerId = null;
+  let lastPreparedMultiplayerRoundId = null;
+  let lastPreviewedMultiplayerRoundId = null;
+
+  store.updateState((prev) => ({
+    ...prev,
+    session: {
+      ...prev.session,
+      sessionId
+    },
+    solo: {
+      ...prev.solo,
+      selectedMode
+    }
+  }));
+  multiplayerNicknameValue = loadStoredMultiplayerNickname();
+
+  function phaseForRunStatus(status) {
+    if (status === 'loading_start' || status === 'running') return 'running';
+    if (status === 'won' || status === 'abandoned') return 'results';
+    if (status === 'error') return 'error';
+    return 'idle';
+  }
+
+  function getCurrentRunState() {
+    return getRunState(store.getState());
+  }
+
+  function getCurrentMultiplayerState() {
+    return getMultiplayerState(store.getState());
+  }
+
+  function updateRunState(updater) {
+    store.updateState((prev) => {
+      const nextRun = updater(getRunState(prev), prev);
+      return {
+        ...prev,
+        phase: phaseForRunStatus(nextRun.status),
+        run: nextRun
+      };
+    });
+  }
+
+  function updateSoloState(updater) {
+    store.updateState((prev) => ({
+      ...prev,
+      solo: updater(getSoloState(prev), prev)
+    }));
+  }
+
+  function updateMultiplayerState(updater) {
+    store.updateState((prev) => ({
+      ...prev,
+      multiplayer: updater(getMultiplayerState(prev), prev)
+    }));
+  }
 
   function normalizeSelectedMode(value) {
     const mode = String(value || '').trim().toLowerCase();
@@ -312,12 +453,54 @@ async function bootstrap() {
       .slice(0, 24);
   }
 
+  function sanitizeNickname(value) {
+    return String(value || '')
+      .replace(/[^A-Za-z]/g, '')
+      .slice(0, 10);
+  }
+
+  function sanitizeLobbyCode(value) {
+    return String(value || '')
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 6);
+  }
+
   function isValidSeedKey(value) {
     return SEEDED_KEY_PATTERN.test(String(value || ''));
   }
 
+  function isValidNickname(value) {
+    return /^[A-Za-z]{3,10}$/.test(String(value || ''));
+  }
+
+  function isValidLobbyCode(value) {
+    return /^[A-Z0-9]{6}$/.test(String(value || ''));
+  }
+
   function getSelectedMode() {
     return selectedMode;
+  }
+
+  function setMultiplayerError(message = '') {
+    multiplayerErrorMessage = String(message || '').trim();
+    renderUi();
+  }
+
+  function persistMultiplayerNickname(value) {
+    try {
+      localStorage.setItem(MULTIPLAYER_NICKNAME_STORAGE_KEY, value);
+    } catch (_err) {
+      // Ignore storage failures; the field remains usable for the current session.
+    }
+  }
+
+  function loadStoredMultiplayerNickname() {
+    try {
+      return sanitizeNickname(localStorage.getItem(MULTIPLAYER_NICKNAME_STORAGE_KEY) || '');
+    } catch (_err) {
+      return '';
+    }
   }
 
   function getToolbarState() {
@@ -330,7 +513,13 @@ async function bootstrap() {
   }
 
   function renderUi(elapsedMs = timer ? timer.getElapsedMs() : 0) {
-    renderer.renderState(buildUiState(store.getState(), elapsedMs, historyController, getToolbarState()));
+    renderer.renderState(buildUiState(store.getState(), elapsedMs, historyController, getToolbarState(), {
+      playMode,
+      multiplayerNicknameValue,
+      multiplayerLobbyCodeValue,
+      multiplayerErrorMessage,
+      multiplayerCountdownValue
+    }));
     targetPreview.render();
   }
 
@@ -343,7 +532,12 @@ async function bootstrap() {
   // create instance of controller that shows target page previews (via target-preview.js)
   const targetPreview = createTargetPreviewController({
     modeSubtitle,
-    isPreviewAvailable: () => store.getState().status !== 'idle',
+    isPreviewAvailable: () => {
+      if (playMode === 'solo') {
+        return getCurrentRunState().status !== 'idle';
+      }
+      return Boolean(getCurrentMultiplayerState().round?.endPage?.title);
+    },
     fetchPageByTitle: getWikiPageByTitle
   });
 
@@ -352,7 +546,7 @@ async function bootstrap() {
   function initializeRunMeta(mode) {
     activeRunMeta = {
       runId: createClientRunId(),
-      sessionId: getOrCreateSessionId(),
+      sessionId,
       startedAtUtc: new Date().toISOString(),
       mode,
       dateKey: null,
@@ -364,7 +558,8 @@ async function bootstrap() {
   // after game win, build a payload of run data to submit to the backend for validation and persistence.
   function buildWinningRunPayload(durationMs) {
     const gameState = store.getState();
-    if (!activeRunMeta || !gameState.startPage || !gameState.targetPage || !gameState.route.length) {
+    const runState = getRunState(gameState);
+    if (!activeRunMeta || !runState.startPage || !runState.targetPage || !runState.route.length) {
       return null;
     }
 
@@ -378,10 +573,10 @@ async function bootstrap() {
       startedAtUtc: activeRunMeta.startedAtUtc,
       completedAtUtc: new Date().toISOString(),
       durationMs: Math.max(0, Math.floor(Number(durationMs) || 0)),
-      clickCount: Math.max(0, Math.floor(Number(gameState.clickCount) || 0)),
-      startPage: gameState.startPage,
-      targetPage: gameState.targetPage,
-      route: gameState.route.map((step) => ({
+      clickCount: Math.max(0, Math.floor(Number(runState.clickCount) || 0)),
+      startPage: runState.startPage,
+      targetPage: runState.targetPage,
+      route: runState.route.map((step) => ({
         title: step.title,
         path: step.path,
         url: step.url,
@@ -392,8 +587,306 @@ async function bootstrap() {
     };
   }
 
+  function stopMultiplayerCountdown() {
+    if (multiplayerCountdownTimerId != null) {
+      clearTimeout(multiplayerCountdownTimerId);
+      multiplayerCountdownTimerId = null;
+    }
+    multiplayerCountdownValue = null;
+  }
+
+  async function disconnectMultiplayerRealtime() {
+    if (multiplayerSnapshotPoller) {
+      multiplayerSnapshotPoller.stop();
+      multiplayerSnapshotPoller = null;
+    }
+    if (multiplayerRealtimeClient) {
+      await multiplayerRealtimeClient.disconnect();
+      multiplayerRealtimeClient = null;
+    }
+    updateMultiplayerState((prevMultiplayer) => ({
+      ...prevMultiplayer,
+      realtime: {
+        ...prevMultiplayer.realtime,
+        channelStatus: 'idle',
+        isPolling: false
+      }
+    }));
+  }
+
+  function resetLocalMultiplayerView({ message = '' } = {}) {
+    stopMultiplayerCountdown();
+    lastPreparedMultiplayerRoundId = null;
+    lastPreviewedMultiplayerRoundId = null;
+    targetPreview.invalidate();
+    timer.reset();
+    historyController.reset();
+    store.setState({
+      ...createInitialGameState(),
+      mode: 'solo',
+      session: {
+        sessionId,
+        nickname: store.getState().session?.nickname || null
+      },
+      solo: {
+        ...getSoloState(store.getState()),
+        selectedMode
+      }
+    });
+    multiplayerLobbyCodeValue = '';
+    multiplayerErrorMessage = String(message || '').trim();
+    syncModeSubtitle();
+    renderUi(0);
+  }
+
+  async function prepareMultiplayerRound(round) {
+    if (!round?.id || !round?.startPage?.title) return;
+    if (lastPreparedMultiplayerRoundId === round.id && getCurrentRunState().currentPage) return;
+
+    const countdownLength = 3;
+    lastPreparedMultiplayerRoundId = round.id;
+    stopMultiplayerCountdown();
+    multiplayerCountdownValue = countdownLength;
+    store.updateState((prev) => ({
+      ...prev,
+      phase: 'countdown',
+      run: {
+        ...getRunState(prev),
+        status: 'loading_start',
+        currentPage: null,
+        clickCount: 0,
+        route: [],
+        history: {
+          stack: [],
+          cursor: -1
+        }
+      }
+    }));
+    renderUi(0);
+
+    const tick = async () => {
+      if (multiplayerCountdownValue == null) return;
+      if (multiplayerCountdownValue > 1) {
+        multiplayerCountdownValue -= 1;
+        renderUi(0);
+        multiplayerCountdownTimerId = window.setTimeout(tick, 1000);
+        return;
+      }
+
+      stopMultiplayerCountdown();
+      historyController.reset();
+      timer.reset();
+      try {
+        await loadAndRenderStartPageByTitle(round.startPage.title, {
+          moveType: 'start',
+          countMove: false
+        });
+        timer.start();
+        updateRunState((prevRun) => ({
+          ...prevRun,
+          status: 'running'
+        }));
+        store.updateState((prev) => ({
+          ...prev,
+          phase: 'running'
+        }));
+        renderUi(timer.getElapsedMs());
+      } catch (err) {
+        lastPreparedMultiplayerRoundId = null;
+        updateRunState((prevRun) => ({
+          ...prevRun,
+          status: 'error'
+        }));
+        setMultiplayerError(err?.message || 'Failed to load multiplayer start page.');
+      }
+    };
+
+    multiplayerCountdownTimerId = window.setTimeout(tick, 1000);
+  }
+
+  async function applyIncomingMultiplayerSnapshot(snapshot) {
+    if (!snapshot?.lobby) return;
+    const prevState = store.getState();
+    const currentLobbyCode = String(prevState.multiplayer?.lobby?.code || '').trim();
+    const currentPlayerStillActive = Array.isArray(snapshot.players)
+      && snapshot.players.some((player) => player?.sessionId === sessionId);
+    if (currentLobbyCode && snapshot.lobby.code === currentLobbyCode && !currentPlayerStillActive) {
+      await disconnectMultiplayerRealtime();
+      resetLocalMultiplayerView({ message: 'You were removed from the lobby.' });
+      return;
+    }
+    const nextState = applyMultiplayerSnapshot(prevState, snapshot, { sessionId });
+    store.setState(nextState);
+    setMultiplayerError('');
+    if (snapshot.round?.id && snapshot.round.endPage?.title && snapshot.round.id !== lastPreviewedMultiplayerRoundId) {
+      const previewToken = targetPreview.beginRun();
+      void targetPreview.prefetch(snapshot.round.endPage, previewToken);
+      lastPreviewedMultiplayerRoundId = snapshot.round.id;
+    }
+    if (!snapshot.round) {
+      lastPreviewedMultiplayerRoundId = null;
+      targetPreview.invalidate();
+    }
+    syncModeSubtitle();
+    if (snapshot.round && !snapshot.round.endedAtUtc) {
+      await prepareMultiplayerRound(snapshot.round);
+      renderUi(timer.getElapsedMs());
+      return;
+    }
+    if (snapshot.round?.endedAtUtc) {
+      stopMultiplayerCountdown();
+      timer.stop();
+      renderUi(timer.getElapsedMs());
+      return;
+    }
+    renderUi();
+  }
+
+  function updateRealtimeStatus(nextStatus, nextLastEventAtUtc = null) {
+    updateMultiplayerState((prevMultiplayer) => ({
+      ...prevMultiplayer,
+      realtime: {
+        ...prevMultiplayer.realtime,
+        channelStatus: nextStatus,
+        lastEventAtUtc: nextLastEventAtUtc ?? prevMultiplayer.realtime.lastEventAtUtc
+      }
+    }));
+  }
+
+  async function ensureSnapshotPoller(lobbyCode) {
+    if (!multiplayerSnapshotPoller) {
+      multiplayerSnapshotPoller = createLobbySnapshotPoller({
+        lobbyCode,
+        onSnapshot: (snapshot) => {
+          void applyIncomingMultiplayerSnapshot(snapshot);
+        },
+        onError: (err) => {
+          setMultiplayerError(err?.message || 'Failed to refresh lobby snapshot.');
+        }
+      });
+    }
+    const started = await multiplayerSnapshotPoller.start({ immediate: true });
+    updateMultiplayerState((prevMultiplayer) => ({
+      ...prevMultiplayer,
+      realtime: {
+        ...prevMultiplayer.realtime,
+        isPolling: Boolean(started)
+      }
+    }));
+  }
+
+  async function stopSnapshotPoller() {
+    if (multiplayerSnapshotPoller) {
+      multiplayerSnapshotPoller.stop();
+    }
+    updateMultiplayerState((prevMultiplayer) => ({
+      ...prevMultiplayer,
+      realtime: {
+        ...prevMultiplayer.realtime,
+        isPolling: false
+      }
+    }));
+  }
+
+  async function connectMultiplayerRealtime(lobbyCode) {
+    await disconnectMultiplayerRealtime();
+    multiplayerRealtimeClient = createLobbyRealtimeClient({
+      lobbyCode,
+      onEvent: () => {
+        void getMultiplayerSnapshot(lobbyCode)
+          .then((snapshot) => applyIncomingMultiplayerSnapshot(snapshot))
+          .catch((err) => setMultiplayerError(err?.message || 'Failed to refresh lobby snapshot.'));
+      },
+      onStatusChange: (payload) => {
+        updateRealtimeStatus(payload?.status || 'idle', payload?.lastEventAtUtc || null);
+        if (payload?.status === 'subscribed') {
+          void stopSnapshotPoller();
+        }
+        if (payload?.status === 'stale' || payload?.status === 'disconnected') {
+          void ensureSnapshotPoller(lobbyCode);
+        }
+        renderUi();
+      },
+      onError: (err) => {
+        setMultiplayerError(err?.message || 'Realtime connection failed.');
+      }
+    });
+    const connected = await multiplayerRealtimeClient.connect();
+    if (!connected) {
+      await ensureSnapshotPoller(lobbyCode);
+    }
+  }
+
+  async function createOrJoinMultiplayer({ action }) {
+    const nickname = sanitizeNickname(multiplayerNicknameValue);
+    const lobbyCode = sanitizeLobbyCode(multiplayerLobbyCodeValue);
+    if (!isValidNickname(nickname)) {
+      setMultiplayerError('Nickname must be 3-10 letters.');
+      return null;
+    }
+    persistMultiplayerNickname(nickname);
+    multiplayerNicknameValue = nickname;
+    store.updateState((prev) => ({
+      ...prev,
+      session: {
+        ...prev.session,
+        nickname
+      }
+    }));
+
+    if (action === 'join' && !isValidLobbyCode(lobbyCode)) {
+      setMultiplayerError('Lobby code must be 6 letters or numbers.');
+      return null;
+    }
+
+    try {
+      const snapshot = action === 'create'
+        ? await createMultiplayerLobby({ sessionId, nickname })
+        : await joinMultiplayerLobby(lobbyCode, { sessionId, nickname });
+      playMode = 'multiplayer';
+      lastPreparedMultiplayerRoundId = null;
+      multiplayerLobbyCodeValue = snapshot?.lobby?.code || lobbyCode;
+      await applyIncomingMultiplayerSnapshot(snapshot);
+      if (snapshot?.lobby?.code) {
+        await connectMultiplayerRealtime(snapshot.lobby.code);
+      }
+      return snapshot;
+    } catch (err) {
+      setMultiplayerError(err?.message || `Failed to ${action} lobby.`);
+      return null;
+    }
+  }
+
+  async function leaveCurrentMultiplayerLobby({ shouldConfirm = false } = {}) {
+    const multiplayerState = getCurrentMultiplayerState();
+    if (!multiplayerState.lobby?.code) return;
+    if (shouldConfirm && multiplayerState.round && !window.confirm('Leave this lobby and abandon the current multiplayer round?')) {
+      return;
+    }
+
+    try {
+      await leaveMultiplayerLobby(multiplayerState.lobby.code, { sessionId });
+    } catch (err) {
+      setMultiplayerError(err?.message || 'Failed to leave lobby.');
+    }
+
+    await disconnectMultiplayerRealtime();
+    resetLocalMultiplayerView();
+  }
+
   function syncModeSubtitle() {
     if (!modeSubtitle) return;
+    if (playMode === 'multiplayer') {
+      const multiplayerState = getCurrentMultiplayerState();
+      if (multiplayerState.round?.endPage?.url && multiplayerState.round?.endPage?.title) {
+        const targetTitle = String(multiplayerState.round.endPage.title).trim();
+        modeSubtitle.innerHTML = `Join a shared race to <a data-role="target-page-link" href="${multiplayerState.round.endPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a>. Lobby progress updates live and falls back to snapshot polling if realtime degrades.`;
+      } else {
+        modeSubtitle.innerHTML = 'Create or join a lobby to race against others.';
+      }
+      targetPreview.bindLinkEvents();
+      return;
+    }
     if (getSelectedMode() === 'random_vital') {
       if (currentTargetPage?.url && currentTargetPage?.title) {
         const targetTitle = String(currentTargetPage.title).trim();
@@ -420,6 +913,51 @@ async function bootstrap() {
     targetPreview.bindLinkEvents();
   }
   syncModeSubtitle();
+
+  function canSwitchPlayMode(nextMode) {
+    if (playMode === nextMode) return true;
+    const multiplayerState = getCurrentMultiplayerState();
+    if (playMode === 'multiplayer' && multiplayerState.lobby?.code) {
+      setMultiplayerError('Leave the current multiplayer lobby before switching tabs.');
+      return false;
+    }
+    if (playMode === 'solo' && ['running', 'loading_start'].includes(getCurrentRunState().status)) {
+      store.updateState((prev) => ({
+        ...prev,
+        errorMessage: 'Finish or abandon the current solo run before switching tabs.'
+      }));
+      renderUi();
+      return false;
+    }
+    return true;
+  }
+
+  function setPlayMode(nextMode) {
+    if (!canSwitchPlayMode(nextMode)) return;
+    playMode = nextMode === 'multiplayer' ? 'multiplayer' : 'solo';
+    store.updateState((prev) => ({
+      ...prev,
+      mode: playMode === 'multiplayer'
+        ? (getMultiplayerState(prev).lobby?.code ? 'multiplayer' : prev.mode)
+        : 'solo'
+    }));
+    if (playMode === 'solo') {
+      setMultiplayerError('');
+    } else {
+      clearToolbarError();
+    }
+    syncModeSubtitle();
+    renderUi();
+  }
+
+  renderer.onControl('show-solo', () => {
+    setPlayMode('solo');
+  });
+
+  renderer.onControl('show-multiplayer', () => {
+    setPlayMode('multiplayer');
+  });
+
   modeSelect?.addEventListener('change', () => {
     selectedMode = normalizeSelectedMode(modeSelect.value);
     targetPreview.invalidate();
@@ -428,7 +966,16 @@ async function bootstrap() {
     const nextMode = getSelectedMode();
     store.updateState((prev) => ({
       ...prev,
-      runSeedLabel: nextMode === 'agi' ? 'agi' : '--'
+      mode: 'solo',
+      solo: {
+        ...prev.solo,
+        selectedMode: nextMode,
+        seedHash: null
+      },
+      run: {
+        ...getRunState(prev),
+        runSeedLabel: nextMode === 'agi' ? 'agi' : '--'
+      }
     }));
     renderUi();
     syncModeSubtitle();
@@ -442,9 +989,25 @@ async function bootstrap() {
     clearToolbarError();
     renderUi();
   });
+  renderer.els.multiplayerNickname?.addEventListener('input', () => {
+    const nextNickname = sanitizeNickname(renderer.els.multiplayerNickname.value);
+    if (nextNickname !== renderer.els.multiplayerNickname.value) {
+      renderer.els.multiplayerNickname.value = nextNickname;
+    }
+    multiplayerNicknameValue = nextNickname;
+    setMultiplayerError('');
+  });
+  renderer.els.multiplayerLobbyCode?.addEventListener('input', () => {
+    const nextCode = sanitizeLobbyCode(renderer.els.multiplayerLobbyCode.value);
+    if (nextCode !== renderer.els.multiplayerLobbyCode.value) {
+      renderer.els.multiplayerLobbyCode.value = nextCode;
+    }
+    multiplayerLobbyCodeValue = nextCode;
+    setMultiplayerError('');
+  });
   seededInputWrap?.addEventListener('click', async () => {
     if (getSelectedMode() !== 'random_vital') return;
-    const seedToCopy = String(store.getState().runSeedLabel || '').trim();
+    const seedToCopy = String(getCurrentRunState().runSeedLabel || '').trim();
     if (!seedToCopy || seedToCopy === '--' || seedToCopy === 'agi') return;
 
     seededInput.select();
@@ -452,6 +1015,44 @@ async function bootstrap() {
     const copied = await copyTextToClipboard(seedToCopy);
     seededInput.setAttribute('title', copied ? 'Copied' : 'Copy failed');
     seededInputWrap.setAttribute('title', copied ? 'Copied' : 'Copy failed');
+  });
+  renderer.onControl('create-lobby', () => {
+    void createOrJoinMultiplayer({ action: 'create' });
+  });
+  renderer.onControl('join-lobby', () => {
+    void createOrJoinMultiplayer({ action: 'join' });
+  });
+  renderer.onControl('copy-lobby-code', async () => {
+    const code = getCurrentMultiplayerState().lobby?.code || '';
+    if (!code) return;
+    await copyTextToClipboard(code);
+  });
+  renderer.onControl('leave-lobby-inline', () => {
+    const shouldConfirm = Boolean(getCurrentMultiplayerState().round && !getCurrentMultiplayerState().round.endedAtUtc);
+    void leaveCurrentMultiplayerLobby({ shouldConfirm });
+  });
+  renderer.onControl('start-lobby-race', async () => {
+    const multiplayerState = getCurrentMultiplayerState();
+    if (!multiplayerState.lobby?.code) return;
+    try {
+      const snapshot = await startMultiplayerLobby(multiplayerState.lobby.code, { sessionId });
+      await applyIncomingMultiplayerSnapshot(snapshot);
+    } catch (err) {
+      setMultiplayerError(err?.message || 'Failed to start lobby race.');
+    }
+  });
+  renderer.els.multiplayerRoster?.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    const button = target?.closest?.('[data-action="kick-player"]');
+    if (!button) return;
+    const targetSessionId = String(button.getAttribute('data-session-id') || '').trim();
+    const multiplayerState = getCurrentMultiplayerState();
+    if (!multiplayerState.lobby?.code || !targetSessionId) return;
+    void kickMultiplayerPlayer(multiplayerState.lobby.code, {
+      sessionId,
+      targetSessionId
+    }).then((snapshot) => applyIncomingMultiplayerSnapshot(snapshot))
+      .catch((err) => setMultiplayerError(err?.message || 'Failed to kick player.'));
   });
 
   function syncFullscreenButtonLabel() {
@@ -469,9 +1070,9 @@ async function bootstrap() {
   async function loadAndRenderStartPageByTitle(title, { moveType = 'click', countMove = false } = {}) {
     const page = await getWikiPageByTitle(title);
 
-    store.updateState((prev) => {
-      const nextClicks = countMove ? prev.clickCount + 1 : prev.clickCount;
-      const nextRoute = [...prev.route];
+    updateRunState((prevRun) => {
+      const nextClicks = countMove ? prevRun.clickCount + 1 : prevRun.clickCount;
+      const nextRoute = [...prevRun.route];
       nextRoute.push({
         title: page.displayTitle,
         path: page.page.path,
@@ -482,14 +1083,14 @@ async function bootstrap() {
       });
 
       return {
-        ...prev,
+        ...prevRun,
         currentPage: page,
         clickCount: nextClicks,
         route: nextRoute,
-        status: prev.status === 'loading_start' ? 'running' : prev.status,
-        errorMessage: null
+        status: prevRun.status === 'loading_start' ? 'running' : prevRun.status
       };
     });
+    clearToolbarError();
 
     return page;
   }
@@ -508,6 +1109,7 @@ async function bootstrap() {
 
     startRequestToken += 1;
     const requestToken = startRequestToken;
+    const fallbackRunStatus = 'idle';
     const runPreviewToken = targetPreview.beginRun();
     startRequestPending = true;
     clearToolbarError();
@@ -515,10 +1117,26 @@ async function bootstrap() {
     historyController.reset();
     timer.reset();
     currentTargetPage = null;
+    activeRunMeta = null;
     store.setState({
       ...createInitialGameState(),
-      status: 'loading_start',
-      runSeedLabel: selectedMode === 'agi' ? 'agi' : (selectedMode === 'seeded' ? submittedSeed : '--')
+      mode: 'solo',
+      phase: 'running',
+      session: {
+        sessionId,
+        nickname: store.getState().session?.nickname || null
+      },
+      solo: {
+        ...getSoloState(store.getState()),
+        selectedMode,
+        activeRunId: null,
+        seedHash: selectedMode === 'seeded' ? submittedSeed : null
+      },
+      run: {
+        ...getRunState(createInitialGameState()),
+        status: 'loading_start',
+        runSeedLabel: selectedMode === 'agi' ? 'agi' : (selectedMode === 'seeded' ? submittedSeed : '--')
+      }
     });
     renderUi(0);
     syncModeSubtitle();
@@ -540,17 +1158,26 @@ async function bootstrap() {
           ? submittedSeed
           : (daily?.seedHash || null);
       }
+      updateSoloState((prevSolo) => ({
+        ...prevSolo,
+        selectedMode,
+        activeRunId: activeRunMeta?.runId || null,
+        seedHash: activeRunMeta?.seedHash || null
+      }));
       currentTargetPage = daily.endPage || null;
       syncModeSubtitle();
       store.updateState((prev) => ({
         ...prev,
-        dateKey: daily.dateKey,
-        targetPage: daily.endPage,
-        startPage: daily.startPage,
-        runSeedLabel: selectedMode === 'agi'
-          ? 'agi'
-          : (selectedMode === 'seeded' ? submittedSeed : (daily?.seedHash || '--')),
-        status: 'loading_start'
+        run: {
+          ...getRunState(prev),
+          dateKey: daily.dateKey,
+          targetPage: daily.endPage,
+          startPage: daily.startPage,
+          runSeedLabel: selectedMode === 'agi'
+            ? 'agi'
+            : (selectedMode === 'seeded' ? submittedSeed : (daily?.seedHash || '--')),
+          status: 'loading_start'
+        }
       }));
       renderUi(0);
       void targetPreview.prefetch(daily.endPage, runPreviewToken);
@@ -562,8 +1189,8 @@ async function bootstrap() {
 
       timer.start();
 
-      store.updateState((prev) => ({
-        ...prev,
+      updateRunState((prevRun) => ({
+        ...prevRun,
         status: 'running'
       }));
       renderUi(timer.getElapsedMs());
@@ -571,10 +1198,20 @@ async function bootstrap() {
     } catch (err) {
       if (requestToken !== startRequestToken) return null;
       const isInvalidSeedError = selectedMode === 'seeded' && (err?.status === 400 || err?.status === 404);
-      const currentStatus = store.getState().status;
+      const currentStatus = getCurrentRunState().status;
       store.updateState((prev) => ({
         ...prev,
-        status: isInvalidSeedError ? prev.status : (currentStatus === 'idle' || currentStatus === 'won' || currentStatus === 'abandoned' ? prev.status : 'error'),
+        phase: isInvalidSeedError
+          ? phaseForRunStatus(fallbackRunStatus)
+          : (currentStatus === 'idle' || currentStatus === 'won' || currentStatus === 'abandoned' ? prev.phase : 'error'),
+        run: {
+          ...getRunState(prev),
+          status: isInvalidSeedError
+            ? fallbackRunStatus
+            : (currentStatus === 'idle' || currentStatus === 'won' || currentStatus === 'abandoned'
+              ? getRunState(prev).status
+              : 'error')
+        },
         errorMessage: isInvalidSeedError
           ? 'The seed is invalid.'
           : (err?.message || 'Failed to start the daily challenge.')
@@ -594,27 +1231,27 @@ async function bootstrap() {
   }
 
   async function handleArticleNav(path, source) {
-    const state = store.getState();
-    if (state.status !== 'running' || !state.currentPage) return;
+    const runState = getCurrentRunState();
+    if (runState.status !== 'running' || !runState.currentPage) return;
 
     const snapshot = {
-      page: state.currentPage,
-      routeLength: state.route.length,
+      page: runState.currentPage,
+      routeLength: runState.route.length,
       scrollTop: renderer.els.article.scrollTop
     };
     historyController.pushSnapshot(snapshot);
 
     try {
       const page = await getWikiPageByPath(path);
-      const reachedTarget = isTargetPageMatch(page, store.getState().targetPage);
+      const reachedTarget = isTargetPageMatch(page, getCurrentRunState().targetPage);
       let finalElapsedMs = null;
-      if (reachedTarget && store.getState().status === 'running') {
+      if (reachedTarget && getCurrentRunState().status === 'running') {
         finalElapsedMs = timer.stop();
       }
 
-      store.updateState((prev) => {
-        const clickCount = prev.clickCount + 1;
-        const route = [...prev.route, {
+      updateRunState((prevRun) => {
+        const clickCount = prevRun.clickCount + 1;
+        const route = [...prevRun.route, {
           title: page.displayTitle,
           path: page.page.path,
           url: page.page.url,
@@ -623,37 +1260,58 @@ async function bootstrap() {
           redirectFollowed: Boolean(page?.redirect?.followed)
         }];
         return {
-          ...prev,
+          ...prevRun,
           currentPage: page,
           clickCount,
           route,
-          status: reachedTarget ? 'won' : 'running',
-          errorMessage: null
+          status: reachedTarget ? 'won' : 'running'
         };
       });
+      clearToolbarError();
       renderUi(finalElapsedMs ?? timer.getElapsedMs());
       if (reachedTarget) {
-        const payload = buildWinningRunPayload(finalElapsedMs);
-        if (payload) {
-          void postWinningRun(payload).then((result) => {
-            if (!result?.ok) {
-              console.warn('Failed to submit wiki race win result', {
-                mode: payload.mode,
-                runId: payload.runId,
-                seedHash: payload.seedHash || null,
-                error: result?.error || 'Unknown error',
-                status: result?.status ?? null,
-                payload: result?.payload || null
-              });
-            }
-          });
+        if (playMode === 'multiplayer') {
+          const roundId = getCurrentMultiplayerState().round?.id;
+          if (roundId) {
+            void submitMultiplayerRoundResult(roundId, {
+              sessionId,
+              status: 'completed',
+              durationMs: finalElapsedMs,
+              clickCount: getCurrentRunState().clickCount
+            }).then((result) => {
+              if (result?.ok && result.payload) {
+                return applyIncomingMultiplayerSnapshot(result.payload);
+              }
+              setMultiplayerError(result?.error || 'Failed to submit multiplayer result.');
+              return null;
+            });
+          }
+        } else {
+          const payload = buildWinningRunPayload(finalElapsedMs);
+          if (payload) {
+            void postWinningRun(payload).then((result) => {
+              if (!result?.ok) {
+                console.warn('Failed to submit wiki race win result', {
+                  mode: payload.mode,
+                  runId: payload.runId,
+                  seedHash: payload.seedHash || null,
+                  error: result?.error || 'Unknown error',
+                  status: result?.status ?? null,
+                  payload: result?.payload || null
+                });
+              }
+            });
+          }
         }
         void winConfetti.play();
       }
     } catch (err) {
+      updateRunState((prevRun) => ({
+        ...prevRun,
+        status: 'error'
+      }));
       store.updateState((prev) => ({
         ...prev,
-        status: 'error',
         errorMessage: err?.message || 'Page load failed. Start again.'
       }));
       renderUi();
@@ -679,22 +1337,39 @@ async function bootstrap() {
   });
 
   renderer.onControl('abandon', () => {
-    const state = store.getState();
-    if (state.status !== 'running') return;
+    const runState = getCurrentRunState();
+    if (runState.status !== 'running') return;
     timer.stop();
-    store.updateState((prev) => ({ ...prev, status: 'abandoned' }));
-    renderUi();
+    if (playMode === 'multiplayer') {
+      const roundId = getCurrentMultiplayerState().round?.id;
+      if (roundId) {
+        void submitMultiplayerRoundResult(roundId, {
+          sessionId,
+          status: 'abandoned',
+          clickCount: getCurrentRunState().clickCount
+        }).then((result) => {
+          if (result?.ok && result.payload) {
+            return applyIncomingMultiplayerSnapshot(result.payload);
+          }
+          setMultiplayerError(result?.error || 'Failed to submit multiplayer abandon.');
+          return null;
+        });
+      }
+    } else {
+      updateRunState((prevRun) => ({ ...prevRun, status: 'abandoned' }));
+      renderUi();
+    }
   });
 
   renderer.onControl('back', () => {
-    const state = store.getState();
-    if (state.status !== 'running' || !historyController.canGoBack()) return;
+    const runState = getCurrentRunState();
+    if (runState.status !== 'running' || !historyController.canGoBack()) return;
     historyController.goBackViaBrowser();
   });
 
   renderer.onArticleLinkClick((event, link) => {
-    const state = store.getState();
-    if (state.status !== 'running') {
+    const runState = getCurrentRunState();
+    if (runState.status !== 'running') {
       event.preventDefault();
       return;
     }
@@ -710,7 +1385,7 @@ async function bootstrap() {
       return;
     }
 
-    if (!isAllowedCurrentPageLink(state.currentPage, path)) {
+    if (!isAllowedCurrentPageLink(runState.currentPage, path)) {
       event.preventDefault();
       store.updateState((prev) => ({
         ...prev,
@@ -727,13 +1402,13 @@ async function bootstrap() {
   window.addEventListener('popstate', () => {
     if (!historyController.consumeIgnoreNextPop()) return;
 
-    const state = store.getState();
+    const runState = getCurrentRunState();
     const snapshot = historyController.popSnapshot();
-    if (!snapshot || state.status !== 'running') return;
+    if (!snapshot || runState.status !== 'running') return;
 
-    store.updateState((prev) => {
-      const clickCount = prev.clickCount + 1;
-      const route = [...prev.route, {
+    updateRunState((prevRun) => {
+      const clickCount = prevRun.clickCount + 1;
+      const route = [...prevRun.route, {
         title: snapshot.page.displayTitle,
         path: snapshot.page.page.path,
         url: snapshot.page.page.url,
@@ -742,7 +1417,7 @@ async function bootstrap() {
         redirectFollowed: Boolean(snapshot.page?.redirect?.followed)
       }];
       return {
-        ...prev,
+        ...prevRun,
         currentPage: snapshot.page,
         clickCount,
         route

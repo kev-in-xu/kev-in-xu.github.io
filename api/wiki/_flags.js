@@ -15,3 +15,7 @@ export function isWikiRaceSeedStoreEnabled() {
 export function isWikiRaceMultiplayerEnabled() {
   return parseBooleanFlag(process.env.WIKI_RACE_MULTIPLAYER_ENABLED, false);
 }
+
+export function isWikiRaceRealtimeEnabled() {
+  return parseBooleanFlag(process.env.WIKI_RACE_REALTIME_ENABLED, true);
+}

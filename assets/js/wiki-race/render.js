@@ -2,7 +2,9 @@ import { formatElapsedMs } from './timer.js';
 
 export function createRenderer(rootEl) {
   const TOC_SCROLL_TOP_OFFSET_PX = 16;
+  const IDLE_PLACEHOLDER_HTML = '<p class="wiki-race-placeholder">Article content will appear here after you start.</p>';
   const LOADING_PLACEHOLDER_HTML = '<p class="wiki-race-placeholder">Loading article</p>';
+  const ERROR_PLACEHOLDER_HTML = '<p class="wiki-race-placeholder">Article failed to load. Start again.</p>';
   const FULLSCREEN_OUTWARD_ICON = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
       <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
@@ -15,6 +17,30 @@ export function createRenderer(rootEl) {
 
   `;
   const els = {
+    playModeTabs: Array.from(rootEl.querySelectorAll('[data-play-mode]')),
+    soloToolbar: rootEl.querySelector('[data-region="solo-toolbar"]'),
+    soloToolbarControls: rootEl.querySelector('[data-region="solo-toolbar-controls"]'),
+    sharedToolbarControls: rootEl.querySelector('[data-region="shared-toolbar-controls"]'),
+    multiplayerPanel: rootEl.querySelector('[data-region="multiplayer-panel"]'),
+    multiplayerHome: rootEl.querySelector('[data-region="multiplayer-home"]'),
+    multiplayerLobby: rootEl.querySelector('[data-region="multiplayer-lobby"]'),
+    multiplayerLobbyHeader: rootEl.querySelector('[data-region="multiplayer-lobby-header"]'),
+    multiplayerError: rootEl.querySelector('[data-region="multiplayer-error"]'),
+    multiplayerShareBlock: rootEl.querySelector('.wiki-race-share-block'),
+    multiplayerNickname: rootEl.querySelector('[data-field="multiplayer-nickname"]'),
+    multiplayerLobbyCode: rootEl.querySelector('[data-field="multiplayer-lobby-code"]'),
+    multiplayerShareCode: rootEl.querySelector('[data-field="multiplayer-share-code"]'),
+    multiplayerLobbyMeta: rootEl.querySelector('.wiki-race-lobby-meta'),
+    multiplayerConnectionStatus: rootEl.querySelector('[data-field="multiplayer-connection-status"]'),
+    multiplayerPlayerCount: rootEl.querySelector('[data-field="multiplayer-player-count"]'),
+    multiplayerRosterPanel: rootEl.querySelector('.wiki-race-roster-panel'),
+    multiplayerRosterActionHeader: rootEl.querySelector('[data-region="multiplayer-roster-action-header"]'),
+    multiplayerRoster: rootEl.querySelector('[data-region="multiplayer-roster"]'),
+    multiplayerRoundState: rootEl.querySelector('[data-field="multiplayer-round-state"]'),
+    multiplayerCountdown: rootEl.querySelector('[data-field="multiplayer-countdown"]'),
+    multiplayerLiveStatus: rootEl.querySelector('[data-field="multiplayer-live-status"]'),
+    multiplayerStartCountdownBtn: rootEl.querySelector('[data-action="start-lobby-race"]'),
+    multiplayerInlineLeaveBtn: rootEl.querySelector('[data-action="leave-lobby-inline"]'),
     startBtn: rootEl.querySelector('[data-action="start"]'),
     backBtn: rootEl.querySelector('[data-action="back"]'),
     abandonBtn: rootEl.querySelector('[data-action="abandon"]'),
@@ -36,6 +62,62 @@ export function createRenderer(rootEl) {
   let lastRouteText = null;
   let cleanupTocSync = () => {};
   let cleanupLazyImageSync = () => {};
+
+  function renderMultiplayerRoster(state) {
+    if (!els.multiplayerRoster) return;
+    const showActionColumn = Boolean(state.canKickPlayers);
+    const players = Array.isArray(state.multiplayerPlayers) ? state.multiplayerPlayers : [];
+    if (!players.length) {
+      els.multiplayerRoster.innerHTML = `<tr><td class="wiki-race-roster-empty" colspan="${showActionColumn ? 3 : 2}">No players yet.</td></tr>`;
+      return;
+    }
+
+    els.multiplayerRoster.innerHTML = '';
+    players.forEach((player) => {
+      const row = document.createElement('tr');
+      row.className = 'wiki-race-roster-row';
+
+      const nameCell = document.createElement('td');
+      nameCell.className = 'wiki-race-roster-cell wiki-race-roster-cell-player';
+      const name = document.createElement('span');
+      const playerStatus = String(player.resultStatus || '').trim();
+      name.className = `wiki-race-roster-name${playerStatus ? ` is-${playerStatus}` : ''}`;
+      name.textContent = player.nickname;
+      nameCell.appendChild(name);
+
+      if (player.isHost) {
+        const badge = document.createElement('span');
+        badge.className = 'wiki-race-roster-badge';
+        badge.textContent = 'Host';
+        nameCell.appendChild(badge);
+      }
+
+      const resultCell = document.createElement('td');
+      resultCell.className = `wiki-race-roster-cell wiki-race-roster-result${playerStatus ? ` is-${playerStatus}` : ''}`;
+      resultCell.textContent = String(player.resultLabel || 'Waiting');
+
+      row.appendChild(nameCell);
+      row.appendChild(resultCell);
+
+      if (showActionColumn) {
+        const actionCell = document.createElement('td');
+        actionCell.className = 'wiki-race-roster-cell wiki-race-roster-cell-action';
+        if (!player.isSelf && !state.multiplayerRoundStarted) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'wiki-race-btn wiki-race-btn-danger wiki-race-kick-btn';
+          button.textContent = 'Kick';
+          button.dataset.action = 'kick-player';
+          button.dataset.sessionId = player.sessionId;
+          actionCell.appendChild(button);
+        } else {
+          actionCell.textContent = '-';
+        }
+        row.appendChild(actionCell);
+      }
+      els.multiplayerRoster.appendChild(row);
+    });
+  }
 
   function setFullscreenToggleState(isFullscreenActive) {
     if (!els.fullscreenBtn) return;
@@ -334,6 +416,103 @@ export function createRenderer(rootEl) {
   }
 
   function renderState(state) {
+    const isMultiplayerMode = state.playMode === 'multiplayer';
+    const hasJoinedMultiplayerLobby = Boolean(state.hasJoinedMultiplayerLobby);
+    const shouldShowToolbar = !isMultiplayerMode || hasJoinedMultiplayerLobby;
+    const showSoloControls = !isMultiplayerMode;
+
+    if (els.playModeTabs?.length) {
+      els.playModeTabs.forEach((tab) => {
+        const isActive = tab.dataset.playMode === state.playMode;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+    if (els.soloToolbar) {
+      els.soloToolbar.hidden = !shouldShowToolbar;
+      els.soloToolbar.style.display = shouldShowToolbar ? '' : 'none';
+    }
+    if (els.soloToolbarControls) {
+      els.soloToolbarControls.hidden = !showSoloControls;
+      els.soloToolbarControls.style.display = showSoloControls ? '' : 'none';
+    }
+    if (els.sharedToolbarControls) {
+      els.sharedToolbarControls.hidden = !shouldShowToolbar;
+      els.sharedToolbarControls.style.display = shouldShowToolbar ? '' : 'none';
+    }
+    if (els.multiplayerPanel) {
+      els.multiplayerPanel.hidden = !isMultiplayerMode;
+      els.multiplayerPanel.style.display = isMultiplayerMode ? '' : 'none';
+    }
+    if (els.multiplayerHome) {
+      els.multiplayerHome.hidden = !isMultiplayerMode || state.hasJoinedMultiplayerLobby;
+    }
+    if (els.multiplayerLobby) {
+      els.multiplayerLobby.hidden = !isMultiplayerMode || !state.hasJoinedMultiplayerLobby;
+    }
+    if (els.multiplayerLobbyHeader) {
+      const shouldShowLobbyHeader = isMultiplayerMode && state.hasJoinedMultiplayerLobby;
+      els.multiplayerLobbyHeader.hidden = !shouldShowLobbyHeader;
+      els.multiplayerLobbyHeader.style.display = shouldShowLobbyHeader ? '' : 'none';
+    }
+    if (els.multiplayerShareBlock) {
+      els.multiplayerShareBlock.hidden = !state.hasJoinedMultiplayerLobby;
+    }
+    if (els.multiplayerError) {
+      const multiplayerError = String(state.multiplayerErrorMessage || '').trim();
+      els.multiplayerError.hidden = !multiplayerError;
+      els.multiplayerError.textContent = multiplayerError;
+    }
+    if (els.multiplayerNickname) {
+      els.multiplayerNickname.value = String(state.multiplayerNicknameValue || '');
+    }
+    if (els.multiplayerLobbyCode) {
+      els.multiplayerLobbyCode.value = String(state.multiplayerLobbyCodeValue || '');
+    }
+    if (els.multiplayerShareCode) {
+      els.multiplayerShareCode.textContent = String(state.multiplayerShareCode || '------');
+    }
+    if (els.multiplayerConnectionStatus) {
+      els.multiplayerConnectionStatus.textContent = String(state.multiplayerConnectionStatusLabel || 'Offline');
+      els.multiplayerConnectionStatus.dataset.state = String(state.multiplayerConnectionStatus || 'idle');
+    }
+    if (els.multiplayerPlayerCount) {
+      els.multiplayerPlayerCount.textContent = String(state.multiplayerPlayerCountLabel || '0 / 6');
+    }
+    if (els.multiplayerLobbyMeta) {
+      els.multiplayerLobbyMeta.hidden = !isMultiplayerMode || !state.hasJoinedMultiplayerLobby;
+    }
+    if (els.multiplayerRosterPanel) {
+      const shouldShowRosterPanel = isMultiplayerMode && state.hasJoinedMultiplayerLobby;
+      els.multiplayerRosterPanel.hidden = !shouldShowRosterPanel;
+      els.multiplayerRosterPanel.style.display = shouldShowRosterPanel ? '' : 'none';
+    }
+    if (els.multiplayerRosterActionHeader) {
+      const shouldShowActionHeader = Boolean(state.hasJoinedMultiplayerLobby && state.canKickPlayers);
+      els.multiplayerRosterActionHeader.hidden = !shouldShowActionHeader;
+      els.multiplayerRosterActionHeader.style.display = shouldShowActionHeader ? '' : 'none';
+    }
+    if (els.multiplayerStartCountdownBtn) {
+      const shouldShowStart = state.hasJoinedMultiplayerLobby
+        && state.canStartMultiplayerCountdown
+        && !state.multiplayerRoundStarted;
+      els.multiplayerStartCountdownBtn.hidden = !shouldShowStart;
+      els.multiplayerStartCountdownBtn.disabled = !shouldShowStart;
+    }
+    if (els.multiplayerInlineLeaveBtn) {
+      els.multiplayerInlineLeaveBtn.disabled = !state.hasJoinedMultiplayerLobby;
+    }
+    if (els.multiplayerRoundState) {
+      els.multiplayerRoundState.textContent = String(state.multiplayerRoundStateLabel || 'Lobby');
+    }
+    if (els.multiplayerCountdown) {
+      els.multiplayerCountdown.textContent = String(state.multiplayerCountdownLabel || '--');
+    }
+    if (els.multiplayerLiveStatus) {
+      els.multiplayerLiveStatus.textContent = String(state.multiplayerLiveStatusLabel || 'Waiting');
+    }
+    renderMultiplayerRoster(state);
+
     if (els.stats) {
       let statsState = 'idle';
       if (state.status === 'running') statsState = 'running';
@@ -353,12 +532,12 @@ export function createRenderer(rootEl) {
     const canCopySeedField = Boolean(state.canCopySeedField);
     const toolbarErrorMessage = String(state.toolbarErrorMessage || '').trim();
 
-    els.startBtn.disabled = state.canStart === false || state.status === 'loading_start' || isRunning;
+    els.startBtn.disabled = state.canStart === false || state.status === 'loading_start' || isRunning || isMultiplayerMode;
     els.backBtn.disabled = !isRunning || !state.canGoBack;
     els.abandonBtn.disabled = !isRunning;
     if (els.modeSelect) {
       // Keep mode selection fixed while a run is active.
-      els.modeSelect.disabled = Boolean(state.disableModeSelection) || isRunning || isLoadingStart;
+      els.modeSelect.disabled = Boolean(state.disableModeSelection) || isRunning || isLoadingStart || isMultiplayerMode;
     }
     if (els.seededInput) {
       els.seededInput.value = String(state.seedFieldValue || '');
@@ -380,9 +559,12 @@ export function createRenderer(rootEl) {
     }
     els.article.classList.toggle('is-finished', isFinished);
 
-    if (isLoadingStart && !state.articleHtml) {
-      if (els.article.innerHTML !== LOADING_PLACEHOLDER_HTML) {
-        els.article.innerHTML = LOADING_PLACEHOLDER_HTML;
+    if (!state.articleHtml) {
+      const placeholderHtml = state.status === 'loading_start'
+        ? LOADING_PLACEHOLDER_HTML
+        : (state.status === 'error' ? ERROR_PLACEHOLDER_HTML : IDLE_PLACEHOLDER_HTML);
+      if (els.article.innerHTML !== placeholderHtml) {
+        els.article.innerHTML = placeholderHtml;
         els.article.classList.remove('has-sidebar');
         lastArticleHtml = null;
         lastAllowedLinksKey = '';
@@ -448,6 +630,18 @@ export function createRenderer(rootEl) {
     if (routeText !== lastRouteText) {
       els.route.textContent = routeText;
       lastRouteText = routeText;
+    }
+
+    const showArticleScaffold = true;
+    if (els.route?.closest('.wiki-race-route-panel')) {
+      const routePanel = els.route.closest('.wiki-race-route-panel');
+      routePanel.hidden = !showArticleScaffold;
+      routePanel.style.display = showArticleScaffold ? '' : 'none';
+    }
+    if (els.tocPanel?.closest('.wiki-race-main')) {
+      const mainPanel = els.tocPanel.closest('.wiki-race-main');
+      mainPanel.hidden = !showArticleScaffold;
+      mainPanel.style.display = showArticleScaffold ? '' : 'none';
     }
   }
 
