@@ -68,7 +68,10 @@ export function persistRunSeed(payload) {
 }
 
 export function persistDailyRun(payload) {
-  return postJson('/api/wiki/daily-run', payload);
+  return postJson('/api/wiki/run-seed', {
+    ...(payload || {}),
+    operation: 'claim_daily_run'
+  });
 }
 
 // api caller for submitting game results to the backend, which will validate and persist the data.

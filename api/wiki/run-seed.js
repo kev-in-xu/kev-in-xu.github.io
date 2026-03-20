@@ -1,9 +1,11 @@
+import { toWikiPageRefFromTitleOrPath } from './_mw.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 import { isWikiRaceSeedStoreEnabled } from './_flags.js';
 import { areSameWikiPageRefs, normalizeWikiPageRef } from './_page-ref.js';
-import { createAndPersistRunSeed } from './_seed-store.js';
+import { createAndPersistRunSeed, createOrFetchDailyRun } from './_seed-store.js';
 
 const VALID_RUN_SEED_MODES = new Set(['agi', 'random_vital']);
+const DAILY_RUN_OPERATION = 'claim_daily_run';
 
 function readJsonBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -28,6 +30,12 @@ function normalizeMode(value) {
   return VALID_RUN_SEED_MODES.has(mode) ? mode : null;
 }
 
+function normalizeSeedHash(value) {
+  const seedHash = String(value || '').trim().toLowerCase();
+  if (!seedHash) return null;
+  return /^[a-f0-9]{24}$/i.test(seedHash) ? seedHash : null;
+}
+
 function badRequest(res, message, detail = null) {
   return res.status(400).json({
     error: message,
@@ -49,6 +57,48 @@ export default async function handler(req, res) {
 
   const body = readJsonBody(req);
   if (!body) return badRequest(res, 'Invalid JSON body');
+
+  if (String(body.operation || '').trim().toLowerCase() === DAILY_RUN_OPERATION) {
+    const mode = normalizeMode(body.mode);
+    const dateKey = normalizeDateKey(body.dateKey);
+    const seedHash = normalizeSeedHash(body.seedHash);
+
+    if (!mode || mode !== 'agi') return badRequest(res, 'Invalid mode');
+    if (!dateKey) return badRequest(res, 'Invalid dateKey');
+    if (!seedHash) return badRequest(res, 'Invalid seedHash');
+
+    try {
+      const result = await createOrFetchDailyRun({
+        mode,
+        dateKey,
+        seedHash
+      });
+      const runSeed = result.runSeed;
+      const startPage = toWikiPageRefFromTitleOrPath({
+        title: runSeed?.start_title,
+        path: runSeed?.start_path
+      });
+      const endPage = toWikiPageRefFromTitleOrPath({
+        title: runSeed?.end_title,
+        path: runSeed?.end_path
+      });
+
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({
+        mode,
+        dateKey: result.dailyRun.dateKey,
+        seedHash: result.dailyRun.seedHash,
+        startPage,
+        endPage,
+        seedSource: 'supabase'
+      });
+    } catch (err) {
+      return res.status(err?.status || 502).json({
+        error: err?.message || 'Failed to persist daily run',
+        detail: err?.detail || null
+      });
+    }
+  }
 
   const mode = normalizeMode(body.mode);
   const startPage = normalizeWikiPageRef(body.startPage);
