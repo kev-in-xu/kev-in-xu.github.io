@@ -30,15 +30,10 @@ export function createRenderer(rootEl) {
     multiplayerNickname: rootEl.querySelector('[data-field="multiplayer-nickname"]'),
     multiplayerLobbyCode: rootEl.querySelector('[data-field="multiplayer-lobby-code"]'),
     multiplayerShareCode: rootEl.querySelector('[data-field="multiplayer-share-code"]'),
-    multiplayerLobbyMeta: rootEl.querySelector('.wiki-race-lobby-meta'),
+    multiplayerLobbyStatus: rootEl.querySelector('[data-field="multiplayer-lobby-status"]'),
     multiplayerConnectionStatus: rootEl.querySelector('[data-field="multiplayer-connection-status"]'),
-    multiplayerPlayerCount: rootEl.querySelector('[data-field="multiplayer-player-count"]'),
     multiplayerRosterPanel: rootEl.querySelector('.wiki-race-roster-panel'),
-    multiplayerRosterActionHeader: rootEl.querySelector('[data-region="multiplayer-roster-action-header"]'),
     multiplayerRoster: rootEl.querySelector('[data-region="multiplayer-roster"]'),
-    multiplayerRoundState: rootEl.querySelector('[data-field="multiplayer-round-state"]'),
-    multiplayerCountdown: rootEl.querySelector('[data-field="multiplayer-countdown"]'),
-    multiplayerLiveStatus: rootEl.querySelector('[data-field="multiplayer-live-status"]'),
     multiplayerStartCountdownBtn: rootEl.querySelector('[data-action="start-lobby-race"]'),
     multiplayerInlineLeaveBtn: rootEl.querySelector('[data-action="leave-lobby-inline"]'),
     startBtn: rootEl.querySelector('[data-action="start"]'),
@@ -65,56 +60,77 @@ export function createRenderer(rootEl) {
 
   function renderMultiplayerRoster(state) {
     if (!els.multiplayerRoster) return;
-    const showActionColumn = Boolean(state.canKickPlayers);
     const players = Array.isArray(state.multiplayerPlayers) ? state.multiplayerPlayers : [];
-    if (!players.length) {
-      els.multiplayerRoster.innerHTML = `<tr><td class="wiki-race-roster-empty" colspan="${showActionColumn ? 3 : 2}">No players yet.</td></tr>`;
-      return;
-    }
-
+    const slots = Array.from({ length: 6 }, (_value, index) => players[index] || null);
     els.multiplayerRoster.innerHTML = '';
-    players.forEach((player) => {
+    const rows = [
+      { label: 'Player', key: 'player' },
+      { label: 'Time', key: 'time' },
+      { label: 'Clicks', key: 'clicks' }
+    ];
+
+    rows.forEach((rowConfig) => {
       const row = document.createElement('tr');
       row.className = 'wiki-race-roster-row';
+      const rowLabel = document.createElement('th');
+      rowLabel.scope = 'row';
+      rowLabel.className = 'wiki-race-roster-row-label';
+      rowLabel.textContent = rowConfig.label;
+      row.appendChild(rowLabel);
 
-      const nameCell = document.createElement('td');
-      nameCell.className = 'wiki-race-roster-cell wiki-race-roster-cell-player';
-      const name = document.createElement('span');
-      const playerStatus = String(player.resultStatus || '').trim();
-      name.className = `wiki-race-roster-name${playerStatus ? ` is-${playerStatus}` : ''}`;
-      name.textContent = player.nickname;
-      nameCell.appendChild(name);
+      slots.forEach((player) => {
+        const cell = document.createElement('td');
+        cell.className = 'wiki-race-roster-cell';
 
-      if (player.isHost) {
-        const badge = document.createElement('span');
-        badge.className = 'wiki-race-roster-badge';
-        badge.textContent = 'Host';
-        nameCell.appendChild(badge);
-      }
-
-      const resultCell = document.createElement('td');
-      resultCell.className = `wiki-race-roster-cell wiki-race-roster-result${playerStatus ? ` is-${playerStatus}` : ''}`;
-      resultCell.textContent = String(player.resultLabel || 'Waiting');
-
-      row.appendChild(nameCell);
-      row.appendChild(resultCell);
-
-      if (showActionColumn) {
-        const actionCell = document.createElement('td');
-        actionCell.className = 'wiki-race-roster-cell wiki-race-roster-cell-action';
-        if (!player.isSelf && !state.multiplayerRoundStarted) {
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'wiki-race-btn wiki-race-btn-danger wiki-race-kick-btn';
-          button.textContent = 'Kick';
-          button.dataset.action = 'kick-player';
-          button.dataset.sessionId = player.sessionId;
-          actionCell.appendChild(button);
-        } else {
-          actionCell.textContent = '-';
+        if (!player) {
+          cell.classList.add('is-empty');
+          row.appendChild(cell);
+          return;
         }
-        row.appendChild(actionCell);
-      }
+
+        const playerStatus = String(player.resultStatus || '').trim();
+        cell.classList.add(`wiki-race-roster-cell-${rowConfig.key}`);
+        if (playerStatus) {
+          cell.classList.add(`is-${playerStatus}`);
+        }
+
+        if (rowConfig.key === 'player') {
+          const content = document.createElement('div');
+          content.className = 'wiki-race-roster-player-slot';
+
+          const name = document.createElement('span');
+          name.className = `wiki-race-roster-name${playerStatus ? ` is-${playerStatus}` : ''}`;
+          name.textContent = player.nickname;
+          content.appendChild(name);
+
+          if (player.isHost) {
+            const badge = document.createElement('span');
+            badge.className = 'wiki-race-roster-badge';
+            badge.textContent = 'Host';
+            content.appendChild(badge);
+          }
+
+          if (state.canKickPlayers && !player.isSelf && !state.multiplayerRoundStarted) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'wiki-race-kick-btn';
+            button.textContent = 'X';
+            button.setAttribute('aria-label', `Kick ${player.nickname}`);
+            button.dataset.action = 'kick-player';
+            button.dataset.sessionId = player.sessionId;
+            content.appendChild(button);
+          }
+
+          cell.appendChild(content);
+        } else {
+          cell.textContent = rowConfig.key === 'time'
+            ? String(player.timeLabel || '')
+            : String(player.clicksLabel || '');
+        }
+
+        row.appendChild(cell);
+      });
+
       els.multiplayerRoster.appendChild(row);
     });
   }
@@ -476,21 +492,10 @@ export function createRenderer(rootEl) {
       els.multiplayerConnectionStatus.textContent = String(state.multiplayerConnectionStatusLabel || 'Offline');
       els.multiplayerConnectionStatus.dataset.state = String(state.multiplayerConnectionStatus || 'idle');
     }
-    if (els.multiplayerPlayerCount) {
-      els.multiplayerPlayerCount.textContent = String(state.multiplayerPlayerCountLabel || '0 / 6');
-    }
-    if (els.multiplayerLobbyMeta) {
-      els.multiplayerLobbyMeta.hidden = !isMultiplayerMode || !state.hasJoinedMultiplayerLobby;
-    }
     if (els.multiplayerRosterPanel) {
       const shouldShowRosterPanel = isMultiplayerMode && state.hasJoinedMultiplayerLobby;
       els.multiplayerRosterPanel.hidden = !shouldShowRosterPanel;
       els.multiplayerRosterPanel.style.display = shouldShowRosterPanel ? '' : 'none';
-    }
-    if (els.multiplayerRosterActionHeader) {
-      const shouldShowActionHeader = Boolean(state.hasJoinedMultiplayerLobby && state.canKickPlayers);
-      els.multiplayerRosterActionHeader.hidden = !shouldShowActionHeader;
-      els.multiplayerRosterActionHeader.style.display = shouldShowActionHeader ? '' : 'none';
     }
     if (els.multiplayerStartCountdownBtn) {
       const shouldShowStart = state.hasJoinedMultiplayerLobby
@@ -502,14 +507,8 @@ export function createRenderer(rootEl) {
     if (els.multiplayerInlineLeaveBtn) {
       els.multiplayerInlineLeaveBtn.disabled = !state.hasJoinedMultiplayerLobby;
     }
-    if (els.multiplayerRoundState) {
-      els.multiplayerRoundState.textContent = String(state.multiplayerRoundStateLabel || 'Lobby');
-    }
-    if (els.multiplayerCountdown) {
-      els.multiplayerCountdown.textContent = String(state.multiplayerCountdownLabel || '--');
-    }
-    if (els.multiplayerLiveStatus) {
-      els.multiplayerLiveStatus.textContent = String(state.multiplayerLiveStatusLabel || 'Waiting');
+    if (els.multiplayerLobbyStatus) {
+      els.multiplayerLobbyStatus.textContent = String(state.multiplayerLobbyStatusLabel || 'lobby open');
     }
     renderMultiplayerRoster(state);
 

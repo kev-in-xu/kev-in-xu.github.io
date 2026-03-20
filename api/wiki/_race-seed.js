@@ -9,6 +9,12 @@ const MAX_ATTEMPTS = 25;
 const RANDOM_BATCH_SIZE = 5;
 const RANDOM_TARGET_MAX_ATTEMPTS = 20;
 
+function getErrorDetail(err, fallback) {
+  if (!err) return fallback;
+  const detail = String(err.detail || err.message || '').trim();
+  return detail || fallback;
+}
+
 export async function generateRandomRacePair({ targetMode = 'random_vital', dateKey = null } = {}) {
   let acceptedPayload = null;
   let attempts = 0;
@@ -32,19 +38,21 @@ export async function generateRandomRacePair({ targetMode = 'random_vital', date
   }
 
   if (!acceptedPayload) {
-    const error = new Error('Failed to generate daily start page');
+    const error = new Error('Failed to generate random race start page');
     error.status = 502;
-    error.detail = lastError ? String(lastError) : 'No valid page found within attempt limit';
+    error.detail = getErrorDetail(lastError, 'No valid start page found within attempt limit');
     throw error;
   }
 
   let endPayload = null;
+  let lastTargetError = null;
   if (targetMode === 'random_vital') {
     for (let i = 0; i < RANDOM_TARGET_MAX_ATTEMPTS; i += 1) {
       let randomTargetRef = null;
       try {
         randomTargetRef = await fetchRandomVitalPageRef();
-      } catch (_err) {
+      } catch (err) {
+        lastTargetError = err;
         randomTargetRef = null;
       }
       if (!randomTargetRef?.title) continue;
@@ -57,7 +65,8 @@ export async function generateRandomRacePair({ targetMode = 'random_vital', date
       if (!endPayload) {
         try {
           endPayload = await buildWikiPagePayloadByTitle(randomTargetRef.title);
-        } catch (_err) {
+        } catch (err) {
+          lastTargetError = err;
           endPayload = null;
         }
       }
@@ -84,10 +93,10 @@ export async function generateRandomRacePair({ targetMode = 'random_vital', date
   }
 
   if (!endPayload?.page?.path) {
-    const error = new Error('Failed to generate target page');
+    const error = new Error('Failed to generate random race target page');
     error.status = 502;
     error.detail = targetMode === 'random_vital'
-      ? 'random vital target fetch failed'
+      ? getErrorDetail(lastTargetError, 'Random vital target fetch failed')
       : 'Failed to resolve AGI target page';
     throw error;
   }

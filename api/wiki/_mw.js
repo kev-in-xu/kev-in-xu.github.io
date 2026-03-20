@@ -38,11 +38,31 @@ export async function fetchMwJson(params, { timeoutMs = 10000 } = {}) {
       }
     });
     if (!response.ok) {
-      const err = new Error(`MediaWiki request failed (${response.status})`);
+      let responseDetail = '';
+      try {
+        responseDetail = (await response.text()).trim();
+      } catch (_err) {
+        responseDetail = '';
+      }
+      const rateLimited = response.status === 429 || response.headers.get('retry-after') != null;
+      const err = new Error(
+        rateLimited
+          ? `MediaWiki rate limited request (${response.status})`
+          : `MediaWiki request failed (${response.status})`
+      );
       err.status = response.status;
+      err.detail = responseDetail || null;
+      err.isRateLimited = rateLimited;
       throw err;
     }
     return await response.json();
+  } catch (err) {
+    if (err?.name === 'AbortError') {
+      const timeoutError = new Error('MediaWiki request timed out');
+      timeoutError.status = 504;
+      throw timeoutError;
+    }
+    throw err;
   } finally {
     clearTimeout(timer);
   }
@@ -122,8 +142,14 @@ export async function fetchRandomVitalPageRef({ timeoutMs = 10000 } = {}) {
       }
     });
     if (!response.ok) {
-      const err = new Error(`Vital random request failed (${response.status})`);
+      const rateLimited = response.status === 429 || response.headers.get('retry-after') != null;
+      const err = new Error(
+        rateLimited
+          ? `Vital random source rate limited request (${response.status})`
+          : `Vital random request failed (${response.status})`
+      );
       err.status = response.status;
+      err.isRateLimited = rateLimited;
       throw err;
     }
 
@@ -135,6 +161,13 @@ export async function fetchRandomVitalPageRef({ timeoutMs = 10000 } = {}) {
     }
 
     return toWikiPageRef({ title });
+  } catch (err) {
+    if (err?.name === 'AbortError') {
+      const timeoutError = new Error('Vital random request timed out');
+      timeoutError.status = 504;
+      throw timeoutError;
+    }
+    throw err;
   } finally {
     clearTimeout(timer);
   }

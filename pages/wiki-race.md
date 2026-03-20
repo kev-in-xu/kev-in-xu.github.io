@@ -86,45 +86,48 @@ classes:
               <button type="button" class="wiki-race-btn" data-action="copy-lobby-code">Copy</button>
             </div>
           </div>
-          <div class="wiki-race-lobby-meta">
-            <div class="wiki-race-status-item">
-              <span class="wiki-race-status-label">Round</span>
-              <strong data-field="multiplayer-round-state">Lobby</strong>
-            </div>
-            <div class="wiki-race-status-item">
-              <span class="wiki-race-status-label">Countdown</span>
-              <strong data-field="multiplayer-countdown">--</strong>
-            </div>
-            <div class="wiki-race-status-item">
-              <span class="wiki-race-status-label">Live</span>
-              <strong data-field="multiplayer-live-status">Waiting</strong>
-            </div>
-            <div class="wiki-race-connection-badge" data-field="multiplayer-connection-status">Offline</div>
+          <div class="wiki-race-status-item wiki-race-lobby-status">
+            <span class="wiki-race-status-label">Status</span>
+            <strong data-field="multiplayer-lobby-status">lobby open</strong>
           </div>
-          <div class="wiki-race-status-actions">
-            <button type="button" class="wiki-race-btn" data-action="start-lobby-race">Start Countdown</button>
-            <button type="button" class="wiki-race-btn" data-action="leave-lobby-inline">Leave</button>
+          <div class="wiki-race-lobby-actions">
+            <button type="button" class="wiki-race-btn wiki-race-lobby-action" data-action="start-lobby-race">Start Countdown</button>
+            <button type="button" class="wiki-race-btn wiki-race-btn-danger wiki-race-lobby-action" data-action="leave-lobby-inline">Leave Lobby</button>
           </div>
+          <div class="wiki-race-connection-badge" data-field="multiplayer-connection-status">Offline</div>
         </div>
 
         <div class="wiki-race-lobby-grid">
           <section class="wiki-race-roster-panel" aria-label="Players" hidden>
-            <div class="wiki-race-panel-heading">
-              <h2>Players</h2>
-              <span class="wiki-race-panel-count" data-field="multiplayer-player-count">0 / 6</span>
-            </div>
             <div class="wiki-race-roster-table-wrap">
               <table class="wiki-race-roster-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Player</th>
-                    <th scope="col">Result</th>
-                    <th scope="col" data-region="multiplayer-roster-action-header">Action</th>
-                  </tr>
-                </thead>
                 <tbody data-region="multiplayer-roster">
-                  <tr>
-                    <td class="wiki-race-roster-empty" colspan="3">No players yet.</td>
+                  <tr class="wiki-race-roster-row">
+                    <th scope="row" class="wiki-race-roster-row-label">Player</th>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                  </tr>
+                  <tr class="wiki-race-roster-row">
+                    <th scope="row" class="wiki-race-roster-row-label">Time</th>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                  </tr>
+                  <tr class="wiki-race-roster-row">
+                    <th scope="row" class="wiki-race-roster-row-label">Clicks</th>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
+                    <td class="wiki-race-roster-cell"></td>
                   </tr>
                 </tbody>
               </table>

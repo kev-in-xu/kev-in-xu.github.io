@@ -211,6 +211,11 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
   const countdownValue = uiMeta.multiplayerCountdownValue;
   const hasJoinedMultiplayerLobby = Boolean(lobbyCode);
   const multiplayerRoundStarted = Boolean(multiplayerState.round);
+  const multiplayerLobbyStatusLabel = Number.isFinite(countdownValue) && countdownValue > 0
+    ? `starting in ${countdownValue}`
+    : (multiplayerState.round
+      ? (multiplayerState.round.endedAtUtc ? 'round finished' : 'round running')
+      : 'lobby open');
   const multiplayerPlayers = (multiplayerState.players || []).map((player) => ({
     ...player,
     isSelf: player.sessionId === gameState.session?.sessionId,
@@ -224,6 +229,20 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
       if (result.status === 'abandoned') return 'Gave up';
       if (result.status === 'timeout') return 'Timed out';
       return result.status;
+    })(),
+    timeLabel: (() => {
+      const result = resultsBySessionId.get(player.sessionId);
+      if (!result) return '';
+      if (result.status === 'completed') return formatElapsedMs(result.durationMs || 0);
+      if (result.status === 'abandoned' || result.status === 'timeout') return 'abandon';
+      return '';
+    })(),
+    clicksLabel: (() => {
+      const result = resultsBySessionId.get(player.sessionId);
+      if (!result) return '';
+      if (result.status === 'completed') return String(result.clickCount);
+      if (result.status === 'abandoned' || result.status === 'timeout') return 'abandon';
+      return '';
     })()
   }));
   const canShowSeedField = isSeededMode
@@ -257,20 +276,11 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
     multiplayerShareCode: lobbyCode,
     multiplayerConnectionStatus: connectionStatus,
     multiplayerConnectionStatusLabel: connectionLabels[connectionStatus] || 'Offline',
-    multiplayerPlayerCountLabel: `${multiplayerPlayers.length} / ${multiplayerState.lobby?.maxPlayers || 6}`,
     multiplayerPlayers,
     canKickPlayers: Boolean(multiplayerState.isHost),
     canStartMultiplayerCountdown: Boolean(multiplayerState.isHost),
     multiplayerRoundStarted,
-    multiplayerRoundStateLabel: multiplayerState.round
-      ? (multiplayerState.round.endedAtUtc ? 'Finished' : 'Running')
-      : 'Lobby',
-    multiplayerCountdownLabel: Number.isFinite(countdownValue) && countdownValue > 0
-      ? String(countdownValue)
-      : (multiplayerState.round ? 'Live' : '--'),
-    multiplayerLiveStatusLabel: multiplayerState.round
-      ? `${multiplayerState.results.length}/${multiplayerPlayers.length} finished`
-      : 'Waiting',
+    multiplayerLobbyStatusLabel,
     multiplayerLeaderboard: multiplayerState.leaderboard || []
   };
 }
@@ -386,6 +396,7 @@ async function bootstrap() {
   let multiplayerCountdownTimerId = null;
   let lastPreparedMultiplayerRoundId = null;
   let lastPreviewedMultiplayerRoundId = null;
+  let pendingMultiplayerExitLobbyCode = null;
 
   store.updateState((prev) => ({
     ...prev,
@@ -618,6 +629,7 @@ async function bootstrap() {
     stopMultiplayerCountdown();
     lastPreparedMultiplayerRoundId = null;
     lastPreviewedMultiplayerRoundId = null;
+    pendingMultiplayerExitLobbyCode = null;
     targetPreview.invalidate();
     timer.reset();
     historyController.reset();
@@ -707,6 +719,9 @@ async function bootstrap() {
   async function applyIncomingMultiplayerSnapshot(snapshot) {
     if (!snapshot?.lobby) return;
     const prevState = store.getState();
+    if (pendingMultiplayerExitLobbyCode && snapshot.lobby.code === pendingMultiplayerExitLobbyCode) {
+      return;
+    }
     const currentLobbyCode = String(prevState.multiplayer?.lobby?.code || '').trim();
     const currentPlayerStillActive = Array.isArray(snapshot.players)
       && snapshot.players.some((player) => player?.sessionId === sessionId);
@@ -843,6 +858,7 @@ async function bootstrap() {
       const snapshot = action === 'create'
         ? await createMultiplayerLobby({ sessionId, nickname })
         : await joinMultiplayerLobby(lobbyCode, { sessionId, nickname });
+      pendingMultiplayerExitLobbyCode = null;
       playMode = 'multiplayer';
       lastPreparedMultiplayerRoundId = null;
       multiplayerLobbyCodeValue = snapshot?.lobby?.code || lobbyCode;
@@ -860,17 +876,20 @@ async function bootstrap() {
   async function leaveCurrentMultiplayerLobby({ shouldConfirm = false } = {}) {
     const multiplayerState = getCurrentMultiplayerState();
     if (!multiplayerState.lobby?.code) return;
+    const lobbyCode = multiplayerState.lobby.code;
     if (shouldConfirm && multiplayerState.round && !window.confirm('Leave this lobby and abandon the current multiplayer round?')) {
       return;
     }
 
+    pendingMultiplayerExitLobbyCode = lobbyCode;
+    await disconnectMultiplayerRealtime();
+
     try {
-      await leaveMultiplayerLobby(multiplayerState.lobby.code, { sessionId });
+      await leaveMultiplayerLobby(lobbyCode, { sessionId });
     } catch (err) {
       setMultiplayerError(err?.message || 'Failed to leave lobby.');
     }
 
-    await disconnectMultiplayerRealtime();
     resetLocalMultiplayerView();
   }
 
