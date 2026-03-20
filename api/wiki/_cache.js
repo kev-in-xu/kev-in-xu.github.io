@@ -1,15 +1,15 @@
 import { getSupabaseServiceClient } from './_supabase.js';
 
 const memoryCache = new Map();
-const DAILY_START_PREFIX = 'wiki-race:daily-start:';
+const RACE_START_PREFIX = 'wiki-race:race-start:';
 const PAGE_PREFIX = 'wiki-race:page:';
 
 /**
- * Extracts the YYYY-MM-DD date segment from a daily-start full cache key.
+ * Extracts the YYYY-MM-DD date segment from a race-start full cache key.
  */
 function keyToDailyDate(key) {
-  if (!String(key).startsWith(DAILY_START_PREFIX)) return null;
-  const suffix = String(key).slice(DAILY_START_PREFIX.length);
+  if (!String(key).startsWith(RACE_START_PREFIX)) return null;
+  const suffix = String(key).slice(RACE_START_PREFIX.length);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(suffix)) return null;
   return suffix;
 }
@@ -50,7 +50,7 @@ function toPageRefFromRow(prefix, row) {
 }
 
 /**
- * Reads a daily-start payload from Supabase storage.
+ * Reads a race-start payload from Supabase storage.
  * Output: cached JSON payload or `null`.
  */
 async function supabaseGetJson(key) {
@@ -82,8 +82,8 @@ async function supabaseGetJson(key) {
 }
 
 /**
- * Upserts a daily-start payload into Supabase storage.
- * Input: full daily-start cache key and payload object.
+ * Upserts a race-start payload into Supabase storage.
+ * Input: full race-start cache key and payload object.
  * Output: Boolean success indicator.
  * Logic: maps payload fields to relational row columns and upserts by `date_key`.
  */

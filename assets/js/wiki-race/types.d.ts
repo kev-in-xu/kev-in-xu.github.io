@@ -27,7 +27,7 @@ export interface ValidLinkRef {
   text: string;
 }
 
-export interface DailyStartResponse {
+export interface RaceStartResponse {
   dateKey: string;
   startPage: WikiPageRef;
   endPage: WikiPageRef;

@@ -10,16 +10,18 @@ import { createTimer, formatElapsedMs } from './timer.js';
 import { createHistoryController } from './history.js';
 import {
   createMultiplayerLobby,
-  getDailyStart,
+  getRaceStart,
+  getRandomVitalTarget,
   getMultiplayerSnapshot,
   joinMultiplayerLobby,
   kickMultiplayerPlayer,
   leaveMultiplayerLobby,
+  persistRandomRunSeed,
   postWinningRun,
   startMultiplayerLobby,
   submitMultiplayerRoundResult
 } from './api-client.js';
-import { getWikiPageByPath, getWikiPageByTitle } from './mw-browser-client.js';
+import { getRandomStartPage, getWikiPageByPath, getWikiPageByTitle } from './mw-browser-client.js';
 import { createTargetPreviewController } from './target-preview.js';
 import { createLobbyRealtimeClient, createLobbySnapshotPoller } from './realtime-client.js';
 import { applyMultiplayerSnapshot } from './multiplayer-state.js';
@@ -28,6 +30,7 @@ const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/pla
 const SESSION_ID_STORAGE_KEY = 'wiki-race-session-id-v1';
 const MULTIPLAYER_NICKNAME_STORAGE_KEY = 'wiki-race-multiplayer-nickname-v1';
 const SEEDED_KEY_PATTERN = /^[a-f0-9]{24}$/i;
+const RANDOM_VITAL_TARGET_MAX_ATTEMPTS = 20;
 let lottieLoadPromise = null;
 
 function isFullscreenActive() {
@@ -283,6 +286,13 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
     multiplayerLobbyStatusLabel,
     multiplayerLeaderboard: multiplayerState.leaderboard || []
   };
+}
+
+function utcDateKey(d = new Date()) {
+  const year = d.getUTCFullYear();
+  const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(d.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function isAllowedCurrentPageLink(currentPage, path) {
@@ -1054,7 +1064,12 @@ async function bootstrap() {
     const multiplayerState = getCurrentMultiplayerState();
     if (!multiplayerState.lobby?.code) return;
     try {
-      const snapshot = await startMultiplayerLobby(multiplayerState.lobby.code, { sessionId });
+      const racePair = await generateRandomVitalRacePair();
+      const snapshot = await startMultiplayerLobby(multiplayerState.lobby.code, {
+        sessionId,
+        startPage: racePair.startPayload.page,
+        endPage: racePair.endPayload.page
+      });
       await applyIncomingMultiplayerSnapshot(snapshot);
     } catch (err) {
       setMultiplayerError(err?.message || 'Failed to start lobby race.');
@@ -1086,9 +1101,7 @@ async function bootstrap() {
     renderUi(elapsedMs);
   });
 
-  async function loadAndRenderStartPageByTitle(title, { moveType = 'click', countMove = false } = {}) {
-    const page = await getWikiPageByTitle(title);
-
+  function applyPageAsRunStep(page, { moveType = 'click', countMove = false } = {}) {
     updateRunState((prevRun) => {
       const nextClicks = countMove ? prevRun.clickCount + 1 : prevRun.clickCount;
       const nextRoute = [...prevRun.route];
@@ -1110,8 +1123,49 @@ async function bootstrap() {
       };
     });
     clearToolbarError();
-
     return page;
+  }
+
+  async function loadAndRenderStartPageByTitle(title, { moveType = 'click', countMove = false } = {}) {
+    const page = await getWikiPageByTitle(title);
+    return applyPageAsRunStep(page, { moveType, countMove });
+  }
+
+  async function generateRandomVitalRacePair() {
+    const startPayload = await getRandomStartPage();
+    let lastTargetError = null;
+
+    for (let attempt = 0; attempt < RANDOM_VITAL_TARGET_MAX_ATTEMPTS; attempt += 1) {
+      let targetRef = null;
+      try {
+        const targetResponse = await getRandomVitalTarget();
+        targetRef = targetResponse?.endPage || null;
+      } catch (err) {
+        lastTargetError = err;
+        continue;
+      }
+
+      if (!targetRef?.title) continue;
+      if (targetRef.path && targetRef.path === startPayload.page.path) continue;
+
+      try {
+        const endPayload = await getWikiPageByTitle(targetRef.title);
+        if (!endPayload?.page?.path) continue;
+        if (endPayload.page.path === startPayload.page.path) continue;
+        if (endPayload.flags?.isDisambiguation) continue;
+        return {
+          dateKey: utcDateKey(),
+          startPayload,
+          endPayload
+        };
+      } catch (err) {
+        lastTargetError = err;
+      }
+    }
+
+    const error = new Error(lastTargetError?.message || 'Failed to generate random race target page');
+    error.status = lastTargetError?.status || 502;
+    throw error;
   }
 
   async function startRun() {
@@ -1162,20 +1216,44 @@ async function bootstrap() {
     void requestElementFullscreen(root);
 
     try {
-      const daily = await getDailyStart({
-        target: selectedMode,
-        seed: selectedMode === 'seeded' ? submittedSeed : null
-      });
+      let startConfig = null;
+      let startPagePayload = null;
+
+      if (selectedMode === 'random_vital') {
+        const racePair = await generateRandomVitalRacePair();
+        if (requestToken !== startRequestToken) return null;
+
+        const seedResult = await persistRandomRunSeed({
+          startPage: racePair.startPayload.page,
+          endPage: racePair.endPayload.page,
+          dateKey: racePair.dateKey
+        });
+        if (requestToken !== startRequestToken) return null;
+
+        startConfig = {
+          dateKey: racePair.dateKey,
+          startPage: racePair.startPayload.page,
+          endPage: racePair.endPayload.page,
+          seedSource: seedResult?.seedSource || null,
+          seedHash: seedResult?.seedHash || null
+        };
+        startPagePayload = racePair.startPayload;
+      } else {
+        startConfig = await getRaceStart({
+          target: selectedMode,
+          seed: selectedMode === 'seeded' ? submittedSeed : null
+        });
+      }
       if (requestToken !== startRequestToken) return null;
 
       initializeRunMeta(selectedMode);
       if (activeRunMeta) {
         activeRunMeta.mode = selectedMode;
-        activeRunMeta.dateKey = daily?.dateKey || null;
-        activeRunMeta.seedSource = daily?.seedSource || null;
+        activeRunMeta.dateKey = startConfig?.dateKey || null;
+        activeRunMeta.seedSource = startConfig?.seedSource || null;
         activeRunMeta.seedHash = selectedMode === 'seeded'
           ? submittedSeed
-          : (daily?.seedHash || null);
+          : (startConfig?.seedHash || null);
       }
       updateSoloState((prevSolo) => ({
         ...prevSolo,
@@ -1183,28 +1261,33 @@ async function bootstrap() {
         activeRunId: activeRunMeta?.runId || null,
         seedHash: activeRunMeta?.seedHash || null
       }));
-      currentTargetPage = daily.endPage || null;
+      currentTargetPage = startConfig.endPage || null;
       syncModeSubtitle();
       store.updateState((prev) => ({
         ...prev,
         run: {
           ...getRunState(prev),
-          dateKey: daily.dateKey,
-          targetPage: daily.endPage,
-          startPage: daily.startPage,
+          dateKey: startConfig.dateKey,
+          targetPage: startConfig.endPage,
+          startPage: startConfig.startPage,
           runSeedLabel: selectedMode === 'agi'
             ? 'agi'
-            : (selectedMode === 'seeded' ? submittedSeed : (daily?.seedHash || '--')),
+            : (selectedMode === 'seeded' ? submittedSeed : (startConfig?.seedHash || '--')),
           status: 'loading_start'
         }
       }));
       renderUi(0);
-      void targetPreview.prefetch(daily.endPage, runPreviewToken);
+      void targetPreview.prefetch(startConfig.endPage, runPreviewToken);
 
-      const page = await loadAndRenderStartPageByTitle(daily.startPage.title, {
-        moveType: 'start',
-        countMove: false
-      });
+      const page = startPagePayload
+        ? applyPageAsRunStep(startPagePayload, {
+          moveType: 'start',
+          countMove: false
+        })
+        : await loadAndRenderStartPageByTitle(startConfig.startPage.title, {
+          moveType: 'start',
+          countMove: false
+        });
 
       timer.start();
 
@@ -1233,7 +1316,7 @@ async function bootstrap() {
         },
         errorMessage: isInvalidSeedError
           ? 'The seed is invalid.'
-          : (err?.message || 'Failed to start the daily challenge.')
+          : (err?.message || 'Failed to start the race.')
       }));
       renderUi();
       if (!isInvalidSeedError) {

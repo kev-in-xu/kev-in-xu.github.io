@@ -1,13 +1,13 @@
 import { titleFromWikiPath, toWikiPageRef } from './_mw.js';
 import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
 import { cacheGetJson, cacheSetJson, detectCacheBackends, getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
-import { generateRandomRacePair } from './_race-seed.js';
+import { generateRandomRacePair } from './_race-pair.js';
 import { isWikiRaceSeedStoreEnabled } from './_flags.js';
 import { getSupabaseServiceClient } from './_supabase.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
 
 const AGI_TARGET_PAGE = toWikiPageRef({ title: 'Artificial general intelligence' });
-const CACHE_PREFIX = 'wiki-race:daily-start:';
+const CACHE_PREFIX = 'wiki-race:race-start:';
 const SEEDED_KEY_PATTERN = /^[a-f0-9]{24}$/i;
 
 /**
@@ -40,7 +40,7 @@ function isDateKey(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(String(value || '').trim());
 }
 
-// converts wiki payload to api-client.js' expected response shape
+// converts race-start payload to api-client.js' expected response shape
 function toClientDailyResponse(payload, seedSource, { seedHash = null } = {}) {
   const endPage = payload.endPage;
   return {
@@ -75,11 +75,11 @@ async function ensurePagePayloadFromSeedRow({ title, path } = {}) {
 }
 
 /**
- * HTTP handler for `/api/wiki/daily-start`.
+ * HTTP handler for `/api/wiki/race-start`.
  * Input: GET request with optional `?date=YYYY-MM-DD`.
  * Output: JSON containing date key, start page, and end page.
  * Logic:
- * - AGI mode serves cached daily seed keyed by UTC date.
+ * - AGI mode serves a cached start pair keyed by UTC date.
  * - random_vital mode generates fresh start/end pages per request and persists a unique run seed hash.
  */
 export default async function handler(req, res) {
@@ -96,7 +96,13 @@ export default async function handler(req, res) {
   const cacheKey = useDailyCache ? `${CACHE_PREFIX}${dateKey}` : null;
   const isSeedStoreEnabled = isWikiRaceSeedStoreEnabled();
 
-  if (!isSeedStoreEnabled && (targetMode === 'random_vital' || targetMode === 'seeded')) {
+  if (targetMode === 'random_vital') {
+    return res.status(400).json({
+      error: 'random_vital must be generated in the browser'
+    });
+  }
+
+  if (!isSeedStoreEnabled && targetMode === 'seeded') {
     return res.status(503).json({ error: 'Seed storage is disabled' });
   }
 
@@ -168,7 +174,7 @@ export default async function handler(req, res) {
     );
   }
 
-  // looks up daily cache for AGI mode, but random_vital mode always generates fresh pages and seeds.
+  // Looks up the cached AGI start pair, while seeded replay resolves the stored seed row directly.
   if (useDailyCache && cacheKey) { 
     const { primary } = await detectCacheBackends();
     try {
@@ -191,7 +197,7 @@ export default async function handler(req, res) {
             });
           }
         } catch (_err) {
-          // Non-fatal: daily response still succeeds if page-cache warmup fails.
+          // Non-fatal: race-start still succeeds if page-cache warmup fails.
         }
         res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
         return res.status(200).json(toClientDailyResponse(cached, primary));
@@ -229,7 +235,7 @@ export default async function handler(req, res) {
       await cacheSetJson(cacheKey, responsePayload);
     }
   } catch (_err) {
-    // Non-fatal: daily start still returns even if cache writes fail.
+    // Non-fatal: race-start still returns even if cache writes fail.
   }
 
   const cacheControl = useDailyCache

@@ -49,14 +49,22 @@ async function postJson(path, payload) {
   });
 }
 
-export function getDailyStart({ target = 'agi', seed = null } = {}) {
+export function getRaceStart({ target = 'agi', seed = null } = {}) {
   const mode = String(target || 'agi').trim() || 'agi';
   const params = new URLSearchParams();
   params.set('target', mode);
   if (seed != null && String(seed).trim()) {
     params.set('seed', String(seed).trim());
   }
-  return fetchJson(buildApiUrl(`/api/wiki/daily-start?${params.toString()}`));
+  return fetchJson(buildApiUrl(`/api/wiki/race-start?${params.toString()}`));
+}
+
+export function getRandomVitalTarget() {
+  return fetchJson(buildApiUrl('/api/wiki/random-vital-target'));
+}
+
+export function persistRandomRunSeed(payload) {
+  return postJson('/api/wiki/random-seed', payload);
 }
 
 // api caller for submitting game results to the backend, which will validate and persist the data.

@@ -3,11 +3,14 @@ import {
   isDisallowedNamespaceTitle,
   sanitizeWikiArticleHtml
 } from './page-filter.js';
+import { isValidStartPage } from '../../../lib/wiki-rules.js';
 
 const MW_API = 'https://en.wikipedia.org/w/api.php';
 const MAX_CONCURRENT = 3;
 const MAX_RETRIES = 4;
 const MIN_RETRY_MS = 5000;
+const RANDOM_START_MAX_ATTEMPTS = 25;
+const RANDOM_START_BATCH_SIZE = 5;
 
 let inflightCount = 0;
 const pendingQueue = [];
@@ -99,6 +102,11 @@ async function fetchWithRetries(url) {
   throw new Error('Unexpected MediaWiki retry exit');
 }
 
+function fetchMwJsonUncached(params) {
+  const url = createMwApiUrl(params);
+  return runQueued(() => fetchWithRetries(url));
+}
+
 function fetchMwJsonCached(params) {
   const url = createMwApiUrl(params);
   if (requestCache.has(url)) return requestCache.get(url);
@@ -136,6 +144,10 @@ function pageMetaFromQuery(query) {
   return pages.find((page) => page && !page.missing) || null;
 }
 
+function pageMetasFromQuery(query) {
+  return Object.values(query?.pages || {}).filter((page) => page && !page.missing);
+}
+
 function redirectMetaFromQuery(query, requestedTitle) {
   const requested = String(requestedTitle || '').trim();
   if (!requested) {
@@ -160,32 +172,7 @@ function titleFromPath(path) {
   return decodeURIComponent(String(path).slice('/wiki/'.length)).replace(/_/g, ' ');
 }
 
-async function buildPayloadForTitle(title) {
-  const resolvedTitle = String(title || '').trim();
-  if (!resolvedTitle) {
-    const err = new Error('Wikipedia page not found');
-    err.status = 404;
-    throw err;
-  }
-
-  const queryData = await fetchMwJsonCached({
-    action: 'query',
-    redirects: 1,
-    prop: 'info|pageprops|categories',
-    inprop: 'url',
-    clshow: '!hidden',
-    cllimit: 'max',
-    titles: resolvedTitle
-  });
-  const redirect = redirectMetaFromQuery(queryData?.query, resolvedTitle);
-
-  const pageMeta = pageMetaFromQuery(queryData.query);
-  if (!pageMeta) {
-    const err = new Error('Wikipedia page not found');
-    err.status = 404;
-    throw err;
-  }
-
+async function buildPayloadFromPageMeta(pageMeta) {
   if (isDisallowedNamespaceTitle(pageMeta.title)) {
     const err = new Error('Disallowed page namespace');
     err.status = 422;
@@ -230,8 +217,38 @@ async function buildPayloadForTitle(title) {
       source: 'fresh',
       revid: parseData?.parse?.revid
     },
-    redirect
+    redirect: { followed: false }
   };
+}
+
+async function buildPayloadForTitle(title) {
+  const resolvedTitle = String(title || '').trim();
+  if (!resolvedTitle) {
+    const err = new Error('Wikipedia page not found');
+    err.status = 404;
+    throw err;
+  }
+
+  const queryData = await fetchMwJsonCached({
+    action: 'query',
+    redirects: 1,
+    prop: 'info|pageprops|categories',
+    inprop: 'url',
+    clshow: '!hidden',
+    cllimit: 'max',
+    titles: resolvedTitle
+  });
+
+  const pageMeta = pageMetaFromQuery(queryData.query);
+  if (!pageMeta) {
+    const err = new Error('Wikipedia page not found');
+    err.status = 404;
+    throw err;
+  }
+
+  const payload = await buildPayloadFromPageMeta(pageMeta);
+  payload.redirect = redirectMetaFromQuery(queryData?.query, resolvedTitle);
+  return payload;
 }
 
 export async function getWikiPageByTitle(title) {
@@ -246,4 +263,45 @@ export async function getWikiPageByPath(path) {
     throw err;
   }
   return buildPayloadForTitle(title);
+}
+
+export async function getRandomStartPage({
+  maxAttempts = RANDOM_START_MAX_ATTEMPTS,
+  batchSize = RANDOM_START_BATCH_SIZE,
+  namespace = 0
+} = {}) {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const queryData = await fetchMwJsonUncached({
+        action: 'query',
+        generator: 'random',
+        grnnamespace: namespace,
+        grnlimit: batchSize,
+        prop: 'info|pageprops|categories',
+        inprop: 'url',
+        clshow: '!hidden',
+        cllimit: 'max'
+      });
+
+      const pageMetas = pageMetasFromQuery(queryData?.query);
+      const settled = await Promise.allSettled(
+        pageMetas.map((pageMeta) => buildPayloadFromPageMeta(pageMeta))
+      );
+
+      for (const result of settled) {
+        if (result.status !== 'fulfilled' || !result.value) continue;
+        const payload = result.value;
+        if (!isValidStartPage(payload.flags, payload.page.title)) continue;
+        return payload;
+      }
+    } catch (err) {
+      lastError = err;
+    }
+  }
+
+  const error = new Error('Failed to generate random race start page');
+  error.status = lastError?.status || 502;
+  throw error;
 }

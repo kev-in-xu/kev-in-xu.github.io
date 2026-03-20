@@ -1,7 +1,8 @@
 import { applyWikiApiCors, handleCorsPreflight } from '../../_cors.js';
 import { isWikiRaceMultiplayerEnabled } from '../../_flags.js';
+import { areSameWikiPageRefs, normalizeWikiPageRef } from '../../_page-ref.js';
 import { publishLobbyEvent } from '../../multiplayer/_realtime.js';
-import { generateRandomRacePair } from '../../_race-seed.js';
+import { createAndPersistRandomRunSeed } from '../../_seed-store.js';
 import {
   ROUND_MAX_DURATION_SECONDS,
   createEntityId,
@@ -67,6 +68,13 @@ export default async function handler(req, res) {
 
   const sessionId = normalizeSessionId(body.sessionId);
   if (!sessionId) return badRequest(res, 'Invalid sessionId');
+  const startPage = normalizeWikiPageRef(body.startPage);
+  const endPage = normalizeWikiPageRef(body.endPage);
+  if (!startPage) return badRequest(res, 'Invalid startPage');
+  if (!endPage) return badRequest(res, 'Invalid endPage');
+  if (areSameWikiPageRefs(startPage, endPage)) {
+    return badRequest(res, 'startPage and endPage must be different');
+  }
 
   try {
     const lobbyRow = await getLobbyByCode(supabaseClient, lobbyCode);
@@ -94,8 +102,9 @@ export default async function handler(req, res) {
       return res.status(409).json({ error: 'Host is not active in lobby' });
     }
 
-    const race = await generateRandomRacePair({
-      targetMode: 'random_vital',
+    const seedResult = await createAndPersistRandomRunSeed({
+      startPage,
+      endPage,
       dateKey: utcDateKey()
     });
 
@@ -120,9 +129,9 @@ export default async function handler(req, res) {
     const roundRow = {
       id: createEntityId(),
       lobby_id: lobbyRow.id,
-      seed_hash: race.seedHash,
-      start_path: race.startPage.path,
-      end_path: race.endPage.path,
+      seed_hash: seedResult.seedHash,
+      start_path: startPage.path,
+      end_path: endPage.path,
       started_at_utc: startedAtUtc,
       ended_at_utc: null,
       max_duration_seconds: ROUND_MAX_DURATION_SECONDS
@@ -157,7 +166,7 @@ export default async function handler(req, res) {
     }).catch(() => {});
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json(
-      formatStartResponse(updatedLobbyRow, existingPlayers, roundRow, race)
+      formatStartResponse(updatedLobbyRow, existingPlayers, roundRow, { startPage, endPage })
     );
   } catch (err) {
     return res.status(err?.status || 502).json({

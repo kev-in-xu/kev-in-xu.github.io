@@ -8,6 +8,7 @@
   --wr-accent-2: #0e7490;
   --wr-danger: #b42318;
   --wr-shadow: 0 12px 30px rgba(40, 30, 20, 0.08);
+  --wr-content-inset: 0.52rem;
   color: var(--wr-text);
   position: relative;
   overflow: hidden;
@@ -69,7 +70,7 @@
 
 .wiki-race-subtitle {
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 0 0 0 var(--wr-content-inset) !important;
   color: var(--wr-muted);
   font-size: 0.66rem;
   line-height: 1.25;
@@ -206,7 +207,7 @@
 
 .wiki-race-multiplayer-panel {
   margin: 0.4rem 0 0.4rem;
-  padding: 0.3rem;
+  padding: 0.3rem 0.3rem 0.3rem var(--wr-content-inset);
   border: 1px solid var(--wr-border);
   border-radius: 12px;
   background: rgba(255, 253, 248, 0.8);
@@ -239,7 +240,7 @@
   border-radius: 8px;
   font-size: 0.78rem;
   line-height: 1.2;
-  padding: 0.45rem 0.55rem;
+  padding: 0.25rem 0.35rem;
   width: auto;
   flex: 0 0 auto;
 }
@@ -251,7 +252,7 @@
 
 #wiki-race-lobby-code {
   margin: 0;
-  width: 4.4rem;
+  width: 4rem;
 }
 
 .wiki-race-multiplayer-fields > .wiki-race-btn {
@@ -497,7 +498,7 @@
   border: 1px solid var(--wr-border);
   background: var(--wr-panel);
   border-radius: 10px;
-  padding: 0.26rem 0.52rem;
+  padding: 0.26rem var(--wr-content-inset);
   line-height: 1;
   user-select: none;
 }
@@ -634,16 +635,22 @@
 }
 
 .wiki-race-route-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   background: var(--wr-panel);
   border: 1px solid var(--wr-border);
   border-radius: 6px;
-  padding: 0.45rem 0.45rem;
+  padding: 0.35rem 0.45rem 0.35rem var(--wr-content-inset);
   margin-bottom: 0.25rem;
 }
 
 .wiki-race-route-panel h2 {
-  margin: 0 0 0.15rem;
-  font-size: 0.95rem;
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 0.9rem;
+  padding: 0;
+  border: 0;
 }
 
 .wiki-race-main {
@@ -742,7 +749,7 @@
   background: var(--wr-panel);
   border: 1px solid var(--wr-border);
   border-radius: 10px;
-  padding: 0.65rem;
+  padding: 0.65rem 0.65rem 0.65rem var(--wr-content-inset);
   min-height: 240px;
   font-size: 0.95rem;
   line-height: 1.4;
@@ -1050,9 +1057,16 @@
 }
 
 .wiki-race-route {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-left: 0.45rem;
+  border-left: 1px solid var(--wr-border);
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
   color: var(--wr-text);
-  white-space: normal;
-  word-break: break-word;
   font-size: 0.75rem;
 }
 
