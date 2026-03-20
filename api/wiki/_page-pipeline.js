@@ -1,5 +1,5 @@
 import { fetchMwJson, toWikiPageRef } from './_mw.js';
-import { computePageFlags } from './_filter.js';
+import { computePageFlags } from '../../lib/wiki-rules.js';
 import { sanitizeWikiArticleHtml } from './_sanitize.js';
 
 /**

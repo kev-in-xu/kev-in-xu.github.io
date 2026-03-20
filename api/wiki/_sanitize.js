@@ -1,5 +1,9 @@
+/**
+ * This module provides functionality to sanitize raw MediaWiki HTML content for safe rendering
+ */
+
 import { load } from 'cheerio';
-import { normalizeAndValidateWikiPath } from './_filter.js';
+import { normalizeAndValidateWikiPath } from '../../lib/wiki-rules.js';
 
 const REMOVE_SELECTORS = [
   'script',

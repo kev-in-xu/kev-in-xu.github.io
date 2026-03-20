@@ -2,7 +2,7 @@ import { applyWikiApiCors, handleCorsPreflight } from '../../_cors.js';
 import { isWikiRaceMultiplayerEnabled } from '../../_flags.js';
 import { areSameWikiPageRefs, normalizeWikiPageRef } from '../../_page-ref.js';
 import { publishLobbyEvent } from '../../multiplayer/_realtime.js';
-import { createAndPersistRandomRunSeed } from '../../_seed-store.js';
+import { createAndPersistRunSeed } from '../../_seed-store.js';
 import {
   ROUND_MAX_DURATION_SECONDS,
   createEntityId,
@@ -102,7 +102,7 @@ export default async function handler(req, res) {
       return res.status(409).json({ error: 'Host is not active in lobby' });
     }
 
-    const seedResult = await createAndPersistRandomRunSeed({
+    const seedResult = await createAndPersistRunSeed({
       startPage,
       endPage,
       dateKey: utcDateKey()

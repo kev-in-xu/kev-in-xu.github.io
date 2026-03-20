@@ -1,3 +1,7 @@
+/**
+ * This module provides utilities for parsing and managing feature flags
+ */
+
 function parseBooleanFlag(value, defaultValue = false) {
   if (value == null) return defaultValue;
 

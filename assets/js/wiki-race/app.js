@@ -16,7 +16,8 @@ import {
   joinMultiplayerLobby,
   kickMultiplayerPlayer,
   leaveMultiplayerLobby,
-  persistRandomRunSeed,
+  persistDailyRun,
+  persistRunSeed,
   postWinningRun,
   startMultiplayerLobby,
   submitMultiplayerRoundResult
@@ -31,6 +32,7 @@ const SESSION_ID_STORAGE_KEY = 'wiki-race-session-id-v1';
 const MULTIPLAYER_NICKNAME_STORAGE_KEY = 'wiki-race-multiplayer-nickname-v1';
 const SEEDED_KEY_PATTERN = /^[a-f0-9]{24}$/i;
 const RANDOM_VITAL_TARGET_MAX_ATTEMPTS = 20;
+const AGI_TARGET_TITLE = 'Artificial general intelligence';
 let lottieLoadPromise = null;
 
 function isFullscreenActive() {
@@ -1168,6 +1170,20 @@ async function bootstrap() {
     throw error;
   }
 
+  async function generateAgiRacePair() {
+    const startPayload = await getRandomStartPage();
+    const endPayload = await getWikiPageByTitle(AGI_TARGET_TITLE);
+    return {
+      dateKey: utcDateKey(),
+      startPayload,
+      endPayload
+    };
+  }
+
+  function isAgiRunMissingError(err) {
+    return err?.status === 404 && err?.payload?.code === 'agi_run_missing';
+  }
+
   async function startRun() {
     const selectedMode = getSelectedMode();
     const submittedSeed = selectedMode === 'seeded' ? sanitizeSeedKey(seedInputValue) : null;
@@ -1223,7 +1239,8 @@ async function bootstrap() {
         const racePair = await generateRandomVitalRacePair();
         if (requestToken !== startRequestToken) return null;
 
-        const seedResult = await persistRandomRunSeed({
+        const seedResult = await persistRunSeed({
+          mode: 'random_vital',
           startPage: racePair.startPayload.page,
           endPage: racePair.endPayload.page,
           dateKey: racePair.dateKey
@@ -1238,6 +1255,36 @@ async function bootstrap() {
           seedHash: seedResult?.seedHash || null
         };
         startPagePayload = racePair.startPayload;
+      } else if (selectedMode === 'agi') {
+        try {
+          startConfig = await getRaceStart({
+            target: 'agi'
+          });
+        } catch (err) {
+          if (!isAgiRunMissingError(err)) throw err;
+
+          const racePair = await generateAgiRacePair();
+          if (requestToken !== startRequestToken) return null;
+
+          const seedResult = await persistRunSeed({
+            mode: 'agi',
+            startPage: racePair.startPayload.page,
+            endPage: racePair.endPayload.page,
+            dateKey: racePair.dateKey
+          });
+          if (requestToken !== startRequestToken) return null;
+
+          startConfig = await persistDailyRun({
+            mode: 'agi',
+            dateKey: racePair.dateKey,
+            seedHash: seedResult?.seedHash || null
+          });
+          if (requestToken !== startRequestToken) return null;
+
+          if (startConfig?.startPage?.path === racePair.startPayload.page.path) {
+            startPagePayload = racePair.startPayload;
+          }
+        }
       } else {
         startConfig = await getRaceStart({
           target: selectedMode,

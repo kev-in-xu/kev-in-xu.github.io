@@ -63,8 +63,12 @@ export function getRandomVitalTarget() {
   return fetchJson(buildApiUrl('/api/wiki/random-vital-target'));
 }
 
-export function persistRandomRunSeed(payload) {
-  return postJson('/api/wiki/random-seed', payload);
+export function persistRunSeed(payload) {
+  return postJson('/api/wiki/run-seed', payload);
+}
+
+export function persistDailyRun(payload) {
+  return postJson('/api/wiki/daily-run', payload);
 }
 
 // api caller for submitting game results to the backend, which will validate and persist the data.

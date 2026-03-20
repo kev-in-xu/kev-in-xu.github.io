@@ -1,3 +1,13 @@
+/**
+ * This module provides CORS handling for the wiki API endpoints.
+ * 
+ * CORS (Cross-Origin Resource Sharing) is a security feature that allows or restricts web applications 
+ * from making requests to a domain different from the one that served the web page.
+ * 
+ * CORS handling is required for the wiki API because it may be accessed from web applications 
+ * hosted on different origins, such as local development servers or GitHub Pages.
+ */
+
 const ALLOWED_ORIGINS = new Set([
   'https://kev-in-xu.github.io',
   'http://localhost:4000',

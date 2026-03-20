@@ -1,13 +1,10 @@
-import { titleFromWikiPath, toWikiPageRef } from './_mw.js';
+import { titleFromWikiPath, toWikiPageRefFromTitleOrPath } from './_mw.js';
 import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
-import { cacheGetJson, cacheSetJson, detectCacheBackends, getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
-import { generateRandomRacePair } from './_race-pair.js';
+import { getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
+import { getDailyRunRow, getRunSeedRowByHash } from './_seed-store.js';
 import { isWikiRaceSeedStoreEnabled } from './_flags.js';
 import { getSupabaseServiceClient } from './_supabase.js';
 import { applyWikiApiCors, handleCorsPreflight } from './_cors.js';
-
-const AGI_TARGET_PAGE = toWikiPageRef({ title: 'Artificial general intelligence' });
-const CACHE_PREFIX = 'wiki-race:race-start:';
 const SEEDED_KEY_PATTERN = /^[a-f0-9]{24}$/i;
 
 /**
@@ -40,8 +37,8 @@ function isDateKey(value) {
   return /^\d{4}-\d{2}-\d{2}$/.test(String(value || '').trim());
 }
 
-// converts race-start payload to api-client.js' expected response shape
-function toClientDailyResponse(payload, seedSource, { seedHash = null } = {}) {
+// Converts a canonical run lookup into the api-client.js response shape.
+function toClientRaceStartResponse(payload, seedSource, { seedHash = null } = {}) {
   const endPage = payload.endPage;
   return {
     dateKey: payload.dateKey,
@@ -52,7 +49,7 @@ function toClientDailyResponse(payload, seedSource, { seedHash = null } = {}) {
   };
 }
 
-async function ensurePagePayloadForDaily(pageRef, fallbackTitle) {
+async function ensurePagePayloadForSeededRun(pageRef, fallbackTitle) {
   const queryKey = pageRef?.normalizedTitle || pageRef?.title || fallbackTitle;
   if (!queryKey) return null;
 
@@ -71,16 +68,16 @@ async function ensurePagePayloadForDaily(pageRef, fallbackTitle) {
 async function ensurePagePayloadFromSeedRow({ title, path } = {}) {
   const fallbackTitle = String(title || '').trim() || titleFromWikiPath(path);
   if (!fallbackTitle) return null;
-  return ensurePagePayloadForDaily(null, fallbackTitle);
+  return ensurePagePayloadForSeededRun(null, fallbackTitle);
 }
 
 /**
  * HTTP handler for `/api/wiki/race-start`.
  * Input: GET request with optional `?date=YYYY-MM-DD`.
- * Output: JSON containing date key, start page, and end page.
+ * Output: JSON containing date key, start page, end page, and optional seed hash.
  * Logic:
- * - AGI mode serves a cached start pair keyed by UTC date.
- * - random_vital mode generates fresh start/end pages per request and persists a unique run seed hash.
+ * - AGI mode reads the canonical daily run mapping and linked seed row.
+ * - seeded mode resolves an existing seed row by seed hash.
  */
 export default async function handler(req, res) {
   if (handleCorsPreflight(req, res)) return;
@@ -92,8 +89,6 @@ export default async function handler(req, res) {
 
   const dateKey = req.query?.date ? String(req.query.date) : utcDateKey();
   const targetMode = parseTargetMode(req);
-  const useDailyCache = targetMode === 'agi';
-  const cacheKey = useDailyCache ? `${CACHE_PREFIX}${dateKey}` : null;
   const isSeedStoreEnabled = isWikiRaceSeedStoreEnabled();
 
   if (targetMode === 'random_vital') {
@@ -102,8 +97,71 @@ export default async function handler(req, res) {
     });
   }
 
-  if (!isSeedStoreEnabled && targetMode === 'seeded') {
+  if (!isSeedStoreEnabled && (targetMode === 'agi' || targetMode === 'seeded')) {
     return res.status(503).json({ error: 'Seed storage is disabled' });
+  }
+
+  if (targetMode === 'agi' || targetMode === 'seeded') {
+    const supabaseClient = await getSupabaseServiceClient();
+    if (!supabaseClient) {
+      return res.status(503).json({ error: 'Seed lookup is not configured' });
+    }
+  }
+
+  if (targetMode === 'agi') {
+    let dailyRun = null;
+    try {
+      dailyRun = await getDailyRunRow({
+        mode: 'agi',
+        dateKey
+      });
+    } catch (err) {
+      return res.status(502).json({
+        error: 'Failed to load AGI daily run',
+        detail: err?.message || null
+      });
+    }
+
+    if (!dailyRun?.seedHash) {
+      return res.status(404).json({
+        error: 'AGI daily run has not been instantiated',
+        code: 'agi_run_missing'
+      });
+    }
+
+    let seedRow = null;
+    try {
+      seedRow = await getRunSeedRowByHash(dailyRun.seedHash);
+    } catch (err) {
+      return res.status(502).json({
+        error: 'Failed to load AGI daily run seed',
+        detail: err?.message || null
+      });
+    }
+
+    if (!seedRow) {
+      return res.status(404).json({
+        error: 'AGI daily run seed is missing',
+        code: 'agi_run_missing'
+      });
+    }
+
+    const responsePayload = {
+      dateKey,
+      startPage: toWikiPageRefFromTitleOrPath({
+        title: seedRow.start_title || titleFromWikiPath(seedRow.start_path),
+        path: seedRow.start_path
+      }),
+      endPage: toWikiPageRefFromTitleOrPath({
+        title: seedRow.end_title || titleFromWikiPath(seedRow.end_path),
+        path: seedRow.end_path
+      })
+    };
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json(
+      toClientRaceStartResponse(responsePayload, 'supabase', { seedHash: dailyRun.seedHash })
+    );
   }
 
   if (targetMode === 'seeded') {
@@ -112,21 +170,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid seed key' });
     }
 
-    const supabaseClient = await getSupabaseServiceClient();
-    if (!supabaseClient) {
-      return res.status(503).json({ error: 'Seed lookup is not configured' });
-    }
-
-    const { data: seedRow, error: seedLookupError } = await supabaseClient
-      .from('wiki_race_random_seeds')
-      .select('seed_hash, start_title, end_title, start_path, end_path, created_at_utc, metadata_json')
-      .eq('seed_hash', seedHash)
-      .maybeSingle();
-
-    if (seedLookupError) {
+    let seedRow = null;
+    try {
+      seedRow = await getRunSeedRowByHash(seedHash);
+    } catch (err) {
       return res.status(502).json({
         error: 'Failed to load seeded run',
-        detail: seedLookupError.message
+        detail: err?.message || null
       });
     }
 
@@ -170,79 +220,9 @@ export default async function handler(req, res) {
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json(
-      toClientDailyResponse(responsePayload, 'supabase', { seedHash })
+      toClientRaceStartResponse(responsePayload, 'supabase', { seedHash })
     );
   }
 
-  // Looks up the cached AGI start pair, while seeded replay resolves the stored seed row directly.
-  if (useDailyCache && cacheKey) { 
-    const { primary } = await detectCacheBackends();
-    try {
-      const cached = await cacheGetJson(cacheKey);
-      if (cached?.startPage?.path && cached?.endPage?.path && cached?.dateKey === dateKey) {
-        try {
-          const startPayload = cached.startPayload || await ensurePagePayloadForDaily(cached.startPage, cached.startPage?.title);
-          const endPayload = cached.endPayload || await ensurePagePayloadForDaily(
-            cached.endPage,
-            AGI_TARGET_PAGE.title
-          );
-          if (startPayload) await setCachedWikiPage(cached.startPage.normalizedTitle || cached.startPage.title, startPayload);
-          if (endPayload) await setCachedWikiPage(cached.endPage.normalizedTitle || cached.endPage.title, endPayload);
-
-          if (!cached.startPayload || !cached.endPayload) {
-            await cacheSetJson(cacheKey, {
-              ...cached,
-              startPayload: startPayload || cached.startPayload || null,
-              endPayload: endPayload || cached.endPayload || null
-            });
-          }
-        } catch (_err) {
-          // Non-fatal: race-start still succeeds if page-cache warmup fails.
-        }
-        res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
-        return res.status(200).json(toClientDailyResponse(cached, primary));
-      }
-    } catch (_err) {
-      // Fall through to generation if cache unavailable.
-    }
-  }
-
-  let generatedRace = null;
-  try {
-    generatedRace = await generateRandomRacePair({
-      targetMode,
-      dateKey
-    });
-  } catch (err) {
-    return res.status(err?.status || 502).json({
-      error: err?.message || 'Failed to generate race',
-      detail: err?.detail || null
-    });
-  }
-
-  const responsePayload = {
-    dateKey,
-    startPage: generatedRace.startPage,
-    endPage: generatedRace.endPage,
-    generatedAtUtc: new Date().toISOString(),
-    generationAttempts: generatedRace.generationAttempts,
-    startPayload: generatedRace.startPayload,
-    endPayload: generatedRace.endPayload
-  };
-
-  try {
-    if (useDailyCache && cacheKey) {
-      await cacheSetJson(cacheKey, responsePayload);
-    }
-  } catch (_err) {
-    // Non-fatal: race-start still returns even if cache writes fail.
-  }
-
-  const cacheControl = useDailyCache
-    ? 'public, s-maxage=60, stale-while-revalidate=60'
-    : 'no-store';
-  res.setHeader('Cache-Control', cacheControl);
-  return res.status(200).json(
-    toClientDailyResponse(responsePayload, generatedRace.seedSource, { seedHash: generatedRace.seedHash })
-  );
+  return res.status(400).json({ error: 'Unsupported race target' });
 }

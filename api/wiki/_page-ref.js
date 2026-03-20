@@ -1,3 +1,10 @@
+/**
+ * This module provides utilities for normalizing and comparing Wikipedia page references.
+ * A Wikipedia page reference is expected to have the following properties:
+ * - title: The title of the Wikipedia page (string).
+ * - normalizedTitle: An optional normalized version of the title (string).
+ */
+
 function toNonEmptyString(value) {
   const text = String(value || '').trim();
   return text || null;

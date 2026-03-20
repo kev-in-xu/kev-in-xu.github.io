@@ -1,3 +1,8 @@
+/**
+ * This module provides utilities for interacting with the MediaWiki API, 
+ * specifically for fetching and normalizing Wikipedia page references.
+ */
+
 const MW_API = 'https://en.wikipedia.org/w/api.php';
 const MW_API_USER_AGENT = process.env.MW_API_USER_AGENT
   || 'WikiRaceBot/1.0 (https://kev-in-xu.github.io; kevinxu116@gmail.com)';

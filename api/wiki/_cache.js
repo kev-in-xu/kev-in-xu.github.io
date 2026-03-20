@@ -1,18 +1,12 @@
+/**
+ * This module caches wiki page payloads, using Supabase as the primary backend
+ * and an in-memory Map as a fallback.
+ */
+
 import { getSupabaseServiceClient } from './_supabase.js';
 
 const memoryCache = new Map();
-const RACE_START_PREFIX = 'wiki-race:race-start:';
 const PAGE_PREFIX = 'wiki-race:page:';
-
-/**
- * Extracts the YYYY-MM-DD date segment from a race-start full cache key.
- */
-function keyToDailyDate(key) {
-  if (!String(key).startsWith(RACE_START_PREFIX)) return null;
-  const suffix = String(key).slice(RACE_START_PREFIX.length);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(suffix)) return null;
-  return suffix;
-}
 
 /**
  * Normalizes a wiki title/path into a lowercase cache key token.
@@ -32,127 +26,6 @@ function pageMemoryKey(normalizedKey) {
   return `${PAGE_PREFIX}${normalizedKey}`;
 }
 
-// Helper to convert a Supabase table row into a page reference object
-function toPageRefFromRow(prefix, row) {
-  const title = row?.[`${prefix}_title`] || null;
-  const normalizedTitle = row?.[`${prefix}_normalized_title`] || null;
-  const path = row?.[`${prefix}_path`] || null;
-  const url = row?.[`${prefix}_url`] || null;
-  const pageId = row?.[`${prefix}_page_id`] ?? null;
-  if (!title && !normalizedTitle && !path && !url && pageId == null) return null;
-  return {
-    title: title || normalizedTitle?.replace(/_/g, ' ') || '',
-    normalizedTitle: normalizedTitle || '',
-    path: path || '',
-    url: url || '',
-    pageId
-  };
-}
-
-/**
- * Reads a race-start payload from Supabase storage.
- * Output: cached JSON payload or `null`.
- */
-async function supabaseGetJson(key) {
-  const dateKey = keyToDailyDate(key);
-  if (!dateKey) return null;
-  const supabaseClient = await getSupabaseServiceClient();
-  if (!supabaseClient) return null;
-
-  const { data, error } = await supabaseClient
-    .from('wiki_race_daily_start')
-    .select('date_key, start_title, start_normalized_title, start_path, start_url, start_page_id, end_title, end_normalized_title, end_path, end_url, end_page_id, generation_attempts, generated_at_utc, start_payload_json, end_payload_json')
-    .eq('date_key', dateKey)
-    .maybeSingle();
-
-  if (error) throw error;
-  if (!data) return null;
-
-  const startPage = toPageRefFromRow('start', data);
-  const endPage = toPageRefFromRow('end', data);
-  return {
-    dateKey: data.date_key,
-    startPage,
-    endPage,
-    generatedAtUtc: data.generated_at_utc || null,
-    generationAttempts: data.generation_attempts ?? null,
-    startPayload: data.start_payload_json || null,
-    endPayload: data.end_payload_json || null
-  };
-}
-
-/**
- * Upserts a race-start payload into Supabase storage.
- * Input: full race-start cache key and payload object.
- * Output: Boolean success indicator.
- * Logic: maps payload fields to relational row columns and upserts by `date_key`.
- */
-async function supabaseSetJson(key, value) {
-  const dateKey = keyToDailyDate(key);
-  if (!dateKey) return false;
-  const supabaseClient = await getSupabaseServiceClient();
-  if (!supabaseClient) return false;
-
-  const startPage = value?.startPage || {};
-  const endPage = value?.endPage || {};
-  const row = {
-    date_key: dateKey,
-    start_title: startPage.title || null,
-    start_normalized_title: startPage.normalizedTitle || null,
-    start_path: startPage.path || null,
-    start_url: startPage.url || null,
-    start_page_id: startPage.pageId ?? null,
-    end_title: endPage.title || null,
-    end_normalized_title: endPage.normalizedTitle || null,
-    end_path: endPage.path || null,
-    end_url: endPage.url || null,
-    end_page_id: endPage.pageId ?? null,
-    generation_attempts: value?.generationAttempts ?? null,
-    generated_at_utc: value?.generatedAtUtc || new Date().toISOString(),
-    start_payload_json: value?.startPayload || null,
-    end_payload_json: value?.endPayload || null
-  };
-
-  const { error } = await supabaseClient
-    .from('wiki_race_daily_start')
-    .upsert(row, { onConflict: 'date_key' });
-  if (error) throw error;
-  return true;
-}
-
-/**
- * Gets JSON from cache (either Supabase or in-memory).
- * Input: cache key string.
- */
-export async function cacheGetJson(key) {
-  const supaValue = await supabaseGetJson(key);
-  if (supaValue != null) return supaValue;
-  return memoryCache.get(key) ?? null;
-}
-
-/**
- * Sets JSON in cache with Supabase-first fallback to in-memory cache.
- * Input: cache key, value, and optional options object.
- * Output: Boolean success indicator.
- */
-export async function cacheSetJson(key, value, options = {}) {
-  void options;
-  if (await getSupabaseServiceClient()) {
-    return supabaseSetJson(key, value);
-  }
-  memoryCache.set(key, value);
-  return true;
-}
-
-/**
- * Detects active cache backends for diagnostics and response metadata.
- * Output: object containing the selected primary backend.
- */
-export async function detectCacheBackends() {
-  return {
-    primary: (await getSupabaseServiceClient()) ? 'supabase' : 'memory'
-  };
-}
 
 /**
  * Reads a cached wiki page payload from Supabase by normalized key.

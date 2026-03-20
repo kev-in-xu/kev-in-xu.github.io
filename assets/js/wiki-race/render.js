@@ -55,6 +55,7 @@ export function createRenderer(rootEl) {
   let lastArticleHtml = null;
   let lastAllowedLinksKey = '';
   let lastRouteText = null;
+  let lastRouteTitleCount = 0;
   let cleanupTocSync = () => {};
   let cleanupLazyImageSync = () => {};
 
@@ -625,11 +626,20 @@ export function createRenderer(rootEl) {
       lastAllowedLinksKey = allowedLinksKey;
     }
 
-    const routeText = state.routeTitles?.length ? state.routeTitles.join(' -> ') : '-';
+    const routeTitles = Array.isArray(state.routeTitles) ? state.routeTitles : [];
+    const routeTitleCount = routeTitles.length;
+    const routeText = routeTitleCount ? routeTitles.join(' -> ') : '-';
     if (routeText !== lastRouteText) {
       els.route.textContent = routeText;
+      if (routeTitleCount > lastRouteTitleCount) {
+        requestAnimationFrame(() => {
+          if (!els.route) return;
+          els.route.scrollLeft = els.route.scrollWidth;
+        });
+      }
       lastRouteText = routeText;
     }
+    lastRouteTitleCount = routeTitleCount;
 
     const showArticleScaffold = true;
     if (els.route?.closest('.wiki-race-route-panel')) {
