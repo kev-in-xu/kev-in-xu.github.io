@@ -1,6 +1,5 @@
 import { titleFromWikiPath, toWikiPageRefFromTitleOrPath } from './_mw.js';
 import { buildWikiPagePayloadByTitle } from './_page-pipeline.js';
-import { getCachedWikiPageByTitle, setCachedWikiPage } from './_cache.js';
 import { getDailyRunRow, getRunSeedRowByHash } from './_seed-store.js';
 import { isWikiRaceSeedStoreEnabled } from './_flags.js';
 import { getSupabaseServiceClient } from './_supabase.js';
@@ -50,16 +49,6 @@ function toClientRaceStartResponse(payload, seedSource, { seedHash = null } = {}
 }
 
 async function ensurePagePayloadForSeededRun(pageRef, fallbackTitle) {
-  const queryKey = pageRef?.normalizedTitle || pageRef?.title || fallbackTitle;
-  if (!queryKey) return null;
-
-  try {
-    const cached = await getCachedWikiPageByTitle(queryKey);
-    if (cached?.page?.path) return cached;
-  } catch (_err) {
-    // Fallback to fresh fetch.
-  }
-
   const titleToFetch = pageRef?.title || fallbackTitle;
   if (!titleToFetch) return null;
   return buildWikiPagePayloadByTitle(titleToFetch);
@@ -202,13 +191,6 @@ export default async function handler(req, res) {
 
     if (!startPayload?.page?.path || !endPayload?.page?.path) {
       return res.status(404).json({ error: 'Invalid seed key' });
-    }
-
-    try {
-      await setCachedWikiPage(startPayload.page.normalizedTitle || startPayload.page.title, startPayload);
-      await setCachedWikiPage(endPayload.page.normalizedTitle || endPayload.page.title, endPayload);
-    } catch (_err) {
-      // Non-fatal: seeded response still succeeds if page cache warmup fails.
     }
 
     const storedDateKey = seedRow?.metadata_json?.dateKey;
