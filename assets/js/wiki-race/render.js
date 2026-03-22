@@ -21,6 +21,7 @@ export function createRenderer(rootEl) {
 
   `;
   const els = {
+    playModeTabsWrap: rootEl.querySelector('.wiki-race-mode-tabs'),
     playModeTabs: Array.from(rootEl.querySelectorAll('[data-play-mode]')),
     soloToolbar: rootEl.querySelector('[data-region="solo-toolbar"]'),
     soloToolbarControls: rootEl.querySelector('[data-region="solo-toolbar-controls"]'),
@@ -60,8 +61,67 @@ export function createRenderer(rootEl) {
   let lastAllowedLinksKey = '';
   let lastRouteText = null;
   let lastRouteTitleCount = 0;
+  let loadingDotsTimerId = null;
+  let loadingDotsFrameIndex = 0;
+  let multiplayerStatusDotsTimerId = null;
+  let multiplayerStatusDotsFrameIndex = 0;
   let cleanupTocSync = () => {};
   let cleanupLazyImageSync = () => {};
+
+  function stopLoadingDotsAnimation() {
+    if (loadingDotsTimerId != null) {
+      clearInterval(loadingDotsTimerId);
+      loadingDotsTimerId = null;
+    }
+  }
+
+  function startLoadingDotsAnimation() {
+    const dotsEl = els.article?.querySelector('.wiki-race-loading-dots');
+    if (!dotsEl) {
+      stopLoadingDotsAnimation();
+      return;
+    }
+    if (loadingDotsTimerId != null) return;
+
+    const frames = ['.', '..', '...'];
+    loadingDotsFrameIndex = 0;
+    dotsEl.textContent = frames[loadingDotsFrameIndex];
+    loadingDotsTimerId = window.setInterval(() => {
+      if (!dotsEl.isConnected) {
+        stopLoadingDotsAnimation();
+        return;
+      }
+      loadingDotsFrameIndex = (loadingDotsFrameIndex + 1) % frames.length;
+      dotsEl.textContent = frames[loadingDotsFrameIndex];
+    }, 500);
+  }
+
+  function stopMultiplayerStatusDotsAnimation() {
+    if (multiplayerStatusDotsTimerId != null) {
+      clearInterval(multiplayerStatusDotsTimerId);
+      multiplayerStatusDotsTimerId = null;
+    }
+  }
+
+  function startMultiplayerStatusDotsAnimation(baseLabel) {
+    if (!els.multiplayerLobbyStatus) {
+      stopMultiplayerStatusDotsAnimation();
+      return;
+    }
+    if (multiplayerStatusDotsTimerId != null) return;
+
+    const frames = ['.', '..', '...'];
+    multiplayerStatusDotsFrameIndex = 0;
+    els.multiplayerLobbyStatus.textContent = `${baseLabel}${frames[multiplayerStatusDotsFrameIndex]}`;
+    multiplayerStatusDotsTimerId = window.setInterval(() => {
+      if (!els.multiplayerLobbyStatus?.isConnected) {
+        stopMultiplayerStatusDotsAnimation();
+        return;
+      }
+      multiplayerStatusDotsFrameIndex = (multiplayerStatusDotsFrameIndex + 1) % frames.length;
+      els.multiplayerLobbyStatus.textContent = `${baseLabel}${frames[multiplayerStatusDotsFrameIndex]}`;
+    }, 500);
+  }
 
   function renderMultiplayerRoster(state) {
     if (!els.multiplayerRoster) return;
@@ -443,11 +503,17 @@ export function createRenderer(rootEl) {
     const showSoloControls = !isMultiplayerMode;
 
     if (els.playModeTabs?.length) {
+      let activeTab = null;
       els.playModeTabs.forEach((tab) => {
         const isActive = tab.dataset.playMode === state.playMode;
         tab.classList.toggle('is-active', isActive);
         tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        if (isActive) activeTab = tab;
       });
+      if (els.playModeTabsWrap && activeTab) {
+        els.playModeTabsWrap.style.setProperty('--wr-mode-pill-left', `${activeTab.offsetLeft}px`);
+        els.playModeTabsWrap.style.setProperty('--wr-mode-pill-width', `${activeTab.offsetWidth}px`);
+      }
     }
     if (els.soloToolbar) {
       els.soloToolbar.hidden = !shouldShowToolbar;
@@ -516,7 +582,12 @@ export function createRenderer(rootEl) {
       els.multiplayerInlineLeaveBtn.disabled = !state.hasJoinedMultiplayerLobby;
     }
     if (els.multiplayerLobbyStatus) {
-      els.multiplayerLobbyStatus.textContent = String(state.multiplayerLobbyStatusLabel || 'lobby open');
+      if (state.multiplayerRoundStartPending) {
+        startMultiplayerStatusDotsAnimation('starting round');
+      } else {
+        stopMultiplayerStatusDotsAnimation();
+        els.multiplayerLobbyStatus.textContent = String(state.multiplayerLobbyStatusLabel || 'lobby open');
+      }
     }
     renderMultiplayerRoster(state);
 
@@ -580,6 +651,13 @@ export function createRenderer(rootEl) {
         lastAllowedLinksKey = '';
         renderToc();
       }
+      if (state.status === 'loading_start') {
+        startLoadingDotsAnimation();
+      } else {
+        stopLoadingDotsAnimation();
+      }
+    } else {
+      stopLoadingDotsAnimation();
     }
 
     const allowedLinksKey = (state.allowedLinkPaths || []).join('|');

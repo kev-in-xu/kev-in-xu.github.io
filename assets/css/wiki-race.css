@@ -83,6 +83,10 @@
 }
 
 .wiki-race-mode-tabs {
+  --wr-mode-pill-left: 0px;
+  --wr-mode-pill-width: 0px;
+  position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-self: flex-start;
   margin-bottom: 0.25rem;
@@ -92,7 +96,23 @@
   background: rgba(255, 253, 248, 0.9);
 }
 
+.wiki-race-mode-tabs::before {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  left: var(--wr-mode-pill-left);
+  width: var(--wr-mode-pill-width);
+  border-radius: 999px;
+  background: var(--wr-accent);
+  z-index: 0;
+  pointer-events: none;
+  transition: left 180ms ease, width 180ms ease;
+}
+
 .wiki-race-tab {
+  position: relative;
+  z-index: 1;
   border: none;
   background: transparent;
   color: var(--wr-muted);
@@ -101,10 +121,10 @@
   font-size: 0.76rem;
   line-height: 1.1;
   cursor: pointer;
+  transition: color 180ms ease;
 }
 
 .wiki-race-tab.is-active {
-  background: var(--wr-accent);
   color: #fff;
 }
 
@@ -1065,28 +1085,9 @@
 
 .wiki-race-loading-dots {
   display: inline-block;
-  overflow: hidden;
-  width: 1ch;
+  min-width: 3ch;
   white-space: nowrap;
-  animation: wiki-race-loading-dots 1.2s steps(1, end) infinite;
-}
-
-@keyframes wiki-race-loading-dots {
-  0%, 24% {
-    width: 1ch;
-  }
-
-  25%, 49% {
-    width: 2ch;
-  }
-
-  50%, 74% {
-    width: 3ch;
-  }
-
-  75%, 100% {
-    width: 1ch;
-  }
+  text-align: left;
 }
 
 .wiki-race-article h2:first-child {

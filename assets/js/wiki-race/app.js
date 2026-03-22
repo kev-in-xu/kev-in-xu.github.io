@@ -217,11 +217,13 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
   const countdownValue = uiMeta.multiplayerCountdownValue;
   const hasJoinedMultiplayerLobby = Boolean(lobbyCode);
   const multiplayerRoundStarted = Boolean(multiplayerState.round);
-  const multiplayerLobbyStatusLabel = Number.isFinite(countdownValue) && countdownValue > 0
-    ? `starting in ${countdownValue}`
-    : (multiplayerState.round
-      ? (multiplayerState.round.endedAtUtc ? 'round finished' : 'round running')
-      : 'lobby open');
+  const multiplayerLobbyStatusLabel = uiMeta.multiplayerRoundStartPending
+    ? 'starting round'
+    : (Number.isFinite(countdownValue) && countdownValue > 0
+      ? `starting in ${countdownValue}`
+      : (multiplayerState.round
+        ? (multiplayerState.round.endedAtUtc ? 'round finished' : 'round running')
+        : 'lobby open'));
   const multiplayerPlayers = (multiplayerState.players || []).map((player) => ({
     ...player,
     isSelf: player.sessionId === gameState.session?.sessionId,
@@ -280,6 +282,7 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
     multiplayerLobbyCodeValue: String(uiMeta.multiplayerLobbyCodeValue || ''),
     multiplayerErrorMessage: String(uiMeta.multiplayerErrorMessage || ''),
     debugMode: Boolean(uiMeta.debugMode),
+    multiplayerRoundStartPending: Boolean(uiMeta.multiplayerRoundStartPending),
     hasJoinedMultiplayerLobby,
     multiplayerShareCode: lobbyCode,
     multiplayerConnectionStatus: connectionStatus,
@@ -410,6 +413,7 @@ async function bootstrap() {
   let multiplayerSnapshotPoller = null;
   let multiplayerCountdownValue = null;
   let multiplayerCountdownTimerId = null;
+  let multiplayerRoundStartPending = false;
   let lastPreparedMultiplayerRoundId = null;
   let lastPreviewedMultiplayerRoundId = null;
   let pendingMultiplayerExitLobbyCode = null;
@@ -546,6 +550,7 @@ async function bootstrap() {
       multiplayerLobbyCodeValue,
       multiplayerErrorMessage,
       multiplayerCountdownValue,
+      multiplayerRoundStartPending,
       debugMode: clientConfig.debugMode
     }));
     targetPreview.render();
@@ -654,6 +659,7 @@ async function bootstrap() {
 
   function resetLocalMultiplayerView({ message = '' } = {}) {
     stopMultiplayerCountdown();
+    multiplayerRoundStartPending = false;
     lastPreparedMultiplayerRoundId = null;
     lastPreviewedMultiplayerRoundId = null;
     pendingMultiplayerExitLobbyCode = null;
@@ -683,6 +689,7 @@ async function bootstrap() {
     if (lastPreparedMultiplayerRoundId === round.id && getCurrentRunState().currentPage) return;
 
     const countdownLength = 3;
+    multiplayerRoundStartPending = false;
     lastPreparedMultiplayerRoundId = round.id;
     stopMultiplayerCountdown();
     multiplayerCountdownValue = countdownLength;
@@ -926,7 +933,7 @@ async function bootstrap() {
       const multiplayerState = getCurrentMultiplayerState();
       if (multiplayerState.round?.endPage?.url && multiplayerState.round?.endPage?.title) {
         const targetTitle = String(multiplayerState.round.endPage.title).trim();
-        modeSubtitle.innerHTML = `Join a shared race to <a data-role="target-page-link" href="${multiplayerState.round.endPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a>. Lobby progress updates live and falls back to snapshot polling if realtime degrades.`;
+        modeSubtitle.innerHTML = `Be the first to reach the page for <a data-role="target-page-link" href="${multiplayerState.round.endPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a>!`;
       } else {
         modeSubtitle.innerHTML = 'Create or join a lobby to race against others.';
       }
@@ -1080,6 +1087,8 @@ async function bootstrap() {
   renderer.onControl('start-lobby-race', async () => {
     const multiplayerState = getCurrentMultiplayerState();
     if (!multiplayerState.lobby?.code) return;
+    multiplayerRoundStartPending = true;
+    renderUi();
     try {
       const racePair = await generateRandomVitalRacePair();
       const snapshot = await startMultiplayerLobby(multiplayerState.lobby.code, {
@@ -1089,6 +1098,7 @@ async function bootstrap() {
       });
       await applyIncomingMultiplayerSnapshot(snapshot);
     } catch (err) {
+      multiplayerRoundStartPending = false;
       setMultiplayerError(err?.message || 'Failed to start lobby race.');
     }
   });
