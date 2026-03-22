@@ -132,8 +132,9 @@ function toWikiPageRef({ title, pageid }) {
 }
 
 function stripDisplayTitle(displayTitle, fallback) {
-  const stripped = String(displayTitle || '')
-    .replace(/<[^>]*>/g, '')
+  const root = document.createElement('div');
+  root.innerHTML = String(displayTitle || '');
+  const stripped = String(root.textContent || '')
     .replace(/\s+/g, ' ')
     .trim();
   return stripped || fallback;

@@ -3,7 +3,11 @@ import { formatElapsedMs } from './timer.js';
 export function createRenderer(rootEl) {
   const TOC_SCROLL_TOP_OFFSET_PX = 16;
   const IDLE_PLACEHOLDER_HTML = '<p class="wiki-race-placeholder">Article content will appear here after you start.</p>';
-  const LOADING_PLACEHOLDER_HTML = '<p class="wiki-race-placeholder">Loading article</p>';
+  const LOADING_PLACEHOLDER_HTML = `
+    <p class="wiki-race-placeholder wiki-race-loading-placeholder">
+      Loading article<span class="wiki-race-loading-dots" aria-hidden="true">...</span>
+    </p>
+  `;
   const ERROR_PLACEHOLDER_HTML = '<p class="wiki-race-placeholder">Article failed to load. Start again.</p>';
   const FULLSCREEN_OUTWARD_ICON = `
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -490,6 +494,9 @@ export function createRenderer(rootEl) {
       els.multiplayerShareCode.textContent = String(state.multiplayerShareCode || '------');
     }
     if (els.multiplayerConnectionStatus) {
+      const shouldShowConnectionStatus = state.hasJoinedMultiplayerLobby && state.debugMode;
+      els.multiplayerConnectionStatus.hidden = !shouldShowConnectionStatus;
+      els.multiplayerConnectionStatus.style.display = shouldShowConnectionStatus ? '' : 'none';
       els.multiplayerConnectionStatus.textContent = String(state.multiplayerConnectionStatusLabel || 'Offline');
       els.multiplayerConnectionStatus.dataset.state = String(state.multiplayerConnectionStatus || 'idle');
     }
@@ -523,6 +530,7 @@ export function createRenderer(rootEl) {
     els.timer.textContent = formatElapsedMs(state.elapsedMs || 0);
     els.clicks.textContent = String(state.clickCount ?? 0);
 
+    const isArticleLoading = Boolean(state.isArticleLoading);
     const isRunning = state.status === 'running';
     const isLoadingStart = state.status === 'loading_start';
     const isFinished = state.status === 'won' || state.status === 'abandoned';
@@ -558,6 +566,8 @@ export function createRenderer(rootEl) {
       els.toolbarError.textContent = toolbarErrorMessage;
     }
     els.article.classList.toggle('is-finished', isFinished);
+    els.article.classList.toggle('is-nav-loading', isArticleLoading);
+    els.article.setAttribute('aria-busy', isArticleLoading ? 'true' : 'false');
 
     if (!state.articleHtml) {
       const placeholderHtml = state.status === 'loading_start'

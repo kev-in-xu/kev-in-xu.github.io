@@ -1,6 +1,7 @@
 import { fetchMwJson, toWikiPageRef } from './_mw.js';
 import { computePageFlags } from '../../lib/wiki-rules.js';
 import { sanitizeWikiArticleHtml } from './_sanitize.js';
+import { load } from 'cheerio';
 
 /**
  * Converts MediaWiki display title HTML into plain text.
@@ -9,8 +10,9 @@ import { sanitizeWikiArticleHtml } from './_sanitize.js';
  * Logic: Strips tags, collapses whitespace, and falls back when empty.
  */
 function stripDisplayTitle(displayTitle, fallback) {
-  const stripped = String(displayTitle || '')
-    .replace(/<[^>]*>/g, '')
+  const $ = load('<div id="__display-title"></div>');
+  $('#__display-title').html(String(displayTitle || ''));
+  const stripped = $('#__display-title').text()
     .replace(/\s+/g, ' ')
     .trim();
   return stripped || fallback;

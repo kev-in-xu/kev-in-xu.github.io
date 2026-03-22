@@ -24,7 +24,7 @@ classes:
   })();
 </script>
 
-<div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="https://kev-in-xu-github-io.vercel.app" data-mw-source="browser" data-confetti-src="/assets/animations/wiki-race-win-confetti.json?v=1" data-supabase-url="https://lljbzkmtshufnzfnzawp.supabase.co" data-supabase-anon-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsamJ6a210c2h1Zm56Zm56YXdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MTM1NDksImV4cCI6MjA3ODI4OTU0OX0.F-ARDzmDyzgLl49CWroQupwO6mbttQxgvxIxup92fv0" data-multiplayer-enabled="true" data-realtime-enabled="true" data-realtime-fallback-polling-enabled="true">
+<div id="wiki-race-app" class="wiki-race-app" data-target-title="Artificial general intelligence" data-api-base="https://kev-in-xu-github-io.vercel.app" data-mw-source="browser" data-confetti-src="/assets/animations/wiki-race-win-confetti.json?v=1" data-supabase-url="https://lljbzkmtshufnzfnzawp.supabase.co" data-supabase-anon-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsamJ6a210c2h1Zm56Zm56YXdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MTM1NDksImV4cCI6MjA3ODI4OTU0OX0.F-ARDzmDyzgLl49CWroQupwO6mbttQxgvxIxup92fv0" data-multiplayer-enabled="true" data-debug-mode="false" data-realtime-enabled="true" data-realtime-fallback-polling-enabled="true">
   <div class="wiki-race-shell">
     <section class="wiki-race-mode-tabs" aria-label="Play mode">
       <button type="button" class="wiki-race-tab is-active" data-action="show-solo" data-play-mode="solo" aria-pressed="true">Solo</button>
@@ -41,7 +41,7 @@ classes:
       <div class="wiki-race-multiplayer-intro" data-region="multiplayer-home">
         <div class="wiki-race-multiplayer-fields">
           <label class="wiki-race-inline-field" for="wiki-race-nickname">
-            <span class="wiki-race-mode-text">Nickname</span>
+            <span class="wiki-race-mode-text">Nickname:</span>
             <input
               id="wiki-race-nickname"
               class="wiki-race-text-control"
@@ -57,7 +57,7 @@ classes:
               aria-label="Nickname">
           </label>
           <label class="wiki-race-inline-field" for="wiki-race-lobby-code">
-            <span class="wiki-race-mode-text">Lobby Code</span>
+            <span class="wiki-race-mode-text">Lobby Code:</span>
             <input
               id="wiki-race-lobby-code"
               class="wiki-race-text-control wiki-race-code-control"

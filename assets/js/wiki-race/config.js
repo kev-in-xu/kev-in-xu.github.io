@@ -28,6 +28,7 @@ export function getWikiRaceClientConfig() {
     supabaseUrl,
     supabaseAnonKey,
     multiplayerEnabled: parseBoolean(root?.dataset?.multiplayerEnabled, true),
+    debugMode: parseBoolean(root?.dataset?.debugMode, false),
     realtimeEnabled: parseBoolean(root?.dataset?.realtimeEnabled, true),
     realtimeFallbackPollingEnabled: parseBoolean(root?.dataset?.realtimeFallbackPollingEnabled, true)
   };

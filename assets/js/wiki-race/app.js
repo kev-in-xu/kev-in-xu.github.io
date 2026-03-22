@@ -26,6 +26,7 @@ import { getRandomStartPage, getWikiPageByPath, getWikiPageByTitle } from './mw-
 import { createTargetPreviewController } from './target-preview.js';
 import { createLobbyRealtimeClient, createLobbySnapshotPoller } from './realtime-client.js';
 import { applyMultiplayerSnapshot } from './multiplayer-state.js';
+import { getWikiRaceClientConfig } from './config.js';
 
 const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
 const SESSION_ID_STORAGE_KEY = 'wiki-race-session-id-v1';
@@ -258,6 +259,7 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
     selectedMode,
     status: runState.status,
     phase: gameState.phase,
+    isArticleLoading: Boolean(gameState.ui?.isArticleLoading),
     clickCount: runState.clickCount,
     runSeedLabel,
     elapsedMs,
@@ -277,6 +279,7 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
     multiplayerNicknameValue: String(uiMeta.multiplayerNicknameValue || ''),
     multiplayerLobbyCodeValue: String(uiMeta.multiplayerLobbyCodeValue || ''),
     multiplayerErrorMessage: String(uiMeta.multiplayerErrorMessage || ''),
+    debugMode: Boolean(uiMeta.debugMode),
     hasJoinedMultiplayerLobby,
     multiplayerShareCode: lobbyCode,
     multiplayerConnectionStatus: connectionStatus,
@@ -382,6 +385,7 @@ function getOrCreateSessionId() {
 async function bootstrap() {
   const root = document.getElementById('wiki-race-app');
   if (!root) return;
+  const clientConfig = getWikiRaceClientConfig();
   const modeSubtitle = root.querySelector('[data-region="mode-subtitle"]');
   const store = createStore(createInitialGameState());
   const renderer = createRenderer(root);
@@ -541,9 +545,20 @@ async function bootstrap() {
       multiplayerNicknameValue,
       multiplayerLobbyCodeValue,
       multiplayerErrorMessage,
-      multiplayerCountdownValue
+      multiplayerCountdownValue,
+      debugMode: clientConfig.debugMode
     }));
     targetPreview.render();
+  }
+
+  function setArticleLoading(isLoading) {
+    store.updateState((prev) => ({
+      ...prev,
+      ui: {
+        ...prev.ui,
+        isArticleLoading: Boolean(isLoading)
+      }
+    }));
   }
 
   function clearToolbarError() {
@@ -1380,9 +1395,12 @@ async function bootstrap() {
   }
 
   async function handleArticleNav(path, source) {
-    const runState = getCurrentRunState();
-    if (runState.status !== 'running' || !runState.currentPage) return;
+    const gameState = store.getState();
+    const runState = getRunState(gameState);
+    if (runState.status !== 'running' || !runState.currentPage || gameState.ui?.isArticleLoading) return;
 
+    setArticleLoading(true);
+    renderUi(timer.getElapsedMs());
     const snapshot = {
       page: runState.currentPage,
       routeLength: runState.route.length,
@@ -1390,10 +1408,10 @@ async function bootstrap() {
     };
     historyController.pushSnapshot(snapshot);
 
+    let finalElapsedMs = null;
     try {
       const page = await getWikiPageByPath(path);
       const reachedTarget = isTargetPageMatch(page, getCurrentRunState().targetPage);
-      let finalElapsedMs = null;
       if (reachedTarget && getCurrentRunState().status === 'running') {
         finalElapsedMs = timer.stop();
       }
@@ -1417,7 +1435,6 @@ async function bootstrap() {
         };
       });
       clearToolbarError();
-      renderUi(finalElapsedMs ?? timer.getElapsedMs());
       if (reachedTarget) {
         if (playMode === 'multiplayer') {
           const roundId = getCurrentMultiplayerState().round?.id;
@@ -1463,7 +1480,9 @@ async function bootstrap() {
         ...prev,
         errorMessage: err?.message || 'Page load failed. Start again.'
       }));
-      renderUi();
+    } finally {
+      setArticleLoading(false);
+      renderUi(finalElapsedMs ?? timer.getElapsedMs());
     }
   }
 
@@ -1518,13 +1537,13 @@ async function bootstrap() {
 
   renderer.onArticleLinkClick((event, link) => {
     const runState = getCurrentRunState();
-    if (runState.status !== 'running') {
-      event.preventDefault();
+    const href = (link.getAttribute('href') || '').trim();
+    if (href.startsWith('#')) {
       return;
     }
 
-    const href = (link.getAttribute('href') || '').trim();
-    if (href.startsWith('#')) {
+    if (runState.status !== 'running' || store.getState().ui?.isArticleLoading) {
+      event.preventDefault();
       return;
     }
 
