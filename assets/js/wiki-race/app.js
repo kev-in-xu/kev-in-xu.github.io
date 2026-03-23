@@ -954,15 +954,15 @@ async function bootstrap() {
     if (getSelectedMode() === 'seeded') {
       if (currentTargetPage?.url && currentTargetPage?.title) {
         const targetTitle = String(currentTargetPage.title).trim();
-        modeSubtitle.innerHTML = `Replay the seeded wikipedia race to <a data-role="target-page-link" href="${currentTargetPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a>. Enter a stored 24-character seed key to load the run.`;
+        modeSubtitle.innerHTML = `Reach the wikipedia page for <a data-role="target-page-link" href="${currentTargetPage.url}" target="_blank" rel="noopener noreferrer">${targetTitle}</a> using as few clicks as possible.`;
         targetPreview.bindLinkEvents();
         return;
       }
-      modeSubtitle.innerHTML = 'Enter a stored 24-character seed key to replay a saved wikipedia race.';
+      modeSubtitle.innerHTML = 'Enter a stored 24-character run seed to replay a saved wikipedia race.';
       targetPreview.bindLinkEvents();
       return;
     }
-    modeSubtitle.innerHTML = 'Reach the wikipedia page for <a data-role="target-page-link" href="https://en.wikipedia.org/wiki/Artificial_general_intelligence" target="_blank" rel="noopener noreferrer">artificial general intelligence</a> using as few article links as possible. Daily challenge resets at 00:00 UTC.';
+    modeSubtitle.innerHTML = 'Reach the wikipedia page for <a data-role="target-page-link" href="https://en.wikipedia.org/wiki/Artificial_general_intelligence" target="_blank" rel="noopener noreferrer">artificial general intelligence</a> using as few article links as possible. Start page resets daily.';
     targetPreview.bindLinkEvents();
   }
   syncModeSubtitle();
