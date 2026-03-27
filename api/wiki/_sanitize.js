@@ -3,7 +3,7 @@
  */
 
 import { load } from 'cheerio';
-import { normalizeAndValidateWikiPath } from '../../lib/wiki-rules.js';
+import { parseWikiHref } from '../../lib/wiki-rules.js';
 
 const REMOVE_SELECTORS = [
   'script',
@@ -28,7 +28,8 @@ const REMOVE_SELECTORS = [
   '.cmbox',
   '.fmbox',
   '.tmbox',
-  '.plainlinks'
+  '.plainlinks',
+  '.noprint.Inline-Template'
 ];
 
 const STRIP_TAGS = [
@@ -168,37 +169,41 @@ function normalizeLinks($, $root) {
       return;
     }
 
-    const path = normalizeAndValidateWikiPath(href);
-
-    if (!path) {
+    const parsedLink = parseWikiHref(href);
+    if (!parsedLink) {
       $a.replaceWith($a.text());
       return;
     }
 
-    const slug = decodeURIComponent(path.slice('/wiki/'.length));
+    const slug = decodeURIComponent(parsedLink.path.slice('/wiki/'.length));
     const text = stripHtmlTags($a.text()) || slug.replace(/_/g, ' ');
     const title = slug.replace(/_/g, ' ');
 
-    $a.attr('href', path);
-    $a.attr('data-wiki-path', path);
+    $a.attr('href', parsedLink.href);
+    $a.attr('data-wiki-path', parsedLink.path);
+    if (parsedLink.fragment) {
+      $a.attr('data-wiki-fragment', parsedLink.fragment);
+    } else {
+      $a.removeAttr('data-wiki-fragment');
+    }
     const attrs = Object.keys(a.attribs || {});
     for (const attr of attrs) {
       const lower = attr.toLowerCase();
-      const keep = ['href', 'title', 'data-wiki-path', 'class', 'id'].includes(lower) || lower.startsWith('data-');
+      const keep = ['href', 'title', 'data-wiki-path', 'data-wiki-fragment', 'class', 'id'].includes(lower) || lower.startsWith('data-');
       if (!keep) {
         $a.removeAttr(attr);
       }
     }
 
-    if (!seen.has(path)) {
+    if (!seen.has(parsedLink.path)) {
       linkIndex.push({
-        href: path,
-        path,
+        href: parsedLink.href,
+        path: parsedLink.path,
         title,
         normalizedTitle: slug,
         text
       });
-      seen.add(path);
+      seen.add(parsedLink.path);
     }
   });
 

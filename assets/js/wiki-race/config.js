@@ -16,10 +16,10 @@ export function getWikiRaceRoot() {
 
 export function getWikiRaceClientConfig() {
   const root = getWikiRaceRoot();
-  const apiBase = root?.dataset?.apiBase?.trim()
-    || (typeof window !== 'undefined' && typeof window.WIKI_RACE_API_BASE === 'string'
-      ? window.WIKI_RACE_API_BASE.trim()
-      : '');
+  const apiBase = (typeof window !== 'undefined' && typeof window.WIKI_RACE_API_BASE === 'string'
+    ? window.WIKI_RACE_API_BASE.trim()
+    : '')
+    || root?.dataset?.apiBase?.trim();
   const supabaseUrl = root?.dataset?.supabaseUrl?.trim() || DEFAULT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = root?.dataset?.supabaseAnonKey?.trim() || DEFAULT_PUBLIC_SUPABASE_ANON_KEY;
 

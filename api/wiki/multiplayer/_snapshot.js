@@ -136,11 +136,11 @@ export async function finalizeRoundIfComplete(supabaseClient, lobbyRow, playerRo
     return { resultRows: nextResultRows };
   }
 
-  // otherwise update round and lobby status
+  // otherwise update round and return the lobby to an open/rematch-ready state
   const endedAtUtc = new Date().toISOString();
   const { error: roundUpdateError } = await supabaseClient
     .from('wiki_race_rounds')
-    .update({ ended_at_utc: endedAtUtc }) // update round status to ended
+    .update({ ended_at_utc: endedAtUtc })
     .eq('id', roundRow.id)
     .is('ended_at_utc', null);
   if (roundUpdateError) throw roundUpdateError;
@@ -149,11 +149,11 @@ export async function finalizeRoundIfComplete(supabaseClient, lobbyRow, playerRo
   if (lobbyRow.status === 'running') {
     const { error: lobbyUpdateError } = await supabaseClient
       .from('wiki_race_lobbies')
-      .update({ status: 'ended' }) // update lobby status to completed
+      .update({ status: 'open' })
       .eq('id', lobbyRow.id)
       .eq('status', 'running');
     if (lobbyUpdateError) throw lobbyUpdateError;
-    lobbyRow.status = 'ended';
+    lobbyRow.status = 'open';
   }
 
   return { resultRows: nextResultRows };

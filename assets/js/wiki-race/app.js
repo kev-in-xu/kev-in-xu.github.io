@@ -27,6 +27,7 @@ import { createTargetPreviewController } from './target-preview.js';
 import { createLobbyRealtimeClient, createLobbySnapshotPoller } from './realtime-client.js';
 import { applyMultiplayerSnapshot } from './multiplayer-state.js';
 import { getWikiRaceClientConfig } from './config.js';
+import { parseWikiHref } from '../../../lib/wiki-rules.js';
 
 const LOTTIE_WEB_CDN = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
 const SESSION_ID_STORAGE_KEY = 'wiki-race-session-id-v1';
@@ -176,21 +177,6 @@ async function exitAnyFullscreen() {
   return false;
 }
 
-function normalizePathFromHref(href) {
-  try {
-    const url = new URL(href, window.location.origin);
-    if (url.hostname === 'en.wikipedia.org' && url.pathname.startsWith('/wiki/')) {
-      return url.pathname;
-    }
-    if (url.origin === window.location.origin && url.pathname.startsWith('/wiki/')) {
-      return url.pathname;
-    }
-    return null;
-  } catch (_err) {
-    return null;
-  }
-}
-
 function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}, uiMeta = {}) {
   const runState = getRunState(gameState);
   const multiplayerState = getMultiplayerState(gameState);
@@ -216,13 +202,13 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
   const lobbyCode = multiplayerState.lobby?.code || null;
   const countdownValue = uiMeta.multiplayerCountdownValue;
   const hasJoinedMultiplayerLobby = Boolean(lobbyCode);
-  const multiplayerRoundStarted = Boolean(multiplayerState.round);
+  const multiplayerRoundStarted = Boolean(multiplayerState.round && !multiplayerState.round.endedAtUtc);
   const multiplayerLobbyStatusLabel = uiMeta.multiplayerRoundStartPending
     ? 'starting round'
     : (Number.isFinite(countdownValue) && countdownValue > 0
       ? `starting in ${countdownValue}`
       : (multiplayerState.round
-        ? (multiplayerState.round.endedAtUtc ? 'round finished' : 'round running')
+        ? (multiplayerState.round.endedAtUtc ? 'ready for next round' : 'round running')
         : 'lobby open'));
   const multiplayerPlayers = (multiplayerState.players || []).map((player) => ({
     ...player,
@@ -709,6 +695,9 @@ async function bootstrap() {
       }
     }));
     renderUi(0);
+    if (!isFullscreenActive()) {
+      void requestElementFullscreen(root);
+    }
 
     const tick = async () => {
       if (multiplayerCountdownValue == null) return;
@@ -1404,7 +1393,7 @@ async function bootstrap() {
     }
   }
 
-  async function handleArticleNav(path, source) {
+  async function handleArticleNav(path, source, { fragment = null } = {}) {
     const gameState = store.getState();
     const runState = getRunState(gameState);
     if (runState.status !== 'running' || !runState.currentPage || gameState.ui?.isArticleLoading) return;
@@ -1419,6 +1408,7 @@ async function bootstrap() {
     historyController.pushSnapshot(snapshot);
 
     let finalElapsedMs = null;
+    let shouldScrollToFragment = false;
     try {
       const page = await getWikiPageByPath(path);
       const reachedTarget = isTargetPageMatch(page, getCurrentRunState().targetPage);
@@ -1445,6 +1435,7 @@ async function bootstrap() {
         };
       });
       clearToolbarError();
+      shouldScrollToFragment = Boolean(fragment);
       if (reachedTarget) {
         if (playMode === 'multiplayer') {
           const roundId = getCurrentMultiplayerState().round?.id;
@@ -1493,6 +1484,9 @@ async function bootstrap() {
     } finally {
       setArticleLoading(false);
       renderUi(finalElapsedMs ?? timer.getElapsedMs());
+      if (shouldScrollToFragment && fragment) {
+        renderer.scrollArticleToAnchor(fragment, { behavior: 'auto' });
+      }
     }
   }
 
@@ -1557,13 +1551,29 @@ async function bootstrap() {
       return;
     }
 
-    const path = link.getAttribute('data-wiki-path') || normalizePathFromHref(href);
-    if (!path) {
+    const parsedLink = (() => {
+      const dataPath = String(link.getAttribute('data-wiki-path') || '').trim();
+      const dataFragment = String(link.getAttribute('data-wiki-fragment') || '').trim();
+      if (dataPath) {
+        return {
+          path: dataPath,
+          fragment: dataFragment || null
+        };
+      }
+      const parsedHref = parseWikiHref(href);
+      if (!parsedHref) return null;
+      return {
+        path: parsedHref.path,
+        fragment: parsedHref.fragment
+      };
+    })();
+
+    if (!parsedLink?.path) {
       event.preventDefault();
       return;
     }
 
-    if (!isAllowedCurrentPageLink(runState.currentPage, path)) {
+    if (!isAllowedCurrentPageLink(runState.currentPage, parsedLink.path)) {
       event.preventDefault();
       store.updateState((prev) => ({
         ...prev,
@@ -1574,7 +1584,9 @@ async function bootstrap() {
     }
 
     event.preventDefault();
-    handleArticleNav(path, 'click');
+    handleArticleNav(parsedLink.path, 'click', {
+      fragment: parsedLink.fragment
+    });
   });
 
   window.addEventListener('popstate', () => {

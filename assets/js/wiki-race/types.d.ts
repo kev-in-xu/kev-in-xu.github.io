@@ -112,7 +112,7 @@ export interface MultiplayerState {
 export interface MultiplayerLobbySnapshot {
   id: string;
   code: string;
-  status: 'open' | 'running' | 'ended' | 'abandoned' | 'expired';
+  status: 'open' | 'running' | 'abandoned' | 'expired';
   hostSessionId: string;
   createdAtUtc: string;
   expiresAtUtc: string;

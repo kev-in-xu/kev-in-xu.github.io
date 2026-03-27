@@ -1,7 +1,7 @@
 import {
   computePageFlags,
   isDisallowedNamespaceTitle,
-  normalizeAndValidateWikiPath
+  parseWikiHref
 } from '../../../lib/wiki-rules.js';
 
 export { computePageFlags, isDisallowedNamespaceTitle };
@@ -58,7 +58,7 @@ function removeHiddenSections(root) {
 function removeReferenceAndTocNodes(root) {
   root.querySelectorAll('.reference, sup.reference, .references, .mw-editsection').forEach((node) => node.remove());
   root.querySelectorAll('#toc, .toc, .vector-toc, .mw-table-of-contents').forEach((node) => node.remove());
-  root.querySelectorAll('.ambox').forEach((node) => node.remove());
+  root.querySelectorAll('.ambox, .noprint.Inline-Template').forEach((node) => node.remove());
 }
 
 export function sanitizeWikiArticleHtml({ rawHtml }) {
@@ -71,18 +71,30 @@ export function sanitizeWikiArticleHtml({ rawHtml }) {
 
   Array.from(root.querySelectorAll('a[href]')).forEach((anchor) => {
     const href = String(anchor.getAttribute('href') || '').trim();
-    const path = href.startsWith('#') ? href : normalizeAndValidateWikiPath(href);
-    if (!path || seen.has(path)) return;
-    if (path.startsWith('#')) return; // section jumps are browser-native, not gameplay moves
+    if (href.startsWith('#')) return; // section jumps are browser-native, not gameplay moves
 
-    const slug = decodeURIComponent(path.slice('/wiki/'.length));
+    const parsedLink = parseWikiHref(href);
+    if (!parsedLink) return;
+
+    anchor.setAttribute('href', parsedLink.href);
+    anchor.setAttribute('data-wiki-path', parsedLink.path);
+    if (parsedLink.fragment) {
+      anchor.setAttribute('data-wiki-fragment', parsedLink.fragment);
+    } else {
+      anchor.removeAttribute('data-wiki-fragment');
+    }
+
+    if (seen.has(parsedLink.path)) return;
+
+    const slug = decodeURIComponent(parsedLink.path.slice('/wiki/'.length));
     linkIndex.push({
-      path,
+      href: parsedLink.href,
+      path: parsedLink.path,
       title: slug.replace(/_/g, ' '),
       normalizedTitle: slug,
       text: stripHtmlTags(anchor.textContent || '') || slug.replace(/_/g, ' ')
     });
-    seen.add(path);
+    seen.add(parsedLink.path);
   });
 
   const html = [

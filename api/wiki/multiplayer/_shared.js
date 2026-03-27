@@ -6,7 +6,7 @@ export const NICKNAME_PATTERN = /^[A-Za-z]{3,10}$/;
 export const MAX_PLAYERS_PER_LOBBY = 6;
 export const LOBBY_TTL_HOURS = 24;
 export const ROUND_MAX_DURATION_SECONDS = 600;
-export const ACTIVE_LOBBY_STATUSES = ['open', 'running', 'ended', 'abandoned'];
+export const ACTIVE_LOBBY_STATUSES = ['open', 'running', 'abandoned'];
 const LOBBY_CODE_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 export function readJsonBody(req) {

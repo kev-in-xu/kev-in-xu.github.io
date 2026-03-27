@@ -209,6 +209,32 @@ export function createRenderer(rootEl) {
     els.fullscreenBtn.innerHTML = isFullscreenActive ? FULLSCREEN_INWARD_ICON : FULLSCREEN_OUTWARD_ICON;
   }
 
+  function scrollArticleToAnchor(id, { behavior = 'smooth' } = {}) {
+    const articleBody = els.article?.querySelector('.wiki-race-article-body');
+    if (!els.article || !articleBody) return false;
+
+    const anchorId = String(id || '');
+    if (!anchorId) {
+      els.article.scrollTo({
+        top: 0,
+        behavior
+      });
+      return true;
+    }
+
+    const heading = articleBody.querySelector(`#${CSS.escape(anchorId)}`);
+    if (!heading) return false;
+
+    const articleRect = els.article.getBoundingClientRect();
+    const headingRect = heading.getBoundingClientRect();
+    const top = els.article.scrollTop + (headingRect.top - articleRect.top) - TOC_SCROLL_TOP_OFFSET_PX;
+    els.article.scrollTo({
+      top: Math.max(0, top),
+      behavior
+    });
+    return true;
+  }
+
   function normalizeMediaUrl(url) {
     const value = String(url || '').trim();
     if (!value) return '';
@@ -464,24 +490,7 @@ export function createRenderer(rootEl) {
 
       event.preventDefault();
       const id = decodeURIComponent(String(anchor.getAttribute('href') || '').slice(1));
-      if (!id) {
-        els.article.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-        return;
-      }
-
-      const heading = articleBody.querySelector(`#${CSS.escape(id)}`);
-      if (!heading) return;
-
-      const articleRect = els.article.getBoundingClientRect();
-      const headingRect = heading.getBoundingClientRect();
-      const top = els.article.scrollTop + (headingRect.top - articleRect.top) - TOC_SCROLL_TOP_OFFSET_PX;
-      els.article.scrollTo({
-        top: Math.max(0, top),
-        behavior: 'smooth'
-      });
+      scrollArticleToAnchor(id, { behavior: 'smooth' });
     };
 
     els.article.addEventListener('scroll', onScroll, { passive: true });
@@ -576,7 +585,7 @@ export function createRenderer(rootEl) {
         && state.canStartMultiplayerCountdown
         && !state.multiplayerRoundStarted;
       els.multiplayerStartCountdownBtn.hidden = !shouldShowStart;
-      els.multiplayerStartCountdownBtn.disabled = !shouldShowStart;
+      els.multiplayerStartCountdownBtn.disabled = !shouldShowStart || state.multiplayerRoundStartPending;
     }
     if (els.multiplayerInlineLeaveBtn) {
       els.multiplayerInlineLeaveBtn.disabled = !state.hasJoinedMultiplayerLobby;
@@ -760,6 +769,7 @@ export function createRenderer(rootEl) {
     renderState,
     onArticleLinkClick,
     onControl,
+    scrollArticleToAnchor,
     setFullscreenToggleState
   };
 }
