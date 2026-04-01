@@ -39,6 +39,7 @@ export function createRenderer(rootEl) {
     multiplayerConnectionStatus: rootEl.querySelector('[data-field="multiplayer-connection-status"]'),
     multiplayerRosterPanel: rootEl.querySelector('.wiki-race-roster-panel'),
     multiplayerRoster: rootEl.querySelector('[data-region="multiplayer-roster"]'),
+    multiplayerJoinLobbyBtn: rootEl.querySelector('[data-action="join-lobby"]'),
     multiplayerStartCountdownBtn: rootEl.querySelector('[data-action="start-lobby-race"]'),
     multiplayerInlineLeaveBtn: rootEl.querySelector('[data-action="leave-lobby-inline"]'),
     startBtn: rootEl.querySelector('[data-action="start"]'),
@@ -564,6 +565,9 @@ export function createRenderer(rootEl) {
     }
     if (els.multiplayerLobbyCode) {
       els.multiplayerLobbyCode.value = String(state.multiplayerLobbyCodeValue || '');
+    }
+    if (els.multiplayerJoinLobbyBtn) {
+      els.multiplayerJoinLobbyBtn.disabled = isMultiplayerMode ? !state.canJoinMultiplayerLobby : false;
     }
     if (els.multiplayerShareCode) {
       els.multiplayerShareCode.textContent = String(state.multiplayerShareCode || '------');

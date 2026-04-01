@@ -830,6 +830,11 @@
   padding: 0.1rem;
 }
 
+.wiki-race-article figure img {
+  width: auto;
+  border-radius: 0;
+}
+
 .wiki-race-article .wiki-race-article-body > :first-child {
   margin-top: 0;
 }
@@ -910,6 +915,77 @@
   margin: 0.9rem 0;
   padding: 0.2rem 0 0.2rem 0.8rem;
   color: #54595d;
+}
+
+.wiki-race-article .wiki-race-article-body .thumb {
+  clear: right;
+  float: right;
+  margin: 0.5em 0 1.3em 1.4em;
+  background: transparent;
+}
+
+.wiki-race-article .wiki-race-article-body .thumb.tleft,
+.wiki-race-article .wiki-race-article-body .thumbleft,
+.wiki-race-article .wiki-race-article-body .tleft .thumb {
+  clear: left;
+  float: left;
+  margin: 0.5em 1.4em 1.3em 0;
+}
+
+.wiki-race-article .wiki-race-article-body .thumb.tright,
+.wiki-race-article .wiki-race-article-body .thumbright {
+  clear: right;
+  float: right;
+}
+
+.wiki-race-article .wiki-race-article-body .thumbinner {
+  min-width: 100px;
+  box-sizing: border-box;
+  border: 1px solid #c8ccd1;
+  background: #f8f9fa;
+  color: #202122;
+  font-size: 94%;
+  line-height: 1.4;
+  padding: 3px;
+  text-align: center;
+}
+
+.wiki-race-article .wiki-race-article-body .thumbinner img,
+.wiki-race-article .wiki-race-article-body .thumbinner .thumbimage {
+  display: block;
+  margin: 0 auto;
+  background: #fff;
+}
+
+.wiki-race-article .wiki-race-article-body .thumbcaption {
+  padding: 3px;
+  text-align: left;
+}
+
+.wiki-race-article .wiki-race-article-body .tmulti .thumbinner,
+.wiki-race-article .wiki-race-article-body .multiimageinner {
+  text-align: center;
+}
+
+.wiki-race-article .wiki-race-article-body .tmulti .thumbcaption,
+.wiki-race-article .wiki-race-article-body .multiimageinner .thumbcaption {
+  text-align: left;
+}
+
+.wiki-race-article .wiki-race-article-body .multiimageinner > * {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .wiki-race-article .wiki-race-article-body .thumb,
+  .wiki-race-article .wiki-race-article-body .thumb.tright,
+  .wiki-race-article .wiki-race-article-body .thumb.tleft,
+  .wiki-race-article .wiki-race-article-body .thumbleft,
+  .wiki-race-article .wiki-race-article-body .thumbright {
+    float: none;
+    clear: both;
+    margin: 0.75em auto 1em;
+  }
 }
 
 

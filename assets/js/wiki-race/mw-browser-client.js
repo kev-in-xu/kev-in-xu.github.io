@@ -187,12 +187,11 @@ async function buildPayloadFromPageMeta(pageMeta) {
   });
 
   const rawHtml = parseData?.parse?.text?.['*'] || '';
-  const cleanDisplayTitle = stripDisplayTitle(parseData?.parse?.displaytitle, pageMeta.title);
   const sanitized = sanitizeWikiArticleHtml({
     rawHtml,
-    displayTitle: cleanDisplayTitle,
     categories: pageMeta.categories || []
   });
+  const cleanDisplayTitle = stripDisplayTitle(parseData?.parse?.displaytitle, pageMeta.title);
 
   const flags = computePageFlags({
     title: pageMeta.title,

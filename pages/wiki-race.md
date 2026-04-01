@@ -72,8 +72,8 @@ classes:
               data-field="multiplayer-lobby-code"
               aria-label="Lobby code">
           </label>
-          <button type="button" class="wiki-race-btn" data-action="create-lobby">Create Lobby</button>
           <button type="button" class="wiki-race-btn" data-action="join-lobby">Join Lobby</button>
+          <button type="button" class="wiki-race-btn" data-action="create-lobby">Create Lobby</button>
         </div>
       </div>
 

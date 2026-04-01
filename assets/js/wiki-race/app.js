@@ -274,6 +274,7 @@ function buildUiState(gameState, elapsedMs, historyController, toolbarState = {}
     multiplayerConnectionStatus: connectionStatus,
     multiplayerConnectionStatusLabel: connectionLabels[connectionStatus] || 'Offline',
     multiplayerPlayers,
+    canJoinMultiplayerLobby: Boolean(uiMeta.canJoinMultiplayerLobby),
     canKickPlayers: Boolean(multiplayerState.isHost),
     canStartMultiplayerCountdown: Boolean(multiplayerState.isHost),
     multiplayerRoundStarted,
@@ -536,6 +537,7 @@ async function bootstrap() {
       multiplayerLobbyCodeValue,
       multiplayerErrorMessage,
       multiplayerCountdownValue,
+      canJoinMultiplayerLobby: isValidLobbyCode(multiplayerLobbyCodeValue),
       multiplayerRoundStartPending,
       debugMode: clientConfig.debugMode
     }));
