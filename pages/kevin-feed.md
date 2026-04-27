@@ -4,6 +4,8 @@ permalink: /projects/kevin-feed/
 classes: page--kevin-feed
 ---
 <small>personal feed</small>
+<br>
+<small>see <a href="/projects/cvp-feed/">CVP's feed</a></small>
 <hr>
 <div id="rss-feeds">
   <small>
@@ -15,6 +17,13 @@ classes: page--kevin-feed
       <option value="30">1 Month</option>
     </select>
   </small>
+  <div id="feed-summary" class="feed-summary">
+    <button id="feed-summary-button" class="feed-summary__button" type="button" disabled>
+      Summarize
+    </button>
+    <span id="feed-summary-status" class="feed-summary__status" aria-live="polite"></span>
+    <div id="feed-summary-output" class="feed-summary__output" hidden></div>
+  </div>
   
   <div id="loading" style="margin-top: 1rem; color: #666;">Loading feeds...</div>
 </div>
@@ -33,6 +42,7 @@ classes: page--kevin-feed
   // Date range event listener
   document.addEventListener('DOMContentLoaded', () => {
     const selectElement = document.getElementById('date-range-select');
+    setupFeedSummaryControls();
 
     // Initial load: Use the default selected value (14)
     loadFeeds(parseInt(selectElement.value), ['Kevin']); 

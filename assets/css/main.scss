@@ -128,6 +128,58 @@ $right-sidebar-width: 250px;
     background: #ddd;
 }
 
+.feed-summary {
+  margin-top: 0.6rem;
+}
+
+.feed-summary__button {
+  background: #eee;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  border-radius: 4px;
+}
+
+.feed-summary__button:hover:not(:disabled) {
+  background: #ddd;
+}
+
+.feed-summary__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.feed-summary__status {
+  color: #666;
+  font-size: 0.8rem;
+  margin-left: 0.45rem;
+}
+
+.feed-summary__status--error {
+  color: #a33;
+}
+
+.feed-summary__output {
+  color: #555;
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+}
+
+.feed-summary__output p {
+  margin: 0 0 0.55rem;
+}
+
+.feed-summary__output a {
+  color: #555;
+  text-decoration: underline;
+}
+
+.feed-summary__sources {
+  font-size: 0.8rem;
+}
+
 /* Target links in H3s, but ONLY on the 'My Feed' page */
 .page--cvp-feed h5 a {
   color: #006825; /* Example: Bright Red */

@@ -7,6 +7,107 @@ const SUPABASE_URL = 'https://lljbzkmtshufnzfnzawp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsamJ6a210c2h1Zm56Zm56YXdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3MTM1NDksImV4cCI6MjA3ODI4OTU0OX0.F-ARDzmDyzgLl49CWroQupwO6mbttQxgvxIxup92fv0';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const MS_PER_DAY = 24 * 60 * 60 * 1000; // Define the millisecond constants globally
+const latestFeedSummaryState = {
+    items: [],
+    daysAgo: 14,
+    loadingFeeds: false,
+    summarizing: false
+};
+
+function getFeedSummaryElements() {
+    return {
+        button: document.getElementById('feed-summary-button'),
+        status: document.getElementById('feed-summary-status'),
+        output: document.getElementById('feed-summary-output')
+    };
+}
+
+function setFeedSummaryStatus(message, isError = false) {
+    const { status } = getFeedSummaryElements();
+    if (!status) return;
+    status.textContent = message || '';
+    status.classList.toggle('feed-summary__status--error', Boolean(isError));
+}
+
+function updateFeedSummaryButton() {
+    const { button } = getFeedSummaryElements();
+    if (!button) return;
+    button.disabled = latestFeedSummaryState.loadingFeeds ||
+        latestFeedSummaryState.summarizing ||
+        latestFeedSummaryState.items.length === 0;
+}
+
+function clearFeedSummaryOutput() {
+    const { output } = getFeedSummaryElements();
+    if (!output) return;
+    output.innerHTML = '';
+    output.hidden = true;
+}
+
+function setLatestFeedSummaryItems(feeds, daysAgo) {
+    latestFeedSummaryState.daysAgo = daysAgo;
+    latestFeedSummaryState.items = feeds.flatMap(feed => {
+        if (!feed.feed_items || feed.feed_items.length === 0) return [];
+
+        return feed.feed_items
+            .filter(item => item?.title && item?.link)
+            .map(item => ({
+                title: item.title,
+                link: item.link
+            }));
+    });
+    clearFeedSummaryOutput();
+    setFeedSummaryStatus('');
+    updateFeedSummaryButton();
+}
+
+async function summarizeLatestFeeds() {
+    const { button, output } = getFeedSummaryElements();
+    if (!button || !output || latestFeedSummaryState.items.length === 0) return;
+
+    latestFeedSummaryState.summarizing = true;
+    updateFeedSummaryButton();
+    clearFeedSummaryOutput();
+    setFeedSummaryStatus('Summarizing...');
+
+    try {
+        const response = await fetch('/api/feed-summary', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                items: latestFeedSummaryState.items,
+                daysAgo: latestFeedSummaryState.daysAgo
+            })
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to summarize feeds.');
+        }
+
+        if (!data.summaryHtml) {
+            throw new Error('No summary returned.');
+        }
+
+        output.innerHTML = data.summaryHtml;
+        output.hidden = false;
+        setFeedSummaryStatus('');
+    } catch (error) {
+        console.error('Error summarizing feeds:', error);
+        setFeedSummaryStatus(error.message || 'Failed to summarize feeds.', true);
+    } finally {
+        latestFeedSummaryState.summarizing = false;
+        updateFeedSummaryButton();
+    }
+}
+
+function setupFeedSummaryControls() {
+    const { button } = getFeedSummaryElements();
+    if (!button) return;
+
+    button.addEventListener('click', summarizeLatestFeeds);
+    updateFeedSummaryButton();
+}
 
 // Helper: Truncates titles that are too long
 // Returns shortened title string with '...' if it exceeds maxLength
@@ -125,7 +226,7 @@ function cleanUpUI(rssFeedsContainer) {
     // Clean up previous display
     
     rssFeedsContainer.querySelectorAll('.feed').forEach(el => el.remove()); 
-    rssFeedsContainer.querySelector('p')?.remove();
+    rssFeedsContainer.querySelector(':scope > p')?.remove();
     rssFeedsContainer.querySelectorAll('h3').forEach(el => el.remove());
 }
 
@@ -134,6 +235,11 @@ async function loadFeeds(daysAgo = 14, audience = ['CVP']) {
     // 1. Show loading and disable the dropdown
     document.getElementById('loading').style.display = 'block';
     document.getElementById('date-range-select').disabled = true;
+    latestFeedSummaryState.loadingFeeds = true;
+    latestFeedSummaryState.items = [];
+    clearFeedSummaryOutput();
+    setFeedSummaryStatus('');
+    updateFeedSummaryButton();
 
     // 2. Calculate the start date based on the input
     const startDate = new Date(Date.now() - daysAgo * MS_PER_DAY).toISOString();
@@ -161,12 +267,17 @@ async function loadFeeds(daysAgo = 14, audience = ['CVP']) {
     if (error) {
       console.error('Error loading feeds:', error);
       document.getElementById('loading').innerText = 'Failed to load feeds.';
+      latestFeedSummaryState.loadingFeeds = false;
+      updateFeedSummaryButton();
       return;
     }
 
     // 4. Clean up previous UI
     const rssFeedsContainer = document.getElementById("rss-feeds");
     cleanUpUI(rssFeedsContainer);
+    setLatestFeedSummaryItems(feeds, daysAgo);
+    latestFeedSummaryState.loadingFeeds = false;
+    updateFeedSummaryButton();
    
     // 5. Group feeds by Feed Type in JavaScript
     // The structure returned is: 
@@ -201,7 +312,9 @@ async function loadFeeds(daysAgo = 14, audience = ['CVP']) {
     
     // If no items found after filtering
     if (totalItemsCount === 0) {
-        document.getElementById("rss-feeds").innerHTML += "<p>No recent updates.</p>";
+        document.getElementById("rss-feeds").insertAdjacentHTML('beforeend', "<p>No recent updates.</p>");
+        setFeedSummaryStatus('No items to summarize.');
+        updateFeedSummaryButton();
         return;
     }
 
