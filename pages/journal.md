@@ -10,7 +10,7 @@ classes:
 
 <link rel="stylesheet" href="/assets/css/journal.css">
 
-<div id="habit-journal-app" class="journal-app is-locked" data-api-base="">
+<div id="habit-journal-app" class="journal-app is-locked" data-api-base="https://journal-api-ashy.vercel.app">
   <section class="journal-auth" data-region="auth" aria-label="Journal login">
     <form class="journal-auth-form" data-form="auth">
       <label class="journal-field" for="journal-password">

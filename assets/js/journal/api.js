@@ -30,7 +30,7 @@ export function setApiBase(app) {
     return;
   }
   if (location.hostname === 'kev-in-xu.github.io') {
-    state.apiBase = 'https://kev-in-xu-github-io.vercel.app';
+    state.apiBase = 'https://journal-api-ashy.vercel.app';
     return;
   }
   state.apiBase = '';
