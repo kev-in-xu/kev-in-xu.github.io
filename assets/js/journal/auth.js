@@ -1,4 +1,4 @@
-import { apiFetch } from './api.js';
+import { apiFetch, setAuthToken } from './api.js';
 import { app, $ } from './dom.js';
 import { setStatus } from './ui.js';
 
@@ -23,10 +23,12 @@ export function bindAuthEvents({ onLogin }) {
     setStatus('Checking password...');
 
     try {
-      await apiFetch('/api/journal/login', {
+      const result = await apiFetch('/api/journal/login', {
         method: 'POST',
         body: JSON.stringify({ password })
       });
+      if (!result.token) throw new Error('Login response did not include a session token');
+      setAuthToken(result.token);
       input.value = '';
       unlockJournal();
       await onLogin();
