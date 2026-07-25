@@ -63,11 +63,11 @@ async function loadJournal() {
   }
 }
 
-async function init() {
+function init() {
   if (!app) return;
   setApiBase(app);
   bindAppEvents();
-  await loadJournal();
+  lockJournal();
 }
 
 init();

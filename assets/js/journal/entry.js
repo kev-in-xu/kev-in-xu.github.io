@@ -112,6 +112,15 @@ async function saveDraft(event, onSaved) {
 
 export function bindEntryEvents({ showSummary }) {
   const dayInput = $('[data-field="day"]');
+  const mobileDateInput = window.matchMedia('(max-width: 720px)');
+  const syncDateInputAccessibility = () => {
+    const isMobile = mobileDateInput.matches;
+    dayInput.tabIndex = isMobile ? 0 : -1;
+    dayInput.setAttribute('aria-hidden', String(!isMobile));
+  };
+  syncDateInputAccessibility();
+  mobileDateInput.addEventListener('change', syncDateInputAccessibility);
+
   const openDayPicker = () => {
     if (typeof dayInput.showPicker === 'function') dayInput.showPicker();
     else dayInput.click();

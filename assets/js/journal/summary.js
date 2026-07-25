@@ -6,6 +6,29 @@ import { activeHabitsForDay, createEmptyDraft, dateKey, entryForDay, monthKey, s
 const SUMMARY_MODES = ['none', 'mood', 'energy', 'exercise'];
 const EMPTY_DAY_COLOR = '#e6e6e6';
 const NEUTRAL_DAY_COLOR = '#ffffff';
+const TREND_SERIES = [
+  {
+    label: 'Mood',
+    color: '#2f80ed',
+    max: 6,
+    value: entry => entry.mood,
+    text: value => MOOD_LABELS[value - 1]
+  },
+  {
+    label: 'Energy',
+    color: '#f2994a',
+    max: 6,
+    value: entry => entry.energy ?? 4,
+    text: value => ENERGY_LABELS[value - 1]
+  },
+  {
+    label: 'Exercise',
+    color: '#34a853',
+    max: 3,
+    value: entry => entry.exerciseIntensity,
+    text: value => EXERCISE_LABELS[value]
+  }
+];
 
 function hexToRgb(hex) {
   const normalized = hex.replace('#', '');
@@ -74,30 +97,83 @@ function getCalendarPalette(mode, entry) {
   }
 }
 
-function renderTrend(regionName, entries, maxValue, labelForValue) {
-  const region = $(`[data-region="${regionName}"]`);
+function renderTrendChart(entries) {
+  const region = $('[data-region="trend-chart"]');
   region.innerHTML = '';
-  const recent = entries.slice(-14);
-  if (recent.length === 0) {
+  const monthEntries = [...entries].sort((a, b) => a.dayKey.localeCompare(b.dayKey));
+  if (monthEntries.length === 0) {
     region.textContent = 'No saved entries yet.';
     return;
   }
-  recent.forEach(entry => {
-    const valueByRegion = {
-      'mood-trend': entry.mood,
-      'energy-trend': entry.energy ?? 4,
-      'exercise-trend': entry.exerciseIntensity
-    };
-    const value = valueByRegion[regionName];
-    const item = document.createElement('div');
-    item.className = 'journal-bar';
-    const bar = document.createElement('span');
-    bar.style.height = `${Math.max(8, (value / maxValue) * 100)}%`;
-    const label = document.createElement('span');
-    label.textContent = `${entry.dayKey.slice(5)} ${labelForValue(value)}`;
-    item.append(bar, label);
-    region.append(item);
+
+  const width = 640;
+  const height = 220;
+  const padding = { top: 14, right: 16, bottom: 34, left: 16 };
+  const plotWidth = width - padding.left - padding.right;
+  const plotHeight = height - padding.top - padding.bottom;
+  const xForIndex = index => padding.left + (monthEntries.length === 1 ? plotWidth / 2 : (index / (monthEntries.length - 1)) * plotWidth);
+  const yForValue = (value, max) => padding.top + plotHeight - (value / max) * plotHeight;
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', 'Mood, energy, and exercise trends for recent saved entries');
+
+  for (let i = 0; i <= 3; i += 1) {
+    const y = padding.top + (plotHeight / 3) * i;
+    const grid = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    grid.setAttribute('class', 'journal-line-chart-grid');
+    grid.setAttribute('x1', String(padding.left));
+    grid.setAttribute('x2', String(width - padding.right));
+    grid.setAttribute('y1', String(y));
+    grid.setAttribute('y2', String(y));
+    svg.append(grid);
+  }
+
+  TREND_SERIES.forEach(series => {
+    const points = monthEntries.map((entry, index) => {
+      const value = series.value(entry);
+      return `${xForIndex(index)},${yForValue(value, series.max)}`;
+    }).join(' ');
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    line.setAttribute('class', 'journal-line-chart-series');
+    line.setAttribute('points', points);
+    line.setAttribute('stroke', series.color);
+    svg.append(line);
+
+    monthEntries.forEach((entry, index) => {
+      const value = series.value(entry);
+      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      dot.setAttribute('class', 'journal-line-chart-dot');
+      dot.setAttribute('cx', String(xForIndex(index)));
+      dot.setAttribute('cy', String(yForValue(value, series.max)));
+      dot.setAttribute('r', '4');
+      dot.setAttribute('fill', series.color);
+
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      title.textContent = `${entry.dayKey.slice(5)} ${series.label}: ${series.text(value)}`;
+      dot.append(title);
+      svg.append(dot);
+    });
   });
+
+  const labelStride = Math.ceil(monthEntries.length / 10);
+  monthEntries.forEach((entry, index) => {
+    if (index % labelStride !== 0) return;
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('class', 'journal-line-chart-label');
+    label.setAttribute('x', String(xForIndex(index)));
+    label.setAttribute('y', String(height - 10));
+    label.textContent = entry.dayKey.slice(5);
+    svg.append(label);
+  });
+
+  region.append(svg);
+  const note = document.createElement('p');
+  note.className = 'journal-chart-note';
+  note.textContent = 'Each line is scaled to its own range.';
+  region.append(note);
 }
 
 function renderHabitTotals(entries) {
@@ -268,6 +344,23 @@ function renderDayDetail({ loadDraft, setView } = {}) {
   }
 
   card.append(habitSection);
+
+  const reflection = entry?.reflection?.trim();
+  if (reflection) {
+    const reflectionSection = document.createElement('div');
+    reflectionSection.className = 'journal-day-detail-reflection';
+
+    const reflectionTitle = document.createElement('span');
+    reflectionTitle.className = 'journal-day-detail-section-label';
+    reflectionTitle.textContent = 'Reflection';
+
+    const reflectionText = document.createElement('p');
+    reflectionText.textContent = reflection;
+
+    reflectionSection.append(reflectionTitle, reflectionText);
+    card.append(reflectionSection);
+  }
+
   region.append(card);
 }
 
@@ -347,9 +440,7 @@ export function renderSummary(calendarActions) {
     button.setAttribute('aria-pressed', String(isActive));
   });
   renderHabitFilter();
-  renderTrend('mood-trend', monthEntries, 6, value => MOOD_LABELS[value - 1]);
-  renderTrend('energy-trend', monthEntries, 6, value => ENERGY_LABELS[value - 1]);
-  renderTrend('exercise-trend', monthEntries, 3, value => EXERCISE_LABELS[value]);
+  renderTrendChart(monthEntries);
   renderHabitTotals(monthEntries);
   renderCalendar(calendarActions);
   renderDayDetail(calendarActions);

@@ -39,7 +39,7 @@ classes:
             <span class="journal-date-arrow" aria-hidden="true">▼</span>
           </button>
         </div>
-        <input id="journal-day" name="day" type="date" data-field="day" class="journal-date-input" aria-hidden="true" tabindex="-1">
+        <input id="journal-day" name="day" type="date" data-field="day" class="journal-date-input" aria-label="Choose a different journal date" tabindex="-1">
       </div>
 
       <div class="journal-grid">
@@ -97,38 +97,39 @@ classes:
         <strong data-field="summary-month"></strong>
         <button type="button" class="journal-icon-button" data-action="next-month" aria-label="Next month">&gt;</button>
       </div>
+    </div>
+
+    <section class="journal-panel journal-trend-panel" aria-labelledby="journal-trend-heading">
+      <div class="journal-panel-head">
+        <h2 id="journal-trend-heading">Trends</h2>
+      </div>
+      <div class="journal-trend-legend" aria-label="Trend legend">
+        <span><i class="journal-trend-swatch journal-trend-swatch-mood"></i>Mood</span>
+        <span><i class="journal-trend-swatch journal-trend-swatch-energy"></i>Energy</span>
+        <span><i class="journal-trend-swatch journal-trend-swatch-exercise"></i>Exercise</span>
+      </div>
+      <div class="journal-line-chart" data-region="trend-chart"></div>
+    </section>
+
+    <details class="journal-panel journal-collapsible-panel">
+      <summary class="journal-collapsible-summary">
+        <h3 id="journal-habit-stats-heading">Habit Stats</h3>
+      </summary>
+      <div class="journal-habit-totals" data-region="habit-totals"></div>
+    </details>
+
+    <div class="journal-calendar-controls">
       <label class="journal-field journal-filter-field" for="journal-habit-filter">
         <span>Calendar filter</span>
         <select id="journal-habit-filter" data-field="habit-filter"></select>
       </label>
+      <div class="journal-segmented-control" role="group" aria-label="Calendar color mode">
+        <button type="button" class="journal-segmented-control-button is-active" data-action="set-summary-mode" data-mode="none">none</button>
+        <button type="button" class="journal-segmented-control-button" data-action="set-summary-mode" data-mode="mood">mood</button>
+        <button type="button" class="journal-segmented-control-button" data-action="set-summary-mode" data-mode="energy">energy</button>
+        <button type="button" class="journal-segmented-control-button" data-action="set-summary-mode" data-mode="exercise">exercise</button>
+      </div>
     </div>
-
-    <div class="journal-segmented-control" role="group" aria-label="Calendar color mode">
-      <button type="button" class="journal-segmented-control-button is-active" data-action="set-summary-mode" data-mode="none">none</button>
-      <button type="button" class="journal-segmented-control-button" data-action="set-summary-mode" data-mode="mood">mood</button>
-      <button type="button" class="journal-segmented-control-button" data-action="set-summary-mode" data-mode="energy">energy</button>
-      <button type="button" class="journal-segmented-control-button" data-action="set-summary-mode" data-mode="exercise">exercise</button>
-    </div>
-
-    <div class="journal-grid journal-summary-grid">
-      <section class="journal-panel" aria-labelledby="journal-mood-trend-heading">
-        <h2 id="journal-mood-trend-heading">Mood Trend</h2>
-        <div class="journal-bars" data-region="mood-trend"></div>
-      </section>
-      <section class="journal-panel" aria-labelledby="journal-energy-trend-heading">
-        <h2 id="journal-energy-trend-heading">Energy Trend</h2>
-        <div class="journal-bars" data-region="energy-trend"></div>
-      </section>
-      <section class="journal-panel" aria-labelledby="journal-exercise-trend-heading">
-        <h2 id="journal-exercise-trend-heading">Exercise Trend</h2>
-        <div class="journal-bars" data-region="exercise-trend"></div>
-      </section>
-    </div>
-
-    <section class="journal-panel" aria-labelledby="journal-habit-stats-heading">
-      <h2 id="journal-habit-stats-heading">Habit Stats</h2>
-      <div class="journal-habit-totals" data-region="habit-totals"></div>
-    </section>
 
     <section class="journal-panel" aria-labelledby="journal-calendar-heading">
       <h2 id="journal-calendar-heading">Calendar</h2>
